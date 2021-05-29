@@ -41,7 +41,7 @@ def ConnectPhoneIp():
 
 def FindApk():
     path = filedialog.askopenfilename(title="", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")])
-    if path is not None:
+    if not path is "":
         combobox1.set(path)
 
 def Button3Install():

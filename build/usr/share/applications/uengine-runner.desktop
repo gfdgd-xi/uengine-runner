@@ -1,0 +1,11 @@
+[Desktop Entry]
+Categories=System;
+Comment=uengine（anbox） 运行器
+Encoding=UTF-8
+Exec=/usr/bin/uengine-runner
+Icon=/opt/apps/uengine-runner/icon.png
+MimeType=
+Name=uengine 运行器
+StartupWMClass=uengine 运行器
+Terminal=false
+Type=Application

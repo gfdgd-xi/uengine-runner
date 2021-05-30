@@ -2,3 +2,4 @@
 sudo pip3 install --upgrade pip
 sudo pip3 install --upgrade virtualenv 
 pip3 install pillow
+pip3 install ttkthemes

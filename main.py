@@ -2,9 +2,9 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.0.0
-# 更新时间：2021年
-# 感谢：
+# 版本：1.1.0
+# 更新时间：2021年5月30日
+# 感谢：anbox 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
 #################
@@ -19,8 +19,10 @@ import traceback
 import threading
 import webbrowser
 import subprocess
+import ttkthemes
 import tkinter as tk
 import tkinter.ttk as ttk
+import tkinter.tix as tix
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
 import PIL.Image as Image
@@ -125,18 +127,20 @@ def about_this_program():
     global about
     global title
     global iconPath
-    message = tk.Toplevel()
-    message.resizable(0, 0)
-    message.title("关于 {}".format(title))
-    message.iconphoto(False, tk.PhotoImage(file=iconPath))
+    mess = tk.Toplevel()
+    message = ttk.Frame(mess)
+    mess.resizable(0, 0)
+    mess.title("关于 {}".format(title))
+    mess.iconphoto(False, tk.PhotoImage(file=iconPath))
     img = ImageTk.PhotoImage(Image.open(iconPath))
     label1 = ttk.Label(message, image=img)
     label2 = ttk.Label(message, text=about)
-    button1 = ttk.Button(message, text="确定", command=message.withdraw)
+    button1 = ttk.Button(message, text="确定", command=mess.withdraw)
     label1.pack()
     label2.pack()
     button1.pack(side="bottom")
-    message.mainloop()
+    message.pack()
+    mess.mainloop()
 
 # 显示“提示”窗口
 def helps():
@@ -237,11 +241,16 @@ def write_txt(path, things):
     file.write(things)  # 写入文本
     file.close()  # 关闭文本对象
 
+def ShowUseProgram():
+    global title
+    global useProgram
+    messagebox.showinfo(title="{} 使用的程序列表（部分）".format(title), message=useProgram)
+
 ###########################
 # 程序信息
 ###########################
 programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.0.1"
+version = "1.1.0"
 goodRunSystem = "Linux"
 about = '''一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
 版本：{}
@@ -256,13 +265,17 @@ updateThingsString = '''1、修改了因编写时出现的中、英文混用的�
 2、支持一键连接默认 IP
 3、修复在不连接设备直接选择 apk 安装时会卡住的问题
 4、修复在把“uengine 程序菜单”发送到桌面或启动器如果询问覆盖时点击取消会卡住的问题
-4、对控件细节进行优化'''
+5、修改了程序界面为白色调，不和标题栏冲突矛盾'''
 title = "uengine 运行器 {}".format(version)
 updateTime = "2021年5月30日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 iconPath = "/opt/apps/uengine-runner/icon.png"
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
+useProgram = '''1、uengine（anbox）
+2、Python3
+3、tkinter（tkinter.tk、ttkthemes 和 tkinter.ttk）
+……'''
 
 ###########################
 # 加载配置
@@ -285,10 +298,14 @@ phoneIp = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/PhoneIp.
 ###########################
 # 窗口创建
 ###########################
-window = tk.Tk()
-window.title(title)
-window.resizable(0, 0)
-window.iconphoto(False, tk.PhotoImage(file=iconPath))
+win = tk.Tk()
+style = ttkthemes.ThemedStyle(win)
+style.set_theme("adapta")
+window = ttk.Frame(win)
+win.attributes('-alpha', 0.5)
+win.title(title)
+win.resizable(0, 0)
+win.iconphoto(False, tk.PhotoImage(file=iconPath))
 frame1 = ttk.Frame(window)
 frame2 = ttk.Frame(window)
 label1 = ttk.Label(window, text="要安装的 apk 路径：")
@@ -301,31 +318,37 @@ button3 = ttk.Button(frame2, text="安装", command=Button3Install)
 button4 = ttk.Button(frame1, text="关闭 adb 软件进程", command=KillAdbProgress)
 button5 = ttk.Button(frame2, text="打开 uengine 应用列表", command=Button5Click)
 button6 = ttk.Button(frame1, text="连接默认 IP", command=ConnectPhoneIpDefult)
-menu = tk.Menu(window)  # 设置菜单栏
-programmenu = tk.Menu(menu, tearoff=0)  # 设置“程序”菜单栏
+menu = tk.Menu(window, background="white")  # 设置菜单栏
+programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
+adb = tk.Menu(menu, tearoff=0, background="white")
+uengine = tk.Menu(menu, tearoff=0, background="white")
+help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
 menu.add_cascade(label="程序", menu=programmenu)
+menu.add_cascade(label="adb", menu=adb)
+menu.add_cascade(label="uengine", menu=uengine)
+menu.add_cascade(label="帮助", menu=help)
 programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
 programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
-adb = tk.Menu(menu, tearoff=0)
-menu.add_cascade(label="adb", menu=adb)
 adb.add_command(label="adb 连接的设备", command=ShowAdbConnect)
-uengine = tk.Menu(menu, tearoff=0)
-menu.add_cascade(label="uengine", menu=uengine)
 uengine.add_command(label="发送 uengine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
 uengine.add_command(label="发送 uengine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
-help = tk.Menu(menu, tearoff=0)  # 设置“帮助”菜单栏
-menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
 help.add_separator()
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
 help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
+help.add_command(label="这个程序使用的程序列表（部分）", command=ShowUseProgram)  # 设置“更新内容”项
 help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
+menu.configure(activebackground="white")
+help.configure(activebackground="white")
+uengine.configure(activebackground="white")
+adb.configure(activebackground="white")
+programmenu.configure(activebackground="white")
 # 设置控件
 combobox2['value'] = phoneIp
 combobox1['value'] = findApkHistory
 #
-window.config(menu=menu)  # 显示菜单栏
+win.config(menu=menu)  # 显示菜单栏
 label1.grid(row=2, column=0)
 label2.grid(row=0, column=0)
 combobox1.grid(row=2, column=1)
@@ -338,4 +361,5 @@ button5.grid(row=0, column=1)
 button6.grid(row=0, column=3)
 frame1.grid(row=1, columnspa=3)
 frame2.grid(row=3, columnspa=3)
-window.mainloop()
+window.pack()
+win.mainloop()

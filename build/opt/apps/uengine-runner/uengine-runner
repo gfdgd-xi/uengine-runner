@@ -117,12 +117,16 @@ def DisabledAndEnbled(choose):
     a = userChoose[choose]
     combobox1.configure(state=a)
     combobox2.configure(state=a)
+    combobox3.configure(state=a)
+    checkButton1.configure(state=a)
     button1.configure(state=a)
     button2.configure(state=a)
     button3.configure(state=a)
     button4.configure(state=a)
     button5.configure(state=a)
     button6.configure(state=a)
+    button7.configure(state=a)
+    button8.configure(state=a)
 
 # 需引入 subprocess
 def GetCommandReturn(cmd):

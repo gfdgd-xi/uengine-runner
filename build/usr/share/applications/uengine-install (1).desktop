@@ -1,0 +1,16 @@
+[Desktop Entry]
+Categories=system;Utility;
+Encoding=UTF-8
+Exec=uengine-runner -ci %F
+GenericName=APK 安装（uengine）
+GenericName[zh_CN]=APK 安装（uengine）
+Icon=/opt/apps/uengine-runner/icon.png
+MimeType=application/apk;
+Name=APK 安装（uengine）
+Name[zh_CN]=APK 安装（uengine）
+NoDisplay=true
+OnlyShowIn=Unity;
+StartupNotify=false
+StartupWMClass=APK 安装（uengine）
+Terminal=false
+Type=Application

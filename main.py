@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.1.0
+# 版本：1.2.0
 # 更新时间：2021年5月30日
 # 感谢：anbox 和 统信
 # 基于 Python3 的 tkinter 构建
@@ -15,6 +15,7 @@ import sys
 import time
 import json
 import shutil
+import zipfile
 import traceback
 import threading
 import webbrowser
@@ -22,7 +23,6 @@ import subprocess
 import ttkthemes
 import tkinter as tk
 import tkinter.ttk as ttk
-import tkinter.tix as tix
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
 import PIL.Image as Image
@@ -51,10 +51,14 @@ def ConnectPhoneIp():
     write_txt(get_home() + "/.config/uengine-runner/PhoneIp.json", str(json.dumps(ListToDictionary(phoneIp))))  # 将历史记录的数组转换为字典并写入
     DisabledAndEnbled(False)
 
-def ConnectPhoneIpDefult():
+def ConnectPhoneIpDefult(quit = False):
     global phoneIp
-    messagebox.showinfo(title="提示", message=GetCommandReturn("adb connect '192.168.250.2'"))
-    phoneIp.append(combobox2.get())
+    Return = GetCommandReturn("adb connect '192.168.250.2'")
+    if quit:
+        print(Return)
+        return
+    messagebox.showinfo(title="提示", message=Return)
+    phoneIp.append("192.168.250.2")
     combobox2['value'] = phoneIp
     write_txt(get_home() + "/.config/uengine-runner/PhoneIp.json", str(json.dumps(ListToDictionary(phoneIp))))  # 将历史记录的数组转换为字典并写入
     DisabledAndEnbled(False)
@@ -84,13 +88,25 @@ def AdbRun():
 def AdbConnect():
     return GetCommandReturn("adb devices")
 
-def InstallApk(path):
+def InstallApk(path, quit = False):
     global findApkHistory
     if not AdbRun():
+        if quit:
+            return
         messagebox.showinfo(title="提示", message="你没有使用 adb 连接任何设备")
         DisabledAndEnbled(False)
         return
-    messagebox.showinfo(title="提示", message=GetCommandReturn("adb install '{}'".format(path)))
+    commandReturn = GetCommandReturn("adb install '{}'".format(path))
+    iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.desktop".format(get_home(), GetApkPackageName(path))
+    SaveApkIcon(path, iconSavePath)
+    BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                        "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
+    BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                        "{}/.local/share/applications/{}.desktop".format(get_home(), GetApkPackageName(path)))
+    if quit:
+        print(commandReturn)
+        return
+    messagebox.showinfo(title="提示", message=commandReturn)
     findApkHistory.append(combobox1.get())
     combobox1['value'] = findApkHistory
     write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
@@ -246,11 +262,158 @@ def ShowUseProgram():
     global useProgram
     messagebox.showinfo(title="{} 使用的程序列表（部分）".format(title), message=useProgram)
 
+def AboutAdb():
+    messagebox.showinfo(message=GetCommandReturn("adb version"), title="关于 adb")
+
+def GetApkPath(packetName):
+    return GetCommandReturn("adb shell pm path {}".format(packetName)).replace("package:", "")
+
+def GetAllPackageName():
+    return GetCommandReturn("adb shell pm list packages")
+
+def CopyFileToComputer(filePathInAndroid, filePathInComputer):
+    return GetCommandReturn("adb pull '{}' '{}'".format(filePathInAndroid, filePathInComputer))
+
+def GetApkInformation(apkFilePath):
+    return GetCommandReturn("aapt dump badging '{}'".format(apkFilePath))
+
+def GetApkActivityName(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "launchable-activity" in line:
+            line = line[0: line.index("label='")]
+            line = line.replace("launchable-activity: ", "")
+            line = line.replace("'", "")
+            line = line.replace(" ", "")
+            line = line.replace("name=", "")
+            line = line.replace("label=", "")
+            line = line.replace("icon=", "")
+            return line
+
+def GetApkPackageName(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "package:" in line:
+            #print(line.index("v"))
+            #return line[:line.index("v")]
+            line = line[0: line.index("versionCode='")]
+            line = line.replace("package:", "")
+            line = line.replace("name=", "")
+            line = line.replace("'", "")
+            line = line.replace(" ", "")
+            return line
+
+def BuildUengineDesktop(packageName, activityName, showName, iconPath, savePath):
+    things = '''
+    [Desktop Entry]
+Categories=app;
+Encoding=UTF-8
+Exec=/usr/bin/uengine-launch.sh --action=android.intent.action.MAIN --package={} --component={}
+GenericName={}
+Icon={}
+MimeType=
+Name={}
+StartupWMClass={}
+Terminal=false
+Type=Application
+'''.format(packageName, activityName, showName, iconPath, showName, showName)
+    write_txt(savePath, things)
+
+def GetApkChineseLabel(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "application-label:" in line:
+            line = line.replace("application-label:", "")
+            line = line.replace("'", "")
+            return line
+
+def GetApkIconInApk(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "application:" in line:
+            line = line[line.index("icon='"): -1]
+            line = line.replace("icon='", "")
+            line = line.replace("'", "")
+            return line
+
+def SaveApkIcon(apkFilePath, iconSavePath):
+    zip = zipfile.ZipFile(apkFilePath)
+    iconData = zip.read(GetApkIconInApk(apkFilePath))
+    with open(iconSavePath, 'w+b') as saveIconFile:
+        saveIconFile.write(iconData)
+
+# 获取用户桌面目录
+def get_desktop_path():
+    for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
+        desktop_index = line.find("XDG_DESKTOP_DIR=\"")  # 寻找是否有对应项，有返回 0，没有返回 -1
+        if desktop_index != -1:  # 如果有对应项
+            break  # 结束循环
+    if desktop_index == -1:  # 如果是提前结束，值一定≠-1，如果是没有提前结束，值一定＝-1
+        return -1
+    else:
+        get = line[17:-2]  # 截取桌面目录路径
+        get_index = get.find("$HOME")  # 寻找是否有对应的项，需要替换内容
+        if get != -1:  # 如果有
+            get = get.replace("$HOME", get_home())  # 则把其替换为用户目录（～）
+        return get  # 返回目录
+
+# 获取用户主目录
+def get_home():
+    return os.path.expanduser('~')
+
+def UninstallProgram(package, cleanData):
+    global fineUninstallApkHistory
+    setting = {True: "", False: "-k"}
+    Return = GetCommandReturn("adb shell pm uninstall {} {}".format(setting[cleanData], package))
+    if os.path.exists("{}/.local/share/applications/{}.desktop".format(get_home(), package)):
+        os.remove("{}/.local/share/applications/{}.desktop".format(get_home(), package))
+    if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
+        os.remove("{}/{}.desktop".format(get_desktop_path(), package))
+    fineUninstallApkHistory.append(combobox3.get())
+    combobox3['value'] = fineUninstallApkHistory
+    write_txt(get_home() + "/.config/uengine-runner/FindUninstallApkHistory.json", str(json.dumps(ListToDictionary(fineUninstallApkHistory))))  # 将历史记录的数组转换为字典并写入
+    return Return
+
+def ButtonClick7():
+    path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindUninstallApk.json"))["path"])
+    if path != "" and path != "()":
+        try:
+            combobox3.set(path)
+            write_txt(get_home() + "/.config/uengine-runner/FindUninstallApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
+        except:
+            pass
+
+def ButtonClick8():
+    DisabledAndEnbled(True)
+    if os.path.exists(combobox3.get()):
+        path = GetApkPackageName(combobox3.get())
+    else:
+        path = combobox3.get()
+    messagebox.showinfo(message=UninstallProgram(path, not checkButtonBool1.get()))
+    DisabledAndEnbled(False)
+
+def GetAllPackageName():
+    return GetCommandReturn("adb shell pm list packages")
+
+def ShowAdbInstallPackage():
+    mess = tk.Toplevel()
+    message = ttk.Frame(mess)
+    mess.resizable(0, 0)
+    mess.title("所有软件包")
+    textbox1 = tk.Text(message, width=100)
+    button1 = ttk.Button(message, text="确定", command=mess.withdraw)
+    textbox1.insert("0.0", GetAllPackageName())
+    textbox1.configure(state=tk.DISABLED)
+    textbox1.pack()
+    button1.pack(side="bottom")
+    message.pack()
+    mess.mainloop()
+
 ###########################
 # 程序信息
 ###########################
 programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.1.0"
+version = "1.2.0"
 goodRunSystem = "Linux"
 about = '''一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
 版本：{}
@@ -261,20 +424,22 @@ tkinter 版本：{}
 tips = '''提示：
 1、先连接设备再安装应用
 2、支持连接其他 Android 系统操作（需要进行设置）'''
-updateThingsString = '''1、修改了因编写时出现的中、英文混用的情况
-2、支持一键连接默认 IP
-3、修复在不连接设备直接选择 apk 安装时会卡住的问题
-4、修复在把“uengine 程序菜单”发送到桌面或启动器如果询问覆盖时点击取消会卡住的问题
-5、修改了程序界面为白色调，不和标题栏冲突矛盾'''
+updateThingsString = '''1、支持安装自动添加快捷方式、卸载删除快捷方式；
+2、支持使用包名或 APK 文件卸载程序；
+3、支持查看安装的所有包名；
+4、支持终端连接默认 IP 和安装 APK 文件；
+5、进行了部分优化'''
 title = "uengine 运行器 {}".format(version)
-updateTime = "2021年5月30日"
+updateTime = "2021年6月6日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
-iconPath = "/opt/apps/uengine-runner/icon.png"
+iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 useProgram = '''1、uengine（anbox）
 2、Python3
 3、tkinter（tkinter.tk、ttkthemes 和 tkinter.ttk）
+4、adb
+5、aapt
 ……'''
 
 ###########################
@@ -286,19 +451,51 @@ if not os.path.exists(get_home() + "/.config/uengine-runner/PhoneIp.json"):  # �
     write_txt(get_home() + "/.config/uengine-runner/PhoneIp.json", json.dumps({}))  # 创建配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkHistory.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/uengine-runner/FindUninstallApkHistory.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/uengine-runner/FindUninstallApkHistory.json", json.dumps({}))  # 创建配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApk.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/FindApk.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/uengine-runner/FindUninstallApk.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/uengine-runner/FindUninstallApk.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
 
 ###########################
 # 设置变量
 ###########################
 findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkHistory.json")).values())
 phoneIp = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/PhoneIp.json")).values())
+fineUninstallApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindUninstallApkHistory.json")).values())
+
+###########################
+# 判断参数
+###########################
+quit = True
+if len(sys.argv) > 1:  # 有参数
+    if "-q" in sys.argv:
+        quit = True
+    if "-i" in sys.argv:
+        if len(sys.argv) >= sys.argv.index("-i") + 2:
+            InstallApk(sys.argv[sys.argv.index("-i") + 1], quit)
+        sys.exit()
+    if "-ci" in sys.argv:
+        if len(sys.argv) >= sys.argv.index("-ci") + 2:
+            ConnectPhoneIpDefult(quit)
+            InstallApk(sys.argv[sys.argv.index("-ci") + 1], quit)
+        sys.exit()
+    if "-c" in sys.argv:
+        ConnectPhoneIpDefult(quit)
+        sys.exit()
+    print("帮助：")
+    print("-c\t连接默认 IP 地址（192.168.250.2）")
+    print("-ci APK文件路径\t连接默认 IP 地址并安装 APK 软件包")
+    print("-i APK文件路径\t安装 APK 软件包")
+    print("--help 查看帮助")
+    sys.exit()
 
 ###########################
 # 窗口创建
 ###########################
 win = tk.Tk()
+checkButtonBool1 = tk.BooleanVar()
 style = ttkthemes.ThemedStyle(win)
 style.set_theme("adapta")
 window = ttk.Frame(win)
@@ -308,16 +505,22 @@ win.resizable(0, 0)
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
 frame1 = ttk.Frame(window)
 frame2 = ttk.Frame(window)
+frame3 = ttk.Frame(window)
 label1 = ttk.Label(window, text="要安装的 apk 路径：")
 label2 = ttk.Label(window, text="要连接的设备的 IP（默认 IP 为 192.168.250.2）：")
+label3 = ttk.Label(window, text="要卸载的包名或程序对应的 APK 文件：")
 combobox1 = ttk.Combobox(window, width=100)
 combobox2 = ttk.Combobox(window, width=100)
+combobox3 = ttk.Combobox(window, width=100)
 button1 = ttk.Button(frame1, text="连接设备", command=ConnectPhoneIp)
 button2 = ttk.Button(window, text="浏览", command=FindApk)
 button3 = ttk.Button(frame2, text="安装", command=Button3Install)
 button4 = ttk.Button(frame1, text="关闭 adb 软件进程", command=KillAdbProgress)
 button5 = ttk.Button(frame2, text="打开 uengine 应用列表", command=Button5Click)
 button6 = ttk.Button(frame1, text="连接默认 IP", command=ConnectPhoneIpDefult)
+button7 = ttk.Button(window, text="浏览", command=ButtonClick7)
+button8 = ttk.Button(frame3, text="卸载", command=ButtonClick8)
+checkButton1 = ttk.Checkbutton(frame3, text="保留软件数据", variable=checkButtonBool1)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
 adb = tk.Menu(menu, tearoff=0, background="white")
@@ -331,6 +534,7 @@ programmenu.add_command(label="清空软件历史记录", command=CleanProgramHi
 programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
 adb.add_command(label="adb 连接的设备", command=ShowAdbConnect)
+adb.add_command(label="adb 连接的设备的所有软件包", command=ShowAdbInstallPackage)
 uengine.add_command(label="发送 uengine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
 uengine.add_command(label="发送 uengine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
@@ -338,6 +542,7 @@ help.add_separator()
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
 help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
 help.add_command(label="这个程序使用的程序列表（部分）", command=ShowUseProgram)  # 设置“更新内容”项
+help.add_command(label="关于 adb", command=AboutAdb)  # 设置“关于这个程序”项
 help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
 menu.configure(activebackground="white")
 help.configure(activebackground="white")
@@ -345,21 +550,28 @@ uengine.configure(activebackground="white")
 adb.configure(activebackground="white")
 programmenu.configure(activebackground="white")
 # 设置控件
+combobox3['value'] = fineUninstallApkHistory
 combobox2['value'] = phoneIp
 combobox1['value'] = findApkHistory
 #
 win.config(menu=menu)  # 显示菜单栏
 label1.grid(row=2, column=0)
 label2.grid(row=0, column=0)
+label3.grid(row=4, column=0)
 combobox1.grid(row=2, column=1)
 combobox2.grid(row=0, column=1)
+combobox3.grid(row=4, column=1)
 button1.grid(column=0, row=0)
 button2.grid(row=2, column=2)
 button3.grid(row=0, column=0)
 button4.grid(column=1, row=0)
 button5.grid(row=0, column=1)
 button6.grid(row=0, column=3)
+button7.grid(row=4, column=2)
+button8.grid(row=0, column=1)
+checkButton1.grid(row=0, column=0)
 frame1.grid(row=1, columnspa=3)
 frame2.grid(row=3, columnspa=3)
+frame3.grid(row=5, columnspa=3)
 window.pack()
 win.mainloop()

@@ -1,9 +1,9 @@
 Package: spark-uengine-runner
-Version: 1.1.0
+Version: 1.2.0
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi/uengine-runner
 Architecture: all
 Priority: optional
-Depends: python3, python3-tk, adb, python3-pip
+Depends: python3, python3-tk, adb, python3-pip, aapt
 Description: gfdgd xi make's uengine runner
 

@@ -28,6 +28,8 @@ i386 和 amd64
 sudo apt install python3 python3-tk git adb python3-pip aapt
 pip3 install pillow
 pip3 install ttkthemes
+pip3 install pillow -U
+pip3 install ttkthemes -U
 ```
 
 2.  下载本程序

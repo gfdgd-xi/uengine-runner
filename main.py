@@ -52,6 +52,9 @@ def ButtonClick7():
             pass
 
 def ButtonClick8():
+    if combobox3.get() is "":
+        messagebox.showerror(title="提示", message="信息没有填写完整，无法继续卸载 APK")
+        return
     DisabledAndEnbled(True)
     if os.path.exists(combobox3.get()):
         path = GetApkPackageName(combobox3.get())
@@ -96,7 +99,7 @@ def InstallApk(path, quit = False):
     if quit:
         print(commandReturn)
         return
-    messagebox.showinfo(title="提示", message=commandReturn)
+    messagebox.showinfo(title="提示", message="操作完成！")
     findApkHistory.append(combobox1.get())
     combobox1['value'] = findApkHistory
     write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
@@ -115,8 +118,8 @@ def DisabledAndEnbled(choose):
     #button4.configure(state=a)
     button5.configure(state=a)
     #button6.configure(state=a)
-    #button7.configure(state=a)
-    #button8.configure(state=a)
+    button7.configure(state=a)
+    button8.configure(state=a)
 
 # 需引入 subprocess
 def GetCommandReturn(cmd):

@@ -1,4 +1,4 @@
-# 我写废了,继续深造去了,可以使用其他替代品,链接:https://bbs.deepin.org/zh/post/222874
+# 我图标的获取有问题,继续深造去了（为什么图标是xml）,可以使用其他替代品,链接:https://bbs.deepin.org/zh/post/222874
 
 # uengine 运行器 1.2.1
 

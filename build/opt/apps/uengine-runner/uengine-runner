@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.2.2
-# 更新时间：2021年5月30日
+# 版本：1.2.3
+# 更新时间：2021年8月2日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -89,7 +89,7 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
     try:
         global findApkHistory
         commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
-        iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.desktop".format(get_home(), GetApkPackageName(path))
+        iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(path))
         SaveApkIcon(path, iconSavePath)
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
@@ -356,7 +356,7 @@ def get_home()->"获取用户主目录":
 # 程序信息
 ###########################
 programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.2.2"
+version = "1.2.3"
 goodRunSystem = "Linux（deepin/UOS）"
 aaptVersion = GetCommandReturn("aapt version")
 about = '''一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
@@ -371,11 +371,10 @@ tips = '''提示：
 2、需要安装 uengine 才能使用；
 3、如果报错是有关产生 .deksotp 文件有关，一般可以打开程序列表安装。
 如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。'''
-updateThingsString = '''※1、对程序错误的显示更加人性化；
-2、对 icon 的获取方式进行了升级；
-3、增加了注释、删除部分冗余代码。'''
+updateThingsString = '''※1、修改了 deb 的打包，防止部分需要库没有安装;
+2、修改了一个弱智错误'''
 title = "uengine 运行器 {}".format(version)
-updateTime = "2021年7月11日"
+updateTime = "2021年8月2日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"

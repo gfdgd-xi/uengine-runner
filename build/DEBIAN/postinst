@@ -1,3 +1,4 @@
 # !/bin/sh 
-python3 -m pip install --upgrade pillow >> /tmp/uengine-runner.temp.install.log
-python3 -m pip install --upgrade ttkthemes >> /tmp/uengine-runner.temp.install.log
+# python3 -m pip install --upgrade pillow
+# 依赖已经有设置，可以舍去
+python3 -m pip install --upgrade ttkthemes

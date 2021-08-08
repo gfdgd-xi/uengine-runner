@@ -2,10 +2,11 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.2.2
-# 更新时间：2021年5月30日
+# 版本：1.2.3
+# 更新时间：2021年8月01日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
+# 更新：917981399@qq.com
 ###########################################################################################
 #################
 # 引入所需的库
@@ -15,6 +16,7 @@ import sys
 import time
 import json
 import shutil
+from tkinter.constants import TOP
 import zipfile
 import traceback
 import threading
@@ -27,6 +29,10 @@ import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
+from getxmlimg import getsavexml
+
+
+
 
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":
@@ -37,70 +43,85 @@ def UninstallProgram(package: "apk 包名")->"卸载程序":
             os.remove("{}/.local/share/applications/{}.desktop".format(get_home(), package))
         if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
             os.remove("{}/{}.desktop".format(get_desktop_path(), package))
-        fineUninstallApkHistory.append(combobox3.get())
-        combobox3['value'] = fineUninstallApkHistory
+        fineUninstallApkHistory.append(ComboUninstallPath.get())
+        ComboUninstallPath['value'] = fineUninstallApkHistory
         write_txt(get_home() + "/.config/uengine-runner/FindUninstallApkHistory.json", str(json.dumps(ListToDictionary(fineUninstallApkHistory))))  # 将历史记录的数组转换为字典并写入
         return Return
     except:
         traceback.print_exc()
         messagebox.showerror(title="错误", message=traceback.format_exc())
 
-def ButtonClick7():
+def BtnFindUninstallApkClk():
     path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindUninstallApk.json"))["path"])
     if path != "" and path != "()":
         try:
-            combobox3.set(path)
+            ComboUninstallPath.set(path)
             write_txt(get_home() + "/.config/uengine-runner/FindUninstallApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
         except:
             pass
 
 def ButtonClick8():
-    if combobox3.get() is "":
+    if ComboUninstallPath.get() is "":
         messagebox.showerror(title="提示", message="信息没有填写完整，无法继续卸载 APK")
         return
     DisabledAndEnbled(True)
-    if os.path.exists(combobox3.get()):
-        path = GetApkPackageName(combobox3.get())
+    if os.path.exists(ComboUninstallPath.get()):
+        path = GetApkPackageName(ComboUninstallPath.get())
     else:
-        path = combobox3.get()
+        path = ComboUninstallPath.get()
     UninstallProgram(path)
     messagebox.showinfo(message="操作执行完毕！", title="提示")
     DisabledAndEnbled(False)
 
 # 浏览窗口
+# temp strs
+temppath=""
 def FindApk()->"浏览窗口":
     path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApk.json"))["path"])
+    global temppath    
+    temppath = path
+    print("apk path is find:" + path)
     if path != "" and path != "()":
         try:
-            combobox1.set(path)
+            ComboInstallPath.set(path)
             write_txt(get_home() + "/.config/uengine-runner/FindApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
         except:
             pass
 
 def Button3Install():
-    if combobox1.get() is "":
+    if ComboInstallPath.get() is "":
         messagebox.showerror(title="提示", message="信息没有填写完整，无法继续安装 APK")
         return
     DisabledAndEnbled(True)
-    threading.Thread(target=InstallApk, args=(combobox1.get(),)).start()
+    threading.Thread(target=InstallApk, args=(ComboInstallPath.get(),)).start()
 
 # 安装应用
 def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
     try:
+        print("start install apk")
         global findApkHistory
         commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
-        iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.desktop".format(get_home(), GetApkPackageName(path))
+        print("start install apk12")
+        iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(path))
+        tempstr1 = iconSavePath
+        print("start install apk1")
+        iconSaveDir = os.path.dirname(iconSavePath)
+        if not os.path.exists(iconSaveDir):
+          os.makedirs(iconSaveDir,exist_ok=True)
         SaveApkIcon(path, iconSavePath)
+        print("start install apk2")
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
+        print("start install apk3")
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
                             "{}/.local/share/applications/{}.desktop".format(get_home(), GetApkPackageName(path)))
+        print("\nprint install complete")
         if quit:
             print(commandReturn)
             return
         messagebox.showinfo(title="提示", message="操作完成！")
-        findApkHistory.append(combobox1.get())
-        combobox1['value'] = findApkHistory
+        findApkHistory.append(ComboInstallPath.get())
+        ComboInstallPath['value'] = findApkHistory
         write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
     except:
         traceback.print_exc()
@@ -111,13 +132,13 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
 def DisabledAndEnbled(choose: "启动或者禁用")->"禁用或启动所有控件":
     userChoose = {True: tk.DISABLED, False: tk.NORMAL}
     a = userChoose[choose]
-    combobox1.configure(state=a)
-    combobox3.configure(state=a)
-    button2.configure(state=a)
-    button3.configure(state=a)
-    button5.configure(state=a)
-    button7.configure(state=a)
-    button8.configure(state=a)
+    ComboInstallPath.configure(state=a)
+    ComboUninstallPath.configure(state=a)
+    BtnFindApk.configure(state=a)
+    BtnInstall.configure(state=a)
+    BtnShowUengineApp.configure(state=a)
+    BtnUninstallApkBrowser.configure(state=a)
+    BtnUninstall.configure(state=a)
 
 # 需引入 subprocess
 # 运行系统命令并获取返回值
@@ -141,12 +162,12 @@ def about_this_program()->"显示“关于这个程序”窗口":
     message = ttk.Frame(mess)
     mess.resizable(0, 0)
     mess.title("关于 {}".format(title))
-    mess.iconphoto(False, tk.PhotoImage(file=iconPath))
+    #mess.iconphoto(False, tk.PhotoImage(file=iconPath))
     img = ImageTk.PhotoImage(Image.open(iconPath))
-    label1 = ttk.Label(message, image=img)
+    LabApkPath = ttk.Label(message, image=img)
     label2 = ttk.Label(message, text=about)
     button1 = ttk.Button(message, text="确定", command=mess.withdraw)
-    label1.pack()
+    LabApkPath.pack()
     label2.pack()
     button1.pack(side="bottom")
     message.pack()
@@ -250,6 +271,10 @@ def readtxt(path: "路径")->"读取文本文档":
 
 # 写入文本文档
 def write_txt(path: "路径", things: "内容")->"写入文本文档":
+    TxtDir = os.path.dirname(path)
+    print(TxtDir)
+    if not os.path.exists(TxtDir):
+        os.makedirs(TxtDir,exist_ok=True)    
     file = open(path, 'w', encoding='UTF-8')  # 设置文件对象
     file.write(things)  # 写入文本
     file.close()  # 关闭文本对象
@@ -316,22 +341,38 @@ def GetApkChineseLabel(apkFilePath)->"获取软件的中文名称":
             return line
 
 # 获取图标在包内的路径
-def GetApkIconInApk(apkFilePath)->"获取图标在包内的路径":
+#def GetApkIconInApk(apkFilePath)->"获取图标在包内的路径":
+
+#合并两个函数到一起
+def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标（部分程序不支持）":
     info = GetApkInformation(apkFilePath)
     for line in info.split('\n'):
         if "application:" in line:
-            line = line[line.index("icon='"): -1]
-            line = line.replace("icon='", "")
-            if "'" in line:
-                line = line[0: line.index("'")]
-            return line
+            xmlpath = line.split(":")[-1].split()[-1].split("=")[-1].replace("'","")  
+            if xmlpath.endswith('.xml'):
+                    xmlsave = getsavexml()
+                    print(xmlpath)
+                    xmlsave.savexml(apkFilePath,xmlpath,iconSavePath)
+            else:
+                      zip = zipfile.ZipFile(apkFilePath)
+                      iconData = zip.read(xmlpath)
+                      with open(iconSavePath, 'w+b') as saveIconFile:
+                          saveIconFile.write(iconData)
 
-# 获取 apk 文件的图标（部分程序不支持）
-def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标（部分程序不支持）":
-    zip = zipfile.ZipFile(apkFilePath)
-    iconData = zip.read(GetApkIconInApk(apkFilePath))
-    with open(iconSavePath, 'w+b') as saveIconFile:
-        saveIconFile.write(iconData)
+def saveicon():
+    global temppath
+    global tempstr1
+    iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(temppath))
+    print(iconSavePath+"iconpaths")
+    SaveApkIcon(temppath, iconSavePath)
+
+## 获取 apk 文件的图标（部分程序不支持）
+# def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标（部分程序不支持）":
+#    zip = zipfile.ZipFile(apkFilePath)
+#    iconData = zip.read(GetApkIconInApk(apkFilePath))
+#    with open(iconSavePath, 'w+b') as saveIconFile:
+#        saveIconFile.write(iconData)
+
 
 # 获取用户桌面目录
 def get_desktop_path()->"获取用户桌面目录":
@@ -356,31 +397,56 @@ def get_home()->"获取用户主目录":
 # 程序信息
 ###########################
 programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.2.2"
+version = "1.2.3"
 goodRunSystem = "Linux（deepin/UOS）"
 aaptVersion = GetCommandReturn("aapt version")
-about = '''一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
-版本：{}
-适用平台：{}
-tkinter 版本：{}
-aapt 版本：{}
-程序官网：{}
+about = '''    一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
+
+版本        ：{}
+
+适用平台    ：{}
+
+tkinter版本：{}
+
+aapt 版本  ：{}
+
+程序官网    ：{}
+
 ©2021-{} gfdgd xi'''.format(version, goodRunSystem, tk.TkVersion, aaptVersion,programUrl, time.strftime("%Y"))
-tips = '''提示：
+tips = '''    新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。
+
+安装APK：
+    点浏览按钮，选中需要安装的APK，然后点安装按钮
+
+卸载APK：
+    在卸载APK下面的输入框内输入需要卸载的APK包名，点卸载按钮，如果无法获取包名，可以通过浏览APK文件程序自动获取包名进行卸载。
+
+打开Uengine应用列表：
+    打开系统已安装的应用列表（安卓界面）
+
+提示：
 1、需要你有使用 root 权限的能力；
 2、需要安装 uengine 才能使用；
-3、如果报错是有关产生 .deksotp 文件有关，一般可以打开程序列表安装。
-如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。'''
-updateThingsString = '''※1、对程序错误的显示更加人性化；
+3、如果报错是有关产生 .deksotp 文件有关，一般可以打开程序列表安装。如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。
+
+'''
+updateThingsString = '''V1.2.3
+1、调整部分控件名称；
+2、调整界面布局及界面风格；
+3、删除少量冗余代码，调整代码顺序。
+4、修复新安装普通用户的路图标及启动菜单文件路径不存在导致安装APK报错的bugs。
+
+V1.2.2
+1、对程序错误的显示更加人性化；
 2、对 icon 的获取方式进行了升级；
 3、增加了注释、删除部分冗余代码。'''
-title = "uengine 运行器 {}".format(version)
+title = "uengine 安装器 {}".format(version)
 updateTime = "2021年7月11日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
-useProgram = '''1、uengine（anbox）
+useProgram = '''1、uengine相关软件包（基于anbox开发）
 2、Python3
 3、tkinter（tkinter.tk、ttkthemes 和 tkinter.ttk）
 4、aapt
@@ -406,72 +472,181 @@ if not os.path.exists(get_home() + "/.config/uengine-runner/FindUninstallApk.jso
 findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkHistory.json")).values())
 fineUninstallApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindUninstallApkHistory.json")).values())
 
+# add sub window
+#添加窗口开启关闭开关，防止重复开启
+windowflag = "close"
+
+def showhelp():
+     
+#define  window and frame and button label   
+# 
+    global windowflag
+    if windowflag == "close":
+        helpwindow=tk.Toplevel()
+        helpwindow.resizable(0, 0)
+        helpwindow.title("帮助")
+        
+
+        # get screen width and height
+        screen_width = helpwindow.winfo_screenwidth()
+        screen_height = helpwindow.winfo_screenheight()
+        # calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。
+        winwith=490
+        winhigh=600
+        x = (screen_width/2) - (winwith/2)
+        y = (screen_height/2) - (winhigh/2)
+        
+        helpwindow.geometry("490x600"+"+{:.0f}+{:.0f}".format(x, y))
+
+        style = ttkthemes.ThemedStyle(helpwindow)
+        style.set_theme("breeze")
+        
+        
+
+        Frmroot=ttk.Frame(helpwindow)
+        FrmMenu = ttk.Frame(Frmroot)
+        FrmText = ttk.Frame(Frmroot)
+
+        LabFrmText=ttk.LabelFrame(FrmText,text="帮助",height=800,borderwidth=3)  
+        HelpStr = tk.StringVar() 
+        HelpStr.set(tips)
+        LabText = ttk.Label(LabFrmText, textvariable=HelpStr,width=50)
+        LabText.config(wraplength=350)
+        
+        def on_closing():
+            global windowflag
+            windowflag = "close"
+            print(windowflag)
+            helpwindow.destroy()
+
+
+
+# define button func        
+        def ChgLog():
+            HelpStr.set(updateThingsString)
+        def ChgAbout():
+            HelpStr.set(about)
+        def ChgDep():
+            HelpStr.set(useProgram)
+        def ChgTips():
+            HelpStr.set(tips)
+            LabText.config(wraplength=350)
+
+        BtnReadme = ttk.Button(FrmMenu, text="使用说明",width=14,command=ChgTips)
+        BtnLog = ttk.Button(FrmMenu, text="更新内容",width=14,command=ChgLog)
+        BtnZujian = ttk.Button(FrmMenu, text="程序依赖的组件",width=14,command=ChgDep)
+        BtnAbout = ttk.Button(FrmMenu, text="关于",width=14,command=ChgAbout)
+
+
+#layout
+        FrmMenu.grid(row=0,column=0,sticky=tk.NW)
+        BtnReadme.grid(row=0,column=0,sticky=tk.NW,padx=3)
+        BtnLog.grid(row=1,column=0,sticky=tk.NW,padx=3)
+        BtnZujian.grid(row=2,column=0,sticky=tk.NW,padx=3)
+        BtnAbout.grid(row=3,column=0,sticky=tk.NW,padx=3)
+
+        FrmText.grid(row=0,column=1,sticky=tk.NW)
+        LabFrmText.grid(row=0,column=0,sticky=tk.NW,padx=3,pady=3)
+        LabText.grid(row=0,column=0,sticky=tk.NW)
+      
+        Frmroot.pack()
+        windowflag = "open"
+        print(windowflag)
+        #helpwindow.mainloop()
+        helpwindow.protocol("WM_DELETE_WINDOW", on_closing)
+
+
 ###########################
 # 窗口创建
 ###########################
 win = tk.Tk()  # 创建窗口
-# 设置窗口所需的全局变量
-checkButtonBool1 = tk.BooleanVar()
+
 # 设置窗口
 style = ttkthemes.ThemedStyle(win)
-style.set_theme("adapta")
+style.set_theme("breeze")
 window = ttk.Frame(win)
 win.attributes('-alpha', 0.5)
 win.title(title)
 win.resizable(0, 0)
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
+
+# get screen width and height
+screen_width = win.winfo_screenwidth()
+screen_height = win.winfo_screenheight()
+# calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。 
+winwith=570
+winhigh=236
+x = (screen_width/2) - (winwith/2)
+y = (screen_height/2) - (winhigh/2)
+
+win.geometry(""+"+{:.0f}+{:.0f}".format(x, y))
+
 # 创建控件
-frame1 = ttk.Frame(window)
-frame2 = ttk.Frame(window)
-frame3 = ttk.Frame(window)
-label1 = ttk.Label(window, text="要安装的 apk 路径：")
-label3 = ttk.Label(window, text="要卸载的包名或程序对应的 APK 文件：")
-combobox1 = ttk.Combobox(window, width=100)
-combobox3 = ttk.Combobox(window, width=100)
-button2 = ttk.Button(window, text="浏览", command=FindApk)
-button3 = ttk.Button(frame2, text="安装", command=Button3Install)
-button5 = ttk.Button(frame2, text="打开 uengine 应用列表", command=Button5Click)
-button7 = ttk.Button(window, text="浏览", command=ButtonClick7)
-button8 = ttk.Button(frame3, text="卸载", command=ButtonClick8)
+FrmInstall = ttk.Frame(window)
+FrmUninstall = ttk.Frame(window)
+LabApkPath = ttk.Label(window, text="安装APK：")
+LabUninstallPath = ttk.Label(window, text="卸载APK：")
+ComboInstallPath = ttk.Combobox(window, width=50)
+ComboUninstallPath = ttk.Combobox(window, width=50)
+BtnFindApk = ttk.Button(FrmInstall, text="浏览", command=FindApk)
+BtnInstall = ttk.Button(FrmInstall, text="安装", command=Button3Install)
+BtnShowUengineApp = ttk.Button(window, text="打开 uengine 应用列表", command=Button5Click)
+BtnUninstallApkBrowser = ttk.Button(FrmUninstall, text="浏览", command=BtnFindUninstallApkClk)
+BtnUninstall = ttk.Button(FrmUninstall, text="卸载", command=ButtonClick8)
+Btngeticon = ttk.Button(window, text="保存图标", command=saveicon)
 # 设置菜单栏
 menu = tk.Menu(window, background="white")  
+
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
 uengine = tk.Menu(menu, tearoff=0, background="white")
 help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
+
 menu.add_cascade(label="程序", menu=programmenu)
 menu.add_cascade(label="uengine", menu=uengine)
-menu.add_cascade(label="帮助", menu=help)
+menu.add_cascade(label="关于", menu=help)
+
 programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
 programmenu.add_separator()  # 设置分界线
-programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
+programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”
+
 uengine.add_command(label="发送 uengine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
 uengine.add_command(label="发送 uengine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
+
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
-help.add_separator()
-help.add_command(label="小提示", command=helps)  # 设置“小提示”项
-help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
-help.add_command(label="这个程序使用的程序列表（部分）", command=ShowUseProgram)  # 设置“更新内容”项
-help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
-menu.configure(activebackground="white")
-help.configure(activebackground="white")
-uengine.configure(activebackground="white")
-programmenu.configure(activebackground="white")
+help.add_command(label="帮助", command=showhelp)  # 设置“关于这个程序”项
+
+menu.configure(activebackground="dodgerblue")
+help.configure(activebackground="dodgerblue")
+uengine.configure(activebackground="dodgerblue")
+programmenu.configure(activebackground="dodgerblue")
+
 # 设置控件
-combobox3['value'] = fineUninstallApkHistory
-combobox1['value'] = findApkHistory
+ComboUninstallPath['value'] = fineUninstallApkHistory
+ComboInstallPath['value'] = findApkHistory
 # 显示控件
 win.config(menu=menu)  # 显示菜单栏
-label1.grid(row=2, column=0)
-label3.grid(row=4, column=0)
-combobox1.grid(row=2, column=1)
-combobox3.grid(row=4, column=1)
-button2.grid(row=2, column=2)
-button3.grid(row=0, column=0)
-button5.grid(row=0, column=1)
-button7.grid(row=4, column=2)
-button8.grid(row=0, column=1)
-frame1.grid(row=1, columnspa=3)
-frame2.grid(row=3, columnspa=3)
-frame3.grid(row=5, columnspa=3)
+
+
+
+LabApkPath.grid(row=1, column=0,sticky= tk.W,padx=3)
+ComboInstallPath.grid(row=2, column=0,padx=3)
+
+
+FrmInstall.grid(row=2, column=1,padx=3)
+BtnFindApk.grid(row=0, column=0)
+BtnInstall.grid(row=0, column=1)
+
+LabUninstallPath.grid(row=3, column=0,sticky= tk.W,padx=3)
+ComboUninstallPath.grid(row=4, column=0,padx=3)
+
+FrmUninstall.grid(row=4, column=1,padx=3)
+BtnUninstallApkBrowser.grid(row=0, column=0)
+BtnUninstall.grid(row=0, column=1)
+
+BtnShowUengineApp.grid(row=5, column=0,sticky= tk.W,padx=3,pady=2)
+
+Btngeticon.grid(row=5, column=1,sticky= tk.W,padx=3,pady=2)
+
 window.pack()
+
 win.mainloop()

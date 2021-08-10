@@ -41,7 +41,7 @@
 ![1.2.0](https://images.gitee.com/uploads/images/2021/0606/115536_0c0ddf38_7896131.png) 
 
 ### 源码安装教程
-
+按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> 打开终端，按以下内容操作：
 1.  安装所需依赖
 
 ```bash
@@ -85,7 +85,13 @@ pip3 uninstall ttkthemes
 如果出现故障，尝试终端运行，如果是可以自行解决的问题，就**自行解决**，如果可以就**提 issues 并提供解决方案**，不行就**提 isscue 并提供程序和终端报错以及程序版本**
 
 ### 已知问题
-暂未发现
+![Error](https://storage.deepin.org/thread/202108101105396531_截图___tk__messagebox_20210810110449.png)
+部分 app 无法读取出图片，已知：
+| 程序 | 下载链接 |
+| :-: | :-: |
+| Firefox For Android | https://www.firefox.com.cn/download/ |
+| 其他待测试…… | 其他待测试…… |
+
 
 ### 贡献
 我非常欢迎大家的贡献  

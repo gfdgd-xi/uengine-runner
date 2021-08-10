@@ -50,13 +50,16 @@ class getsavexml():
         #获取所有带前后图片ID的图片路径（相同背景或者前景的图片ID但分辨率不一样）
         backimgs =  Findpicpath(resourcelines,backimgid)
         foreimgs =  Findpicpath(resourcelines,foreimgid)
-
+        print(backimgs)
+        print(foreimgs)
         #获取分辨率最高的图片路径
         def getmaxsize(imgs):
             j = 0
             size=(0,0)
             zipapk = zipfile.ZipFile(apkFilePath)
+            imgpath = ""
             while j < len(imgs):
+                print(imgs[j])
                 img = Image.open(zipapk.open(imgs[j]))
                 print(imgs[j])
                 print(img.size)

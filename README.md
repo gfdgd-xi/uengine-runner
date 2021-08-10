@@ -90,7 +90,11 @@ pip3 uninstall ttkthemes
 | 程序 | 下载链接 |
 | :-: | :-: |
 | Firefox For Android | https://www.firefox.com.cn/download/ |
+| 网易云音乐 For Android | https://music.163.com/#/download |
+| 抖音 | https://www.wandoujia.com/apps/7461948 |
+| 360 手机浏览器 | https://mse.360.cn/ |
 | 其他待测试…… | 其他待测试…… |
+**注意：提取不出图标不代表未安装成功！**
 
 
 ### 贡献
@@ -106,3 +110,26 @@ pip3 uninstall ttkthemes
 |   :-:  |      :-:|
 | uengine-installer | https://gitee.com/Maicss/uengine-installer |  
 | uengine APK 打包器 | https://gitee.com/gfdgd-xi/uengine-apk-builder |
+
+### 附测试生成图标无问题列表：
+**至于能不能用就不测试了，这暂时不是重点**
+| 程序 | 下载链接 |
+|:-:|:-:|
+| QQ 全家桶（完整版、极速版、Android Pad 版） | https://im.qq.com |
+| TIM | 忘了 |
+| 微信 | https://weixin.qq.com |
+| 百度翻译 | 忘了 |
+| 百度网盘 | https://pan.baidu.com |
+| 腾讯课堂 | 忘了 |
+| 抖音极速版 | 忘了 |
+| 豌豆荚 | 忘了 |
+| 小猿口算 | 忘了 |
+| Hyperbowl | 忘了 |
+| bilibili | https://d.bilibili.com/download_app.html?bsource=app_bili |
+| 蓝奏云 | https://up.woozooo.com/lanzouh5.apk |
+| QQ 音乐（完整版、Android Pad 版、TV 版、车载版） | https://y.qq.com/download/index.html |
+| 360 手机卫士（完整版、极速版） | https://shouji.360.cn/v6/index.html |
+| 360 清理大师（稳定版、尝鲜版） | http://shouji.360.cn/360cleandroid/ |
+| 360 手机助手 | http://sj.360.cn/index.html |
+| WPS Office For Android | https://www.wps.cn/ |
+| 钉钉 for android | https://page.dingtalk.com/wow/dingtalk/act/download?spm=a3140.8196062.0.0.6f4c5c3dWBhYUM |

@@ -341,19 +341,24 @@ def GetApkChineseLabel(apkFilePath)->"获取软件的中文名称":
 
 #合并两个函数到一起
 def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
-    info = GetApkInformation(apkFilePath)
-    for line in info.split('\n'):
-        if "application:" in line:
-            xmlpath = line.split(":")[-1].split()[-1].split("=")[-1].replace("'","")  
-            if xmlpath.endswith('.xml'):
-                    xmlsave = getsavexml()
-                    print(xmlpath)
-                    xmlsave.savexml(apkFilePath,xmlpath,iconSavePath)
-            else:
-                      zip = zipfile.ZipFile(apkFilePath)
-                      iconData = zip.read(xmlpath)
-                      with open(iconSavePath, 'w+b') as saveIconFile:
-                          saveIconFile.write(iconData)
+    try:
+        info = GetApkInformation(apkFilePath)
+        for line in info.split('\n'):
+            if "application:" in line:
+                xmlpath = line.split(":")[-1].split()[-1].split("=")[-1].replace("'","")  
+                if xmlpath.endswith('.xml'):
+                        xmlsave = getsavexml()
+                        print(xmlpath)
+                        xmlsave.savexml(apkFilePath,xmlpath,iconSavePath)
+                else:
+                    zip = zipfile.ZipFile(apkFilePath)
+                    iconData = zip.read(xmlpath)
+                    with open(iconSavePath, 'w+b') as saveIconFile:
+                        saveIconFile.write(iconData)
+    except:
+        traceback.print_exc()
+        print("Error, show defult icon")
+        shutil.copy(programPath + "/defult.png", iconSavePath)
 
 def saveicon():
     global temppath
@@ -412,7 +417,7 @@ def get_home()->"获取用户主目录":
 # 程序信息
 ###########################
 programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.3.0"
+version = "1.3.1"
 goodRunSystem = "Linux（deepin/UOS）"
 aaptVersion = GetCommandReturn("aapt version")
 about = '''    一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
@@ -449,7 +454,11 @@ tips = '''    新版本Deepin/UOS发布后，可以在应用商店安装部分�
 4、如果报错是有关产生 .deksotp 文件有关，一般可以打开程序列表运行。如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。
 
 '''
-updateThingsString = '''V1.3.0：
+updateThingsString = '''V1.3.1：
+※1、修复打包问题，防止部分用户安装出错的问题;
+※2、修复了程序无法提取图标时可以提取默认图标使用;
+
+V1.3.0：
 ※1、修改了界面布局;
 ※2、修复大多数新安装普通用户的路图标及启动菜单文件路径不存在导致安装APK报错的bugs;
 3、删除少量冗余代码，调整代码顺序;
@@ -468,16 +477,11 @@ V1.2.1：
 ※1、进行了安装方式的修改（不使用 adb），修复原无法安装和卸载的问题；
 2、进行了部分优化；
 3、进行了功能缩水；
-4、修复 deb 打包错误。
-
-V1.2.0：
-1、支持安装自动添加快捷方式、卸载删除快捷方式；
-2、支持使用包名或 APK 文件卸载程序；
-3、支持查看安装的所有包名；
-4、进行了部分优化'''
+4、修复 deb 打包错误。'''
 title = "uengine 安装器 {}".format(version)
 updateTime = "2021年08月08日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"

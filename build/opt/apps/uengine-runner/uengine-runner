@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.3.0
-# 更新时间：2021年8月08日
+# 版本：1.3.2
+# 更新时间：2021年8月15日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：actionchen<917981399@qq.com>
@@ -93,9 +93,13 @@ def Button3Install():
 # 安装应用
 def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
     try:
+        if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
+            print("Mkdir")
+            os.mkdir("{}/.local/share/applications/uengine/".format(get_home()))
         print("start install apk")
         global findApkHistory
         commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
+        print(commandReturn)
         print("start install apk12")
         iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(path))
         tempstr1 = iconSavePath
@@ -109,7 +113,7 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
         print("start install apk3")
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                            "{}/.local/share/applications/{}.desktop".format(get_home(), GetApkPackageName(path)))
+                            "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
         print("\nprint install complete")
         if quit:
             print(commandReturn)
@@ -275,12 +279,6 @@ def write_txt(path: "路径", things: "内容")->"写入文本文档":
     file.write(things)  # 写入文本
     file.close()  # 关闭文本对象
 
-# 显示本程序所有使用的程序
-def ShowUseProgram()->"显示本程序所有使用的程序":
-    global title
-    global useProgram
-    messagebox.showinfo(title="{} 使用的程序列表（部分）".format(title), message=useProgram)
-
 # 获取 aapt 的所有信息
 def GetApkInformation(apkFilePath: "apk 所在路径")->"获取 aapt 的所有信息":
     return GetCommandReturn("aapt dump badging '{}'".format(apkFilePath))
@@ -393,6 +391,96 @@ def SaveIconToOtherPath():
 #    with open(iconSavePath, 'w+b') as saveIconFile:
 #        saveIconFile.write(iconData)
 
+def BackUengineClean()->"清空 uengine 数据":
+    print("Choose")
+    if messagebox.askokcancel(title="警告", message="清空后数据将会完全丢失，确定要继续吗？"):
+        DisabledAndEnbled(True)
+        try:
+            if os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
+                shutil.rmtree("{}/.local/share/applications/uengine/".format(get_home()))
+        except:
+            traceback.print_exc()
+            messagebox.showerror(title="错误", message=traceback.format_exc())
+        InstallWindow.ShowWindows("pkexec rm -rfv /data/uengine")
+        return
+    print("Choose False")
+
+def UengineBridgeStart():
+    DisabledAndEnbled(True)
+    os.system("pkexec uengine-bridge.sh start")
+    DisabledAndEnbled(False)
+
+def UengineBridgeStop():
+    DisabledAndEnbled(True)
+    os.system("pkexec uengine-bridge.sh stop")
+    DisabledAndEnbled(False)
+
+def UengineBridgeRestart():
+    DisabledAndEnbled(True)
+    os.system("pkexec uengine-bridge.sh restart")
+    DisabledAndEnbled(False)
+
+def UengineBridgeReload():
+    DisabledAndEnbled(True)
+    os.system("pkexec uengine-bridge.sh reload")
+    DisabledAndEnbled(False)
+
+def UengineBridgeForceReload():
+    DisabledAndEnbled(True)
+    os.system("pkexec uengine-bridge.sh force-reload")
+    DisabledAndEnbled(False)
+
+class InstallWindow():
+    def ShowWindows(command):
+        global message
+        global text
+        global installTipsText
+        global progressbar
+        message = tk.Toplevel()
+        message.iconphoto(False, tk.PhotoImage(file=iconPath))
+        messageFrame = ttk.Frame(message)
+        installTipsText = tk.StringVar()
+        message.title("正在操作……")
+        installTipsText.set("正在操作……")
+        installTips = ttk.Label(messageFrame, textvariable=installTipsText)
+        progressbar = ttk.Progressbar(messageFrame, length=500, mode='indeterminate')
+        text = tk.Text(messageFrame)
+        text.config(background="black", foreground="white")
+        installTips.pack()
+        progressbar.pack(fill="x")
+        text.pack(expand='yes', fill='both')
+        messageFrame.pack(expand='yes', fill='both')
+        print("Run!")
+        threading.Thread(target=InstallWindow.RunCommand, args=[command]).start()
+        message.mainloop()
+    
+    def RunCommand(command):
+        global message
+        global text
+        global progressbar
+        global installTipsText
+        InstallWindow.AddText("$>" + command + "\n")
+        progressbar.start()
+        result = subprocess.getoutput(command)
+        InstallWindow.AddText(result)
+        messagebox.showinfo(title="提示", message="操作完毕！")
+        installTipsText.set("操作完毕！")
+        message.title("操作完毕！")
+        progressbar.stop()
+        progressbar["value"] = 100
+        # 特意添加！
+        DisabledAndEnbled(False)
+        print("Clean!")
+        if messagebox.askyesno(title="提示", message="清空完毕，将会在重启后生效，是否要重启？"):
+            print("reboot")
+            os.system("reboot")
+
+    def AddText(things):
+        global text
+        text.configure(state=tk.NORMAL)
+        text.insert("end", things)
+        text.configure(state=tk.DISABLED)
+
 
 # 获取用户桌面目录
 def get_desktop_path()->"获取用户桌面目录":
@@ -417,7 +505,7 @@ def get_home()->"获取用户主目录":
 # 程序信息
 ###########################
 programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.3.1"
+version = "1.3.2"
 goodRunSystem = "Linux（deepin/UOS）"
 aaptVersion = GetCommandReturn("aapt version")
 about = '''    一个基于 Python3 的 tkinter 制作的 uengine APK 安装器
@@ -444,6 +532,10 @@ tips = '''    新版本Deepin/UOS发布后，可以在应用商店安装部分�
 保存APK图标：
     在安装APK下面的输入框浏览或输入APK的路径，然后点击“保存图标”按钮，选择保存位置即可
 
+重置（删除）uengine 数据：
+    点击菜单栏的“uengine”的“清空uengine数据”，输入密码重启即可
+    注意：如果任何安卓一遍打不开，多打开几遍应该就可以重新加载uengine配置了
+
 打开Uengine应用列表：
     打开系统已安装的应用列表（安卓界面）
 
@@ -451,10 +543,14 @@ tips = '''    新版本Deepin/UOS发布后，可以在应用商店安装部分�
 1、需要你有使用 root 权限的能力；
 2、需要安装 uengine 才能使用；
 3、提取 apk 图标的 apk 路径以“安装 apk”那栏为准;
-4、如果报错是有关产生 .deksotp 文件有关，一般可以打开程序列表运行。如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。
-
+4、如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。
 '''
-updateThingsString = '''V1.3.1：
+updateThingsString = '''V.1.3.2：
+※1、支持uengine数据重置;
+※2、支持修改uengine网络桥接的启动状态;
+※3、支持右键安装/卸载;
+
+V1.3.1：
 ※1、修复打包问题，防止部分用户安装出错的问题;
 ※2、修复了程序无法提取图标时可以提取默认图标使用;
 
@@ -462,7 +558,7 @@ V1.3.0：
 ※1、修改了界面布局;
 ※2、修复大多数新安装普通用户的路图标及启动菜单文件路径不存在导致安装APK报错的bugs;
 3、删除少量冗余代码，调整代码顺序;
-4、支持提取 apk 图标。
+4、支持提取apk图标。
 
 V1.2.3
 1、调整部分控件名称；
@@ -470,7 +566,7 @@ V1.2.3
 
 V1.2.2
 1、对程序错误的显示更加人性化；
-2、对 icon 的获取方式进行了升级；
+2、对icon的获取方式进行了升级；
 3、增加了注释、删除部分冗余代码。
 
 V1.2.1：
@@ -479,7 +575,7 @@ V1.2.1：
 3、进行了功能缩水；
 4、修复 deb 打包错误。'''
 title = "uengine 安装器 {}".format(version)
-updateTime = "2021年08月08日"
+updateTime = "2021年08月15日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
@@ -496,6 +592,8 @@ useProgram = '''1、uengine相关软件包（基于anbox开发）
 ###########################
 # 加载配置
 ###########################
+if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
+    os.mkdir("{}/.local/share/applications/uengine/".format(get_home()))
 if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkHistory.json"):  # 如果没有配置文件
@@ -534,12 +632,12 @@ def showhelp():
         screen_width = helpwindow.winfo_screenwidth()
         screen_height = helpwindow.winfo_screenheight()
         # calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。
-        winwith=490
-        winhigh=600
+        winwith=550
+        winhigh=700
         x = (screen_width/2) - (winwith/2)
         y = (screen_height/2) - (winhigh/2)
         
-        helpwindow.geometry("490x650"+"+{:.0f}+{:.0f}".format(x, y))
+        helpwindow.geometry("550x700"+"+{:.0f}+{:.0f}".format(x, y))
 
         style = ttkthemes.ThemedStyle(helpwindow)
         style.set_theme("breeze")
@@ -553,7 +651,7 @@ def showhelp():
         LabFrmText=ttk.LabelFrame(FrmText,text="帮助",height=800,borderwidth=3)  
         HelpStr = tk.StringVar() 
         HelpStr.set(tips)
-        LabText = ttk.Label(LabFrmText, textvariable=HelpStr,width=50)
+        LabText = ttk.Label(LabFrmText, textvariable=HelpStr,width=55)
         LabText.config(wraplength=350)
         
         def on_closing():
@@ -658,6 +756,15 @@ programmenu.add_command(label="退出程序", command=window.quit)  # 设置“�
 
 uengine.add_command(label="发送 uengine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
 uengine.add_command(label="发送 uengine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
+uengine.add_separator()
+uengine.add_command(label="启用 uengine 网络桥接", command=UengineBridgeStart)
+uengine.add_command(label="关闭 uengine 网络桥接", command=UengineBridgeStop)
+uengine.add_command(label="重启 uengine 网络桥接", command=UengineBridgeRestart)
+uengine.add_command(label="加载 uengine 网络桥接", command=UengineBridgeReload)
+uengine.add_command(label="强制加载 uengine 网络桥接", command=UengineBridgeForceReload)
+
+uengine.add_separator()
+uengine.add_command(label="清空 uengine 数据", command=BackUengineClean)
 
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
 help.add_command(label="帮助", command=showhelp)  # 设置“关于这个程序”项
@@ -670,6 +777,17 @@ programmenu.configure(activebackground="dodgerblue")
 # 设置控件
 ComboUninstallPath['value'] = fineUninstallApkHistory
 ComboInstallPath['value'] = findApkHistory
+try:
+    if sys.argv[1] == "-i":
+        ComboInstallPath.set(sys.argv[2])
+        print("Install Path: " + sys.argv[2])
+    elif sys.argv[1] == "-u":
+        ComboUninstallPath.set(sys.argv[2])
+        print("Unstall Path: " + sys.argv[2])
+    else:
+        print("Command Format Error")
+except:
+    print("Not Command Or Command Format Error")
 # 显示控件
 win.config(menu=menu)  # 显示菜单栏
 

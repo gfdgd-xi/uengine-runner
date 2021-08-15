@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Categories=System;
+Terminal=false
+Exec=/usr/bin/uengine-runner -u %F
+Icon=/opt/apps/uengine-runner/icon.png
+Name=Uninstall APK(uengine runner)
+Comment=Uninstall APK(uengine runner)
+Comment[zh]=卸载 APK（uengine 运行器）
+Name[zh]=卸载 APK（uengine 运行器）
+StartupNotify=true
+Hidden=false
+NoDisplay=true
+MimeType=application/vnd.android.package-archive

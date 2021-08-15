@@ -1,12 +1,18 @@
-# uengine 运行器 1.3.1
+# uengine 运行器 1.3.2
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![主界面](https://storage.deepin.org/thread/202108082100582804_截图_tk_20210808210047.png)  
+![主界面](https://storage.deepin.org/thread/202108152141139401_截图_选择区域_20210815213948.png)  
 （测试平台：UOS 家庭版，deepin 20.2.2,UOS 专业版 1040）   
 （自己美术功底太差，图标直接用 anbox 的了）   
 
 ### 更新内容
+
+#### V1.3.2：
+**※1、支持uengine数据重置;**
+**※2、支持修改uengine网络桥接的启动状态;**
+**※3、支持右键安装/卸载;**
+![1.3.2](https://storage.deepin.org/thread/202108152141139401_截图_选择区域_20210815213948.png)  
 
 #### V1.3.1：
 **※1、修复打包问题，防止部分用户安装出错的问题;**
@@ -139,3 +145,5 @@ pip3 uninstall ttkthemes
 | 360 手机助手 | http://sj.360.cn/index.html |
 | WPS Office For Android | https://www.wps.cn/ |
 | 钉钉 for android | https://page.dingtalk.com/wow/dingtalk/act/download?spm=a3140.8196062.0.0.6f4c5c3dWBhYUM |
+
+### ©2021-2021

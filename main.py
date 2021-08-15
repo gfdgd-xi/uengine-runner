@@ -556,6 +556,7 @@ updateThingsString = '''V.1.3.2：
 ※2、支持修改uengine网络桥接的启动状态;
 ※3、支持右键安装/卸载;
 ※4、支持启用或禁用uengine;
+※5、修复打包问题，不会出现“dpkg:警告:卸载spark-uengine-runner时，目录/opt/apps/uengine-runner非空，因而不会删除该目录”的错误;
 
 V1.3.1：
 ※1、修复打包问题，防止部分用户安装出错的问题;

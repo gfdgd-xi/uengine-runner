@@ -13,6 +13,7 @@
 **※2、支持修改uengine网络桥接的启动状态;**
 **※3、支持右键安装/卸载;**
 **※4、支持启用或禁用uengine;**
+**※5、修复打包问题，不会出现“dpkg:警告:卸载spark-uengine-runner时，目录/opt/apps/uengine-runner非空，因而不会删除该目录”的错误;**
 ![1.3.2](https://storage.deepin.org/thread/202108152141139401_截图_选择区域_20210815213948.png)  
 
 #### V1.3.1：

@@ -501,6 +501,12 @@ def get_desktop_path()->"获取用户桌面目录":
 def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
 
+def StartUengine():
+    os.system("systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")
+
+def StopUengine():
+    os.system("systemctl disable uengine-container uengine-session")
+
 ###########################
 # 程序信息
 ###########################
@@ -549,6 +555,7 @@ updateThingsString = '''V.1.3.2：
 ※1、支持uengine数据重置;
 ※2、支持修改uengine网络桥接的启动状态;
 ※3、支持右键安装/卸载;
+※4、支持启用或禁用uengine;
 
 V1.3.1：
 ※1、修复打包问题，防止部分用户安装出错的问题;
@@ -568,12 +575,7 @@ V1.2.2
 1、对程序错误的显示更加人性化；
 2、对icon的获取方式进行了升级；
 3、增加了注释、删除部分冗余代码。
-
-V1.2.1：
-※1、进行了安装方式的修改（不使用 adb），修复原无法安装和卸载的问题；
-2、进行了部分优化；
-3、进行了功能缩水；
-4、修复 deb 打包错误。'''
+'''
 title = "uengine 安装器 {}".format(version)
 updateTime = "2021年08月15日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
@@ -756,6 +758,9 @@ programmenu.add_command(label="退出程序", command=window.quit)  # 设置“�
 
 uengine.add_command(label="发送 uengine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
 uengine.add_command(label="发送 uengine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
+uengine.add_separator()
+uengine.add_command(label="启用 uengine", command=StartUengine)
+uengine.add_command(label="禁用 uengine", command=StopUengine)
 uengine.add_separator()
 uengine.add_command(label="启用 uengine 网络桥接", command=UengineBridgeStart)
 uengine.add_command(label="关闭 uengine 网络桥接", command=UengineBridgeStop)

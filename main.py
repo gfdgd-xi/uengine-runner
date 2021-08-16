@@ -405,29 +405,44 @@ def BackUengineClean()->"清空 uengine 数据":
         return
     print("Choose False")
 
-def UengineBridgeStart():
+def UengineBridgeStart()->"启用 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh start")
     DisabledAndEnbled(False)
 
-def UengineBridgeStop():
+def UengineBridgeStop()->"关闭 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh stop")
     DisabledAndEnbled(False)
 
-def UengineBridgeRestart():
+def UengineBridgeRestart()->"重启 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh restart")
     DisabledAndEnbled(False)
 
-def UengineBridgeReload():
+def UengineBridgeReload()->"加载 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh reload")
     DisabledAndEnbled(False)
 
-def UengineBridgeForceReload():
+def UengineBridgeForceReload()->"强制加载 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh force-reload")
+    DisabledAndEnbled(False)
+
+def StartUengine()->"启用 uengine 服务":
+    DisabledAndEnbled(True)
+    os.system("systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")
+    DisabledAndEnbled(False)
+
+def StopUengine()->"关闭 uengine 服务":
+    DisabledAndEnbled(True)
+    os.system("systemctl disable uengine-container uengine-session")
+    DisabledAndEnbled(False)
+
+def UengineRestart()->"重启 uengine 服务":
+    DisabledAndEnbled(True)
+    os.system("systemctl restart uengine*")
     DisabledAndEnbled(False)
 
 class InstallWindow():
@@ -500,12 +515,6 @@ def get_desktop_path()->"获取用户桌面目录":
 # 获取用户主目录
 def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
-
-def StartUengine():
-    os.system("systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")
-
-def StopUengine():
-    os.system("systemctl disable uengine-container uengine-session")
 
 ###########################
 # 程序信息
@@ -760,8 +769,9 @@ programmenu.add_command(label="退出程序", command=window.quit)  # 设置“�
 uengine.add_command(label="发送 uengine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
 uengine.add_command(label="发送 uengine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
 uengine.add_separator()
-uengine.add_command(label="启用 uengine", command=StartUengine)
-uengine.add_command(label="禁用 uengine", command=StopUengine)
+uengine.add_command(label="启用 uengine 服务", command=StartUengine)
+uengine.add_command(label="关闭 uengine 服务", command=StopUengine)
+uengine.add_command(label="重启 uengine 服务", command=UengineRestart)
 uengine.add_separator()
 uengine.add_command(label="启用 uengine 网络桥接", command=UengineBridgeStart)
 uengine.add_command(label="关闭 uengine 网络桥接", command=UengineBridgeStop)

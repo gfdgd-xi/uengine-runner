@@ -1,0 +1,3 @@
+#!/bin/sh 
+python3 -m pip install --upgrade ttkthemes
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner /usr/bin/uengine-runner

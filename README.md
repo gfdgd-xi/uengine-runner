@@ -97,6 +97,10 @@ pip3 uninstall ttkthemes
 提 issue 最好，当然有些问题自己无法解决，请大佬 push 一下
 如果出现故障，尝试终端运行，如果是可以自行解决的问题，就**自行解决**，如果可以就**提 issues 并提供解决方案**，不行就**提 isscue 并提供程序和终端报错以及程序版本**
 
+### 下载量
+这里只统计蓝奏云的下载量，链接（每周更新一次）：  
+[https://kdocs.cn/l/smrvazWGuKcY](https://kdocs.cn/l/smrvazWGuKcY)  
+
 ### 已知问题
 ![Error](https://storage.deepin.org/thread/202108101105396531_截图___tk__messagebox_20210810110449.png)
 部分 app 无法读取出图片，已知：

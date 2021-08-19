@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.3.2
-# 更新时间：2021年7月6日
+# 版本：1.3.3
+# 更新时间：2021年8月19日
 # 感谢：anbox、deepin 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -12,30 +12,26 @@
 #################
 import os
 import sys
-import time
 import json
 import shutil
 import random
 import zipfile
 import traceback
 import threading
-import webbrowser
 import subprocess
 import ttkthemes
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
-import PIL.Image as Image
-import PIL.ImageTk as ImageTk
 from getxmlimg import getsavexml
 
 def FindApk():
-    path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-apk-builder/FindApk.json"))["path"])
+    path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkBuild.json"))["path"])
     if path != "" and path != "()":
         try:
             combobox1.set(path)
-            write_txt(get_home() + "/.config/uengine-apk-builder/FindApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
+            write_txt(get_home() + "/.config/uengine-runner/FindApkBuild.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
         except:
             pass
 
@@ -183,7 +179,7 @@ Name={}
     RunCommandShow("echo '完成！'")
     findApkHistory.append(apkPath)
     combobox1['value'] = findApkHistory
-    write_txt(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
+    write_txt(get_home() + "/.config/uengine-runner/FindApkBuildHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
     messagebox.showinfo(title="提示", message="打包完成")
     DisabledAndEnbled(False)
 
@@ -199,52 +195,10 @@ def GetCommandReturn(cmd):
     # cmd 是要获取输出的命令
     return subprocess.getoutput(cmd)
 
-# 显示“关于这个程序”窗口
-def about_this_program():
-    global about
-    global title
-    global iconPath
-    mess = tk.Toplevel()
-    message = ttk.Frame(mess)
-    mess.resizable(0, 0)
-    mess.title("关于 {}".format(title))
-    mess.iconphoto(False, tk.PhotoImage(file=iconPath))
-    img = ImageTk.PhotoImage(Image.open(iconPath))
-    label1 = ttk.Label(message, image=img)
-    label2 = ttk.Label(message, text=about)
-    button1 = ttk.Button(message, text="确定", command=mess.withdraw)
-    label1.pack()
-    label2.pack()
-    button1.pack(side="bottom")
-    message.pack()
-    mess.mainloop()
-
-# 显示“提示”窗口
-def helps():
-    global tips
-    messagebox.showinfo(title="提示", message=tips)
-
-# 显示更新内容窗口
-def UpdateThings():
-    messagebox.showinfo(title="更新内容", message=updateThings)
-
-# 打开程序官网
-def OpenProgramURL():
-    webbrowser.open_new_tab(programUrl)
-
 # 重启本应用程序
 def ReStartProgram():
     python = sys.executable
     os.execl(python, python, * sys.argv)
-
-def CleanProgramHistory():
-    try:
-        if messagebox.askokcancel(title="警告", message="删除后将无法恢复，你确定吗？\n删除后软件将会自动重启。"):
-            shutil.rmtree(get_home() + "/.config/uengine-apk-builder")
-            ReStartProgram()
-    except:
-        traceback.print_exc()
-        messagebox.showerror(title="错误", message=traceback.format_exc())
 
 # 获取用户主目录
 def get_home():
@@ -414,65 +368,37 @@ def get_desktop_path():
 def get_home():
     return os.path.expanduser('~')
 
-def ShowUseProgram():
-    global title
-    global useProgram
-    messagebox.showinfo(title="{} 使用的程序列表（部分）".format(title), message=useProgram)
-
 ###########################
 # 程序信息
 ###########################
-programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.3.2"
-goodRunSystem = "Linux(deepin/UOS)"
-about = '''一个基于 Python3 的 tkinter 制作的 uengine APK 应用打包器
-版本：{}
-适用平台：{}
-tkinter 版本：{}
-程序官网：{}
-©2021-{} gfdgd xi'''.format(version, goodRunSystem, tk.TkVersion, programUrl, time.strftime("%Y"))
-tips = '''提示：
-1、无'''
-updateThingsString = '''1、无'''
-title = "uengine APK 应用打包器 {}".format(version)
-updateTime = "2021年8月19日"
-updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
-useProgram = '''1、uengine（anbox）
-2、Python3
-3、tkinter（tkinter.tk、ttkthemes 和 tkinter.ttk）
-4、aapt
-5、dpkg
-6、tree
-7、mkdir
-8、echo
-9、chmod
-……'''
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+information = json.loads(readtxt(programPath + "/information.json"))
+version = information["Version"]
+title = "uengine APK 应用打包器 {}".format(version)
+iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 
 ###########################
 # 加载配置
 ###########################
-if not os.path.exists(get_home() + "/.config/uengine-apk-builder"):  # 如果没有配置文件夹
-    os.mkdir(get_home() + "/.config/uengine-apk-builder")  # 创建配置文件夹
-if not os.path.exists(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json", json.dumps({}))  # 创建配置文件
-if not os.path.exists(get_home() + "/.config/uengine-apk-builder/FindApk.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/uengine-apk-builder/FindApk.json", json.dumps({"path": "~"}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
+    os.mkdir(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
+if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkBuildHistory.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/uengine-runner/FindApkBuildHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkBuild.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/uengine-runner/FindApkBuild.json", json.dumps({"path": "~"}))  # 创建配置文件
 
 ###########################
 # 设置变量
 ###########################
-findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json")).values())
+findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkBuildHistory.json")).values())
 
 ###########################
 # 窗口创建
 ###########################
 win = tk.Tk()
-checkButtonBool1 = tk.BooleanVar()
-style = ttkthemes.ThemedStyle(win)
-style.set_theme("adapta")
 window = ttk.Frame(win)
+style = ttkthemes.ThemedStyle(win)
+style.set_theme("breeze")
 win.attributes('-alpha', 0.5)
 win.title(title)
 win.resizable(0, 0)
@@ -485,26 +411,8 @@ button3 = ttk.Button(frame2, text="打包", command=BuildDeb)
 textbox1 = tk.Text(window, width=100)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
-#adb = tk.Menu(menu, tearoff=0, background="white")
-uengine = tk.Menu(menu, tearoff=0, background="white")
-help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
 menu.add_cascade(label="程序", menu=programmenu)
-menu.add_cascade(label="帮助", menu=help)
-programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
-programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
-help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
-help.add_separator()
-help.add_command(label="小提示", command=helps)  # 设置“小提示”项
-help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
-help.add_command(label="这个程序使用的程序列表（部分）", command=ShowUseProgram)  # 设置“更新内容”项
-#help.add_command(label="关于 adb", command=AboutAdb)  # 设置“关于这个程序”项
-help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
-menu.configure(activebackground="white")
-help.configure(activebackground="white")
-uengine.configure(activebackground="white")
-#adb.configure(activebackground="white")
-programmenu.configure(activebackground="white")
 # 设置控件
 combobox1['value'] = findApkHistory
 textbox1.configure(state=tk.DISABLED)

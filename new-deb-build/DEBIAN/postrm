@@ -1,0 +1,8 @@
+#!/bin/sh 
+# 删除软链接
+rm -fv /usr/bin/uengine-runner
+rm -fv /usr/bin/uengine-apk-builder
+rm -fv /usr/bin/uengine-app-uninstall
+rm -fv /usr/bin/uengine-app-install
+rm -fv /usr/bin/uengine-clean
+rm -fv /usr/bin/uengine-runner-about

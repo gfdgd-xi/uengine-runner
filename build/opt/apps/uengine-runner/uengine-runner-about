@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+# 使用系统默认的 python3 运行
+###########################################################################################
+# 作者：gfdgd xi
+# 版本：1.3.3
+# 更新时间：2021年8月19日
+# 感谢：anbox、deepin 和 统信
+# 基于 Python3 的 tkinter 构建
+###########################################################################################
+#################
+# 引入所需的库
+#################
+import os
+import time
+import json
+import ttkthemes
+import subprocess
+import tkinter as tk
+import tkinter.ttk as ttk
+
+# 读取文本文档
+def readtxt(path: "路径")->"读取文本文档":
+    f = open(path, "r")  # 设置文件对象
+    str = f.read()  # 获取内容
+    f.close()  # 关闭文本对象
+    return str  # 返回结果
+
+###########################
+# 程序信息
+###########################
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+information = json.loads(readtxt(programPath + "/information.json"))
+programUrl = information["Url"][0]
+version = information["Version"]
+goodRunSystem = information["System"]
+aaptVersion = subprocess.getoutput("aapt version")
+about = '''    一个基于 Python3 的 tkinter 制作的 uengine APK 运行器
+
+版本        ：{}
+
+适用平台    ：{}
+
+tkinter版本：{}
+
+aapt 版本  ：{}
+
+程序官网    ：{}
+
+©2021-{}'''.format(version, goodRunSystem, tk.TkVersion, aaptVersion,programUrl, time.strftime("%Y"))
+tips = "\n".join(information["Tips"])
+updateThingsString = "\n".join(information["Update"])
+title = "uengine 运行器 {}".format(version)
+updateTime = information["Time"]
+updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
+iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
+desktopName = "UengineAndroidProgramList.desktop"
+contribute = "\n".join(information["Contribute"])
+useProgram = "\n".join(information["Use"])
+
+# add sub window
+#添加窗口开启关闭开关，防止重复开启
+windowflag = "close"
+
+def showhelp():
+     
+    #define  window and frame and button label   
+    # 
+    global windowflag
+    if windowflag == "close":
+        helpwindow=tk.Tk()
+        helpwindow.resizable(0, 0)
+        helpwindow.title("帮助")
+        
+
+        # get screen width and height
+        screen_width = helpwindow.winfo_screenwidth()
+        screen_height = helpwindow.winfo_screenheight()
+        # calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。
+        winwith=550
+        winhigh=700
+        x = (screen_width/2) - (winwith/2)
+        y = (screen_height/2) - (winhigh/2)
+        
+        helpwindow.geometry("550x700"+"+{:.0f}+{:.0f}".format(x, y))
+        helpwindow.iconphoto(False, tk.PhotoImage(file=iconPath))
+
+        style = ttkthemes.ThemedStyle(helpwindow)
+        style.set_theme("breeze")
+        
+        
+
+        Frmroot=ttk.Frame(helpwindow)
+        FrmMenu = ttk.Frame(Frmroot)
+        FrmText = ttk.Frame(Frmroot)
+
+        LabFrmText=ttk.LabelFrame(FrmText,text="帮助",height=800,borderwidth=3)  
+        HelpStr = tk.StringVar() 
+        HelpStr.set(tips)
+        LabText = ttk.Label(LabFrmText, textvariable=HelpStr,width=55)
+        LabText.config(wraplength=350)
+        
+        def on_closing():
+            global windowflag
+            windowflag = "close"
+            print(windowflag)
+            helpwindow.destroy()
+
+
+
+        # define button func        
+        def ChgLog():
+            HelpStr.set(updateThingsString)
+        def ChgAbout():
+            HelpStr.set(about)
+        def ChgDep():
+            HelpStr.set(useProgram)
+        def ChgCon():
+            HelpStr.set(contribute)
+        def ChgTips():
+            HelpStr.set(tips)
+            LabText.config(wraplength=350)
+
+        BtnReadme = ttk.Button(FrmMenu, text="使用说明",width=14,command=ChgTips)
+        BtnLog = ttk.Button(FrmMenu, text="更新内容",width=14,command=ChgLog)
+        BtnZujian = ttk.Button(FrmMenu, text="程序依赖的组件",width=14,command=ChgDep)
+        BtnGongxian = ttk.Button(FrmMenu, text="有贡献的开发者",width=14,command=ChgCon)
+        BtnAbout = ttk.Button(FrmMenu, text="关于",width=14,command=ChgAbout)
+
+
+        #layout
+        FrmMenu.grid(row=0,column=0,sticky=tk.NW)
+        BtnReadme.grid(row=0,column=0,sticky=tk.NW,padx=3)
+        BtnLog.grid(row=1,column=0,sticky=tk.NW,padx=3)
+        BtnZujian.grid(row=2,column=0,sticky=tk.NW,padx=3)
+        BtnGongxian.grid(row=3,column=0,sticky=tk.NW,padx=3)
+        BtnAbout.grid(row=4,column=0,sticky=tk.NW,padx=3)
+
+        FrmText.grid(row=0,column=1,sticky=tk.NW)
+        LabFrmText.grid(row=0,column=0,sticky=tk.NW,padx=3,pady=3)
+        LabText.grid(row=0,column=0,sticky=tk.NW)
+      
+        Frmroot.pack()
+        windowflag = "open"
+        print(windowflag)
+        helpwindow.mainloop()
+        #helpwindow.protocol("WM_DELETE_WINDOW", on_closing)
+showhelp()

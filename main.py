@@ -48,6 +48,7 @@ def UninstallProgram(package: "apk 包名")->"卸载程序":
         traceback.print_exc()
         messagebox.showerror(title="错误", message=traceback.format_exc())
 
+# 卸载文本框的浏览按钮事件
 def BtnFindUninstallApkClk():
     path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindUninstallApk.json"))["path"])
     if path != "" and path != "()":
@@ -57,6 +58,7 @@ def BtnFindUninstallApkClk():
         except:
             pass
 
+# 卸载按钮事件
 def ButtonClick8():
     if ComboUninstallPath.get() is "":
         messagebox.showerror(title="提示", message="信息没有填写完整，无法继续卸载 APK")
@@ -85,6 +87,7 @@ def FindApk()->"浏览窗口":
         except:
             pass
 
+# 安装按钮事件
 def Button3Install():
     if ComboInstallPath.get() is "":
         messagebox.showerror(title="提示", message="信息没有填写完整，无法继续安装 APK")
@@ -149,6 +152,7 @@ def GetCommandReturn(cmd: "命令")->"运行系统命令并获取返回值":
     # cmd 是要获取输出的命令
     return subprocess.getoutput(cmd)
 
+# 打开所有窗口事件
 def Button5Click():
     threading.Thread(target=OpenUengineProgramList).start()
 
@@ -337,11 +341,8 @@ def GetApkChineseLabel(apkFilePath)->"获取软件的中文名称":
             line = line.replace("'", "")
             return line
 
-# 获取图标在包内的路径
-#def GetApkIconInApk(apkFilePath)->"获取图标在包内的路径":
-
-#合并两个函数到一起
-def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
+# 保存apk图标
+def SaveApkIcon(apkFilePath, iconSavePath)->"保存 apk 文件的图标":
     try:
         info = GetApkInformation(apkFilePath)
         for line in info.split('\n'):
@@ -368,6 +369,7 @@ def saveicon():
     print(iconSavePath+"iconpaths")
     SaveApkIcon(temppath, iconSavePath)
 
+# 用户自行保存APK
 def SaveIconToOtherPath():
     apkPath = ComboInstallPath.get()
     if apkPath == "":
@@ -387,13 +389,7 @@ def SaveIconToOtherPath():
         write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
         messagebox.showinfo(title="提示", message="保存成功！")
 
-## 获取 apk 文件的图标（部分程序不支持）
-# def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标（部分程序不支持）":
-#    zip = zipfile.ZipFile(apkFilePath)
-#    iconData = zip.read(GetApkIconInApk(apkFilePath))
-#    with open(iconSavePath, 'w+b') as saveIconFile:
-#        saveIconFile.write(iconData)
-
+# 清空 uengine 数据
 def BackUengineClean()->"清空 uengine 数据":
     print("Choose")
     if messagebox.askokcancel(title="警告", message="清空后数据将会完全丢失，确定要继续吗？"):
@@ -408,47 +404,57 @@ def BackUengineClean()->"清空 uengine 数据":
         return
     print("Choose False")
 
+# 启用 uengine 网络桥接
 def UengineBridgeStart()->"启用 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh start")
     DisabledAndEnbled(False)
 
+# 关闭 uengine 网络桥接
 def UengineBridgeStop()->"关闭 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh stop")
     DisabledAndEnbled(False)
 
+# 重启 uengine 网络桥接
 def UengineBridgeRestart()->"重启 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh restart")
     DisabledAndEnbled(False)
 
+# 加载 uengine 网络桥接
 def UengineBridgeReload()->"加载 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh reload")
     DisabledAndEnbled(False)
 
+# 强制加载 uengine 网络桥接
 def UengineBridgeForceReload()->"强制加载 uengine 网络桥接":
     DisabledAndEnbled(True)
     os.system("pkexec uengine-bridge.sh force-reload")
     DisabledAndEnbled(False)
 
+# 启用 uengine 服务
 def StartUengine()->"启用 uengine 服务":
     DisabledAndEnbled(True)
     os.system("systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")
     DisabledAndEnbled(False)
 
+# 关闭 uengine 服务
 def StopUengine()->"关闭 uengine 服务":
     DisabledAndEnbled(True)
     os.system("systemctl disable uengine-container uengine-session")
     DisabledAndEnbled(False)
 
+# 重启 uengine 服务
 def UengineRestart()->"重启 uengine 服务":
     DisabledAndEnbled(True)
     os.system("systemctl restart uengine*")
     DisabledAndEnbled(False)
 
+# 运行命令的窗口
 class InstallWindow():
+    # 显示窗口
     def ShowWindows(command):
         global message
         global text
@@ -472,6 +478,7 @@ class InstallWindow():
         threading.Thread(target=InstallWindow.RunCommand, args=[command]).start()
         message.mainloop()
     
+    # 运行命令并显示
     def RunCommand(command):
         global message
         global text
@@ -493,6 +500,7 @@ class InstallWindow():
             print("reboot")
             os.system("reboot")
 
+    # 添加文本
     def AddText(things):
         global text
         text.configure(state=tk.NORMAL)
@@ -515,6 +523,7 @@ def get_desktop_path()->"获取用户桌面目录":
             get = get.replace("$HOME", get_home())  # 则把其替换为用户目录（～）
         return get  # 返回目录
 
+# 提取已安装程序的apk
 def SaveInstallUengineApp():
     while True:
         result = simpledialog.askstring(title="输入apk包名", prompt="请输入要获取的apk包名以便进行下一步操作")
@@ -534,14 +543,13 @@ def SaveInstallUengineApp():
         traceback.print_exc()
         messagebox.showerror(title="错误", message=traceback.format_exc())
     
-    
-
 # 获取用户主目录
 def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
 
+# 删除所有的 uengine 应用快捷方式
 def CleanAllUengineDesktopLink():
-    if messagebox.askokcancel(title="提示", message="你确定要删除所有的 uengine 快捷方式吗？"):
+    if messagebox.askokcancel(title="提示", message="你确定要删除所有的 uengine 应用快捷方式吗？"):
         try:
             shutil.rmtree("{}/.local/share/applications/uengine".format(get_home()))
             os.mkdir("{}/.local/share/applications/uengine".format(get_home()))
@@ -550,6 +558,19 @@ def CleanAllUengineDesktopLink():
             traceback.print_exc()
             messagebox.showerror(title="错误", message=traceback.format_exc())
 
+# 打开 uengine 应用打包器
+def OpenUengineDebBuilder():
+    threading.Thread(target=os.system, args=[programPath + "/uengine-apk-builder"]).start()
+
+# 打开 uengine 根目录
+def OpenUengineRootData():
+    threading.Thread(target=os.system, args=["xdg-open /data/uengine/data/data"]).start()
+
+# 打开 uengine 用户数据目录
+def OpenUengineUserData():
+    threading.Thread(target=os.system, args=["xdg-open ~/安卓应用文件"]).start()
+
+# 添加/删除 uengine 应用快捷方式
 class AddNewUengineDesktopLink():
     addTips = '''可以输入app的包名和Activity或通过浏览apk文件来获取包名和Activity
 注意：如果是要删除只要输入包名即可'''
@@ -563,6 +584,7 @@ class AddNewUengineDesktopLink():
         activityName = ttk.Combobox(message, width=30)
         findApk = ttk.Button(message, text="浏览", command=AddNewUengineDesktopLink.FindApk)
         controlFrame = ttk.Frame(message)
+        testOpen = ttk.Button(controlFrame, text="打开", command=AddNewUengineDesktopLink.TestOpen)
         saveButton = ttk.Button(controlFrame, text="写入", command=AddNewUengineDesktopLink.SaveDesktopLink)
         delButton = ttk.Button(controlFrame, text="删除", command=AddNewUengineDesktopLink.DelDesktopLink)
 
@@ -586,11 +608,13 @@ class AddNewUengineDesktopLink():
         activityName.grid(row=1, column=1)
         findApk.grid(row=1, column=2)
         controlFrame.grid(row=2, column=0, columnspan=3)
-        saveButton.grid(row=0, column=0)
-        delButton.grid(row=0, column=1)
+        testOpen.grid(row=0, column=0)
+        saveButton.grid(row=0, column=1)
+        delButton.grid(row=0, column=2)
 
         message.mainloop()
 
+    # 添加快捷方式
     def SaveDesktopLink():
         if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
             if not messagebox.askokcancel(title="提示", message="文件已存在，确定要覆盖吗？"):
@@ -605,6 +629,7 @@ class AddNewUengineDesktopLink():
         AddNewUengineDesktopLink.SaveHistory()
         messagebox.showinfo(title="提示", message="创建完毕！")
 
+    # 删除快捷方式
     def DelDesktopLink():
         global packageName
         if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
@@ -620,6 +645,7 @@ class AddNewUengineDesktopLink():
             traceback.print_exc()
             messagebox.showerror(title="错误", message=traceback.format_exc())
 
+    # 保存历史记录
     def SaveHistory():
         findApkNameHistory.append(packageName.get())
         findApkActivityHistory.append(activityName.get())
@@ -628,10 +654,12 @@ class AddNewUengineDesktopLink():
         write_txt(get_home() + "/.config/uengine-runner/FindApkNameHistory.json", str(json.dumps(ListToDictionary(findApkNameHistory))))  # 将历史记录的数组转换为字典并写入 
         write_txt(get_home() + "/.config/uengine-runner/FindApkActivityHistory.json", str(json.dumps(ListToDictionary(findApkActivityHistory))))  # 将历史记录的数组转换为字典并写入
 
+    # 打开测试
     def TestOpen():
         threading.Thread(target=os.system, args=["/usr/bin/uengine-launch.sh --package={} --component={}".format(packageName.get(), activityName.get())]).start()
         AddNewUengineDesktopLink.SaveHistory()
 
+    # 浏览文件
     def FindApk():
         path = filedialog.askopenfilename(title="选择apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkName.json"))["path"])
         if path == "" or path == ():
@@ -643,9 +671,11 @@ class AddNewUengineDesktopLink():
 ###########################
 # 程序信息
 ###########################
-programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
-version = "1.3.3"
-goodRunSystem = "Linux（deepin/UOS）"
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+information = json.loads(readtxt(programPath + "/information.json"))
+programUrl = information["Url"][0]
+version = information["Version"]
+goodRunSystem = information["System"]
 aaptVersion = GetCommandReturn("aapt version")
 about = '''    一个基于 Python3 的 tkinter 制作的 uengine APK 运行器
 
@@ -660,74 +690,17 @@ aapt 版本  ：{}
 程序官网    ：{}
 
 ©2021-{}'''.format(version, goodRunSystem, tk.TkVersion, aaptVersion,programUrl, time.strftime("%Y"))
-tips = '''    新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。
-
-安装APK：
-    点浏览按钮，选中需要安装的APK，然后点安装按钮
-
-卸载APK：
-    在卸载APK下面的输入框内输入需要卸载的APK包名，点卸载按钮，如果无法获取包名，可以通过浏览APK文件程序自动获取包名进行卸载。
-
-保存APK图标：
-    在安装APK下面的输入框浏览或输入APK的路径，然后点击“保存图标”按钮，选择保存位置即可
-
-重置（删除）uengine 数据：
-    点击菜单栏的“uengine”的“清空uengine数据”，输入密码重启即可
-    注意：如果任何安卓一遍打不开，多打开几遍应该就可以重新加载uengine配置了
-
-打开Uengine应用列表：
-    打开系统已安装的应用列表（安卓界面）
-
-提示：
-1、需要你有使用 root 权限的能力；
-2、需要安装 uengine 才能使用；
-3、提取 apk 图标的 apk 路径以“安装 apk”那栏为准;
-4、如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。
-'''
-updateThingsString = '''V1.3.3：
-※1、添加新版打包方式（deepin打包方式）;
-※2、支持测试运行/创建/删除uengine图标;
-※3、支持提取安装的apk;
-4、修改菜单栏布局;
-
-V.1.3.2：
-※1、支持uengine数据重置;
-※2、支持修改uengine网络桥接的启动状态;
-※3、支持右键安装/卸载;
-※4、支持启用或禁用uengine;
-※5、修复打包问题，不会出现“dpkg:警告:卸载spark-uengine-runner时，目录/opt/apps/uengine-runner非空，因而不会删除该目录”的错误;
-
-V1.3.1：
-※1、修复打包问题，防止部分用户安装出错的问题;
-※2、修复了程序无法提取图标时可以提取默认图标使用;
-
-V1.3.0：
-※1、修改了界面布局;
-※2、修复大多数新安装普通用户的路图标及启动菜单文件路径不存在导致安装APK报错的bugs;
-3、删除少量冗余代码，调整代码顺序;
-4、支持提取apk图标。
-
-V1.2.3
-1、调整部分控件名称；
-2、调整界面布局及界面风格；
-
-V1.2.2
-1、对程序错误的显示更加人性化；
-'''
+tips = "\n".join(information["Tips"])
+updateThingsString = "\n".join(information["Update"])
 title = "uengine 运行器 {}".format(version)
-updateTime = "2021年08月18日"
+updateTime = information["Time"]
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
-programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
-contribute = '''gfdgd xi<3025613752@qq.com>
-actionchen<917981399@qq.com>'''
-useProgram = '''1、uengine相关软件包（基于anbox开发）
-2、Python3
-3、tkinter（tkinter.tk、ttkthemes 和 tkinter.ttk）
-4、aapt
-……'''
+contribute = "\n".join(information["Contribute"])
+useProgram = "\n".join(information["Use"])
+
 
 ###########################
 # 加载配置
@@ -900,6 +873,7 @@ help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单�
 uengineService = tk.Menu(uengine)
 uengineInternet = tk.Menu(uengine)
 uengineIcon = tk.Menu(uengine)
+uengineData = tk.Menu(uengine)
 
 menu.add_cascade(label="程序", menu=programmenu)
 menu.add_cascade(label="uengine", menu=uengine)
@@ -909,10 +883,11 @@ programmenu.add_command(label="清空软件历史记录", command=CleanProgramHi
 programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”
 
+uengine.add_command(label="uengine 应用打包", command=OpenUengineDebBuilder)
 uengine.add_cascade(label="uengine 服务", menu=uengineService)
 uengine.add_cascade(label="uengine 网络桥接", menu=uengineInternet)
 uengine.add_cascade(label="uengine 快捷方式", menu=uengineIcon)
-uengine.add_command(label="清空 uengine 数据", command=BackUengineClean)
+uengine.add_cascade(label="uengine 数据", menu=uengineData)
 
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
 help.add_command(label="帮助", command=showhelp)  # 设置“关于这个程序”项
@@ -933,6 +908,11 @@ uengineIcon.add_separator()
 uengineIcon.add_command(label="添加/删除指定的 uengine 快捷方式", command=AddNewUengineDesktopLink.ShowWindow)
 uengineIcon.add_separator()
 uengineIcon.add_command(label="清空所有 uengine 快捷方式", command=CleanAllUengineDesktopLink)
+
+uengineData.add_command(label="打开 uengine 根目录", command=OpenUengineRootData)
+uengineData.add_command(label="打开 uengine 用户数据目录", command=OpenUengineUserData)
+uengineData.add_separator()
+uengineData.add_command(label="清空 uengine 数据", command=BackUengineClean)
 
 menu.configure(activebackground="dodgerblue")
 help.configure(activebackground="dodgerblue")
@@ -965,18 +945,18 @@ LabApkPath.grid(row=1, column=0,sticky= tk.W,padx=3)
 ComboInstallPath.grid(row=2, column=0,padx=3)
 
 
-FrmInstall.grid(row=2, column=1,padx=3)
+FrmInstall.grid(row=2, column=1,padx=3, rowspan=2)
 BtnFindApk.grid(row=0, column=0)
 BtnInstall.grid(row=0, column=1)
 
-LabUninstallPath.grid(row=3, column=0,sticky= tk.W,padx=3)
-ComboUninstallPath.grid(row=4, column=0,padx=3)
+LabUninstallPath.grid(row=4, column=0,sticky= tk.W,padx=3)
+ComboUninstallPath.grid(row=5, column=0,padx=3)
 
-FrmUninstall.grid(row=4, column=1,padx=3)
+FrmUninstall.grid(row=5, column=1,padx=3)
 BtnUninstallApkBrowser.grid(row=0, column=0)
 BtnUninstall.grid(row=0, column=1)
 
-BtnShowUengineApp.grid(row=5, column=0,sticky= tk.W,padx=3,pady=2)
+BtnShowUengineApp.grid(row=6, column=0,sticky= tk.W,padx=3,pady=2)
 
 Btngeticon.grid(row=1, column=0,sticky= tk.W,padx=3,pady=2)
 BtnSaveApk.grid(row=1, column=1,sticky= tk.W,padx=3,pady=2)

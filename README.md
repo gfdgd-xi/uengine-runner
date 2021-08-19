@@ -16,6 +16,7 @@
 6、支持打开uengine数据目录和用户数据目录;
 7、程序信息保存到json,非直接写入程序本体;
 8、更多命令操作;
+![1.4.0](https://storage.deepin.org/thread/202108191410327464_截图_选择区域_20210819140938.png)
 
 #### V1.3.2：
 **※1、支持uengine数据重置;**  
@@ -111,6 +112,8 @@ pip3 uninstall ttkthemes
 [https://kdocs.cn/l/smrvazWGuKcY](https://kdocs.cn/l/smrvazWGuKcY)  
 
 ### 已知问题
+<p align="center"><img src='https://bbs.deepin.org/assets/image/raccoon/[sad].gif'></p>  
+
 ![Error](https://storage.deepin.org/thread/202108101105396531_截图___tk__messagebox_20210810110449.png)
 部分 app 无法读取出图片，已知：
 | 程序 | 下载链接 |
@@ -125,8 +128,10 @@ pip3 uninstall ttkthemes
 
 
 ### 贡献
-我非常欢迎大家的贡献  
-有通过贡献的开发者列表：  
+<p align="center"><img src='https://bbs.deepin.org/assets/image/raccoon/blush.gif'></p> 
+
+非常欢迎大家的贡献  
+贡献的开发者列表：  
 | 开发者 | 邮箱 |
 | :-: | :-: |
 | gfdgd xi | 3025613752@qq.com |

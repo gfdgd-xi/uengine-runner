@@ -628,6 +628,10 @@ class AddNewUengineDesktopLink():
         write_txt(get_home() + "/.config/uengine-runner/FindApkNameHistory.json", str(json.dumps(ListToDictionary(findApkNameHistory))))  # 将历史记录的数组转换为字典并写入 
         write_txt(get_home() + "/.config/uengine-runner/FindApkActivityHistory.json", str(json.dumps(ListToDictionary(findApkActivityHistory))))  # 将历史记录的数组转换为字典并写入
 
+    def TestOpen():
+        threading.Thread(target=os.system, args=["/usr/bin/uengine-launch.sh --package={} --component={}".format(packageName.get(), activityName.get())]).start()
+        AddNewUengineDesktopLink.SaveHistory()
+
     def FindApk():
         path = filedialog.askopenfilename(title="选择apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkName.json"))["path"])
         if path == "" or path == ():
@@ -682,7 +686,7 @@ tips = '''    新版本Deepin/UOS发布后，可以在应用商店安装部分�
 '''
 updateThingsString = '''V1.3.3：
 ※1、添加新版打包方式（deepin打包方式）;
-※2、支持创建/删除uengine图标;
+※2、支持测试运行/创建/删除uengine图标;
 ※3、支持提取安装的apk;
 4、修改菜单栏布局;
 

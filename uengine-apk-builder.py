@@ -1,0 +1,522 @@
+#!/usr/bin/env python3
+# 使用系统默认的 python3 运行
+###########################################################################################
+# 作者：gfdgd xi
+# 版本：1.3.2
+# 更新时间：2021年7月6日
+# 感谢：anbox、deepin 和 统信
+# 基于 Python3 的 tkinter 构建
+###########################################################################################
+#################
+# 引入所需的库
+#################
+import os
+import sys
+import time
+import json
+import shutil
+import random
+import zipfile
+import traceback
+import threading
+import webbrowser
+import subprocess
+import ttkthemes
+import tkinter as tk
+import tkinter.ttk as ttk
+import tkinter.messagebox as messagebox
+import tkinter.filedialog as filedialog
+import PIL.Image as Image
+import PIL.ImageTk as ImageTk
+from getxmlimg import getsavexml
+
+def FindApk():
+    path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-apk-builder/FindApk.json"))["path"])
+    if path != "" and path != "()":
+        try:
+            combobox1.set(path)
+            write_txt(get_home() + "/.config/uengine-apk-builder/FindApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
+        except:
+            pass
+
+def BuildDeb():
+    if combobox1.get() == "":
+        messagebox.showerror(title="提示", message="信息没有填写完整，无法继续打包 APK")
+        return
+    if not os.path.exists(combobox1.get()):
+        messagebox.showerror(title="提示", message="信息填写错误，无法继续打包 APK")
+        return
+    DisabledAndEnbled(True)
+    threading.Thread(target=BuildApkDeb, args=(combobox1.get(),)).start()
+
+def RunCommandShow(command):
+    TextboxAddText1("$> {}".format(command))
+    TextboxAddText1(GetCommandReturn(command))
+
+def BuildApkDeb(apkPath):
+    tempPath = "/tmp/uengine-apk-builder-{}".format(int(random.randint(0, 1024)))
+    RunCommandShow("echo '======================================New===================================='")
+    RunCommandShow("echo '创建目录'")
+    RunCommandShow("mkdir -pv '{}/DEBIAN'".format(tempPath))
+    RunCommandShow("mkdir -pv '{}/usr/share/applications'".format(tempPath))
+    RunCommandShow("mkdir -pv '{}/usr/share/uengine/apk'".format(tempPath))
+    RunCommandShow("mkdir -pv '{}/usr/share/uengine/icons'".format(tempPath))
+    RunCommandShow("echo '写入文件，因为写入过程过于复杂，不显示写入命令……'")
+    apkPackageName = GetApkPackageName(apkPath)
+    apkPackageVersion = GetApkVersion(apkPath)
+    apkChineseLabel = GetApkChineseLabel(apkPath)
+    apkActivityName = GetApkActivityName(apkPath)
+    iconSavePath = "{}/usr/share/uengine/icons/{}.png".format(tempPath, apkPackageName)
+    debControl = '''Package: {}
+Version: {}
+Architecture: all
+Maintainer: {}
+Depends: deepin-elf-verify (>= 0.0.16.7-1), uengine (>= 1.0.1)
+Section: utils
+Priority: optional
+Description: {}\n'''.format(apkPackageName, apkPackageVersion, apkChineseLabel, apkChineseLabel)
+    debPostinst = '''#!/bin/sh
+
+APK_DIR="/usr/share/uengine/apk"
+APK_NAME="{}.apk"
+APK_PATH="$APK_DIR/$APK_NAME"
+DESKTOP_FILE="/usr/share/applications/{}.desktop"
+ICON_FILE="/usr/share/uengine/icons/{}.png"
+
+if [ -f $APK_PATH ]; then
+    echo "Installing $APK_NAME"
+else 
+    echo "ERROR: $APK_NAME file not found."
+    exit 1
+fi
+
+session_manager=`ps -ef | grep "uengine session-manager" | grep -v grep`
+if test -z "$session_manager"; then
+    echo "ERROR: app install failed(session-manager not start)."
+    #sudo rm -f $DESKTOP_FILE
+    #sudo rm -f $ICON_FILE
+    #sudo rm -f "$APK_PATH"
+    exit 1
+fi
+
+ret=`/usr/bin/uengine-session-launch-helper -- uengine install  --apk="$APK_PATH"`
+if [ $? -ne 0 ]; then
+    echo "ERROR: apk install error..."
+    #sudo rm -f $DESKTOP_FILE
+    #sudo rm -f $ICON_FILE
+    #sudo rm -f "$APK_PATH"
+    exit 1
+fi
+chkfail=`echo $ret |grep "Failed"`
+if test -n "$chkfail" ; then
+    echo "ERROR: $ret"
+    #sudo rm -f $DESKTOP_FILE
+    #sudo rm -f $ICON_FILE
+    #sudo rm -f "$APK_PATH"
+    exit 1
+fi
+
+sudo rm -f "$APK_PATH"
+
+exit 0'''.format(apkPackageName, apkPackageName, apkPackageName)
+    debPrerm = '''#!/bin/sh
+
+APP_NAME="{}"
+
+session_manager=`ps -ef | grep "uengine session-manager" | grep -v grep`
+if test -z "$session_manager"; then
+    echo "ERROR: app install failed(session-manager not start)."
+    exit 1
+fi
+
+echo "Uninstalling $APP_NAME"
+ret=`/usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg="$APP_NAME"`
+if [ $? -ne 0 ]; then
+    echo "ERROR: app uninstall error..."
+    exit 1
+fi
+chkfail=`echo $ret |grep "Failed"`
+if test -n "$chkfail" ; then
+    echo "ERROR: $ret"
+    exit 1
+fi
+
+cat /etc/passwd | awk -F: '$3>=1000' | cut -f 1 -d : | while read line
+do
+    inifile="/home/$line/.config/uengineAppGeometry.ini"
+    if [ -f $inifile ]; then
+        sed -i "/$APP_NAME/d" $inifile
+    fi
+done
+
+exit 0'''.format(apkPackageName)
+    desktopFile = '''[Desktop Entry]
+Categories=Other;
+Exec=/usr/bin/uengine-launch.sh --action=android.intent.action.MAIN --package={} --component={}
+Icon=/usr/share/uengine/icons/{}.png
+Terminal=false
+Type=Application
+GenericName={}
+Name={}
+'''
+    #RunCommandShow("echo '{}' > '{}/DEBIAN/control'".format(debControl, tempPath))
+    RunCommandShow("echo 正在写入文件：'{}/DEBIAN/control'".format(tempPath))
+    write_txt("{}/DEBIAN/control".format(tempPath), debControl)
+    RunCommandShow("echo 正在写入文件：'{}/DEBIAN/postinst'".format(tempPath))
+    write_txt("{}/DEBIAN/postinst".format(tempPath), debPostinst)
+    RunCommandShow("echo 正在写入文件：'{}/DEBIAN/prerm'".format(tempPath))
+    write_txt("{}/DEBIAN/prerm".format(tempPath), debPrerm)
+    RunCommandShow("echo 正在写入文件：'/usr/share/applications/{}.desktop'".format(apkPackageName))
+    #write_txt("{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageName), desktopFile)
+    BuildUengineDesktop(apkPackageName, apkActivityName, apkChineseLabel, iconSavePath,
+                        "{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageName))
+    RunCommandShow("echo '复制文件'")
+    RunCommandShow("echo '写入 APK 软件图标'")
+    SaveApkIcon(apkPath, iconSavePath)
+    RunCommandShow("echo '复制 APK 文件'")
+    RunCommandShow("cp -rv '{}' '{}/usr/share/uengine/apk/{}.apk'".format(apkPath, tempPath, apkPackageName))
+    RunCommandShow("echo '正在设置文件权限……'")
+    RunCommandShow("chmod 0775 -vR '{}/DEBIAN/postinst'".format(tempPath))
+    RunCommandShow("chmod 0775 -vR '{}/DEBIAN/prerm'".format(tempPath))
+    RunCommandShow("echo '打包 deb 到桌面……'")
+    RunCommandShow("dpkg -b '{}' '{}/{}_{}.deb'".format(tempPath, get_desktop_path(),apkPackageName, apkPackageVersion))
+    RunCommandShow("echo '完成！'")
+    findApkHistory.append(apkPath)
+    combobox1['value'] = findApkHistory
+    write_txt(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
+    messagebox.showinfo(title="提示", message="打包完成")
+    DisabledAndEnbled(False)
+
+def DisabledAndEnbled(choose):
+    userChoose = {True: tk.DISABLED, False: tk.NORMAL}
+    a = userChoose[choose]
+    combobox1.configure(state=a)
+    button2.configure(state=a)
+    button3.configure(state=a)
+
+# 需引入 subprocess
+def GetCommandReturn(cmd):
+    # cmd 是要获取输出的命令
+    return subprocess.getoutput(cmd)
+
+# 显示“关于这个程序”窗口
+def about_this_program():
+    global about
+    global title
+    global iconPath
+    mess = tk.Toplevel()
+    message = ttk.Frame(mess)
+    mess.resizable(0, 0)
+    mess.title("关于 {}".format(title))
+    mess.iconphoto(False, tk.PhotoImage(file=iconPath))
+    img = ImageTk.PhotoImage(Image.open(iconPath))
+    label1 = ttk.Label(message, image=img)
+    label2 = ttk.Label(message, text=about)
+    button1 = ttk.Button(message, text="确定", command=mess.withdraw)
+    label1.pack()
+    label2.pack()
+    button1.pack(side="bottom")
+    message.pack()
+    mess.mainloop()
+
+# 显示“提示”窗口
+def helps():
+    global tips
+    messagebox.showinfo(title="提示", message=tips)
+
+# 显示更新内容窗口
+def UpdateThings():
+    messagebox.showinfo(title="更新内容", message=updateThings)
+
+# 打开程序官网
+def OpenProgramURL():
+    webbrowser.open_new_tab(programUrl)
+
+# 重启本应用程序
+def ReStartProgram():
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
+
+def CleanProgramHistory():
+    try:
+        if messagebox.askokcancel(title="警告", message="删除后将无法恢复，你确定吗？\n删除后软件将会自动重启。"):
+            shutil.rmtree(get_home() + "/.config/uengine-apk-builder")
+            ReStartProgram()
+    except:
+        traceback.print_exc()
+        messagebox.showerror(title="错误", message=traceback.format_exc())
+
+# 获取用户主目录
+def get_home():
+    return os.path.expanduser('~')
+
+# 获取用户桌面目录
+def get_desktop_path():
+    for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
+        desktop_index = line.find("XDG_DESKTOP_DIR=\"")  # 寻找是否有对应项，有返回 0，没有返回 -1
+        if desktop_index != -1:  # 如果有对应项
+            break  # 结束循环
+    if desktop_index == -1:  # 如果是提前结束，值一定≠-1，如果是没有提前结束，值一定＝-1
+        return -1
+    else:
+        get = line[17:-2]  # 截取桌面目录路径
+        get_index = get.find("$HOME")  # 寻找是否有对应的项，需要替换内容
+        if get != -1:  # 如果有
+            get = get.replace("$HOME", get_home())  # 则把其替换为用户目录（～）
+        return get  # 返回目录
+
+# 数组转字典
+def ListToDictionary(list):
+    dictionary = {}
+    for i in range(len(list)):
+        dictionary[i] = list[i]
+    return dictionary
+
+# 读取文本文档
+def readtxt(path):
+    f = open(path, "r")  # 设置文件对象
+    str = f.read()  # 获取内容
+    f.close()  # 关闭文本对象
+    return str  # 返回结果
+
+# 写入文本文档
+def write_txt(path, things):
+    file = open(path, 'w', encoding='UTF-8')  # 设置文件对象
+    file.write(things)  # 写入文本
+    file.close()  # 关闭文本对象
+
+def GetApkInformation(apkFilePath):
+    return GetCommandReturn("aapt dump badging '{}'".format(apkFilePath))
+
+def GetApkActivityName(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "launchable-activity" in line:
+            line = line[0: line.index("label='")]
+            line = line.replace("launchable-activity: ", "")
+            line = line.replace("'", "")
+            line = line.replace(" ", "")
+            line = line.replace("name=", "")
+            line = line.replace("label=", "")
+            line = line.replace("icon=", "")
+            return line
+
+def GetApkPackageName(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "package:" in line:
+            line = line[0: line.index("versionCode='")]
+            line = line.replace("package:", "")
+            line = line.replace("name=", "")
+            line = line.replace("'", "")
+            line = line.replace(" ", "")
+            return line
+
+def GetApkVersion(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "package:" in line:
+            if "compileSdkVersion='" in line:
+                line = line.replace(line[line.index("compileSdkVersion='"): -1], "")
+            if "platform" in line:
+                line = line.replace(line[line.index("platform"): -1], "")
+            line = line.replace(line[0: line.index("versionName='")], "")
+            line = line.replace("versionName='", "")
+            line = line.replace("'", "")
+            line = line.replace(" ", "")
+            return line
+
+def BuildUengineDesktop(packageName, activityName, showName, iconPath, savePath):
+    things = '''
+    [Desktop Entry]
+Categories=app;
+Encoding=UTF-8
+Exec=/usr/bin/uengine-launch.sh --action=android.intent.action.MAIN --package={} --component={}
+GenericName={}
+Icon={}
+MimeType=
+Name={}
+StartupWMClass={}
+Terminal=false
+Type=Application
+'''.format(packageName, activityName, showName, iconPath, showName, showName)
+    write_txt(savePath, things)
+
+def GetApkChineseLabel(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "application-label:" in line:
+            line = line.replace("application-label:", "")
+            line = line.replace("'", "")
+            return line
+
+def GetApkIconInApk(apkFilePath):
+    info = GetApkInformation(apkFilePath)
+    for line in info.split('\n'):
+        if "application:" in line:
+            line = line[line.index("icon='"): -1]
+            line = line.replace("icon='", "")
+            if "'" in line:
+                line = line[0: line.index("'")]
+            return line
+            return line
+
+#合并两个函数到一起
+def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
+    try:
+        info = GetApkInformation(apkFilePath)
+        for line in info.split('\n'):
+            if "application:" in line:
+                xmlpath = line.split(":")[-1].split()[-1].split("=")[-1].replace("'","")  
+                if xmlpath.endswith('.xml'):
+                        xmlsave = getsavexml()
+                        print(xmlpath)
+                        xmlsave.savexml(apkFilePath,xmlpath,iconSavePath)
+                else:
+                    zip = zipfile.ZipFile(apkFilePath)
+                    iconData = zip.read(xmlpath)
+                    with open(iconSavePath, 'w+b') as saveIconFile:
+                        saveIconFile.write(iconData)
+    except:
+        traceback.print_exc()
+        print("Error, show defult icon")
+        shutil.copy(programPath + "/defult.png", iconSavePath)
+
+
+#def SaveApkIcon(apkFilePath, iconSavePath):
+#    zip = zipfile.ZipFile(apkFilePath)
+#    iconData = zip.read(GetApkIconInApk(apkFilePath))
+#    with open(iconSavePath, 'w+b') as saveIconFile:
+#        saveIconFile.write(iconData)
+
+def TextboxAddText1(message):
+    global textbox1
+    textbox1.configure(state=tk.NORMAL)
+    textbox1.insert(tk.END,message + "\n")
+    textbox1.configure(state=tk.DISABLED)    
+
+# 获取用户桌面目录
+def get_desktop_path():
+    for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
+        desktop_index = line.find("XDG_DESKTOP_DIR=\"")  # 寻找是否有对应项，有返回 0，没有返回 -1
+        if desktop_index != -1:  # 如果有对应项
+            break  # 结束循环
+    if desktop_index == -1:  # 如果是提前结束，值一定≠-1，如果是没有提前结束，值一定＝-1
+        return -1
+    else:
+        get = line[17:-2]  # 截取桌面目录路径
+        get_index = get.find("$HOME")  # 寻找是否有对应的项，需要替换内容
+        if get != -1:  # 如果有
+            get = get.replace("$HOME", get_home())  # 则把其替换为用户目录（～）
+        return get  # 返回目录
+
+# 获取用户主目录
+def get_home():
+    return os.path.expanduser('~')
+
+def ShowUseProgram():
+    global title
+    global useProgram
+    messagebox.showinfo(title="{} 使用的程序列表（部分）".format(title), message=useProgram)
+
+###########################
+# 程序信息
+###########################
+programUrl = "https://gitee.com/gfdgd-xi/uengine-runner"
+version = "1.3.2"
+goodRunSystem = "Linux(deepin/UOS)"
+about = '''一个基于 Python3 的 tkinter 制作的 uengine APK 应用打包器
+版本：{}
+适用平台：{}
+tkinter 版本：{}
+程序官网：{}
+©2021-{} gfdgd xi'''.format(version, goodRunSystem, tk.TkVersion, programUrl, time.strftime("%Y"))
+tips = '''提示：
+1、无'''
+updateThingsString = '''1、无'''
+title = "uengine APK 应用打包器 {}".format(version)
+updateTime = "2021年8月19日"
+updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
+iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+useProgram = '''1、uengine（anbox）
+2、Python3
+3、tkinter（tkinter.tk、ttkthemes 和 tkinter.ttk）
+4、aapt
+5、dpkg
+6、tree
+7、mkdir
+8、echo
+9、chmod
+……'''
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+
+###########################
+# 加载配置
+###########################
+if not os.path.exists(get_home() + "/.config/uengine-apk-builder"):  # 如果没有配置文件夹
+    os.mkdir(get_home() + "/.config/uengine-apk-builder")  # 创建配置文件夹
+if not os.path.exists(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/uengine-apk-builder/FindApk.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/uengine-apk-builder/FindApk.json", json.dumps({"path": "~"}))  # 创建配置文件
+
+###########################
+# 设置变量
+###########################
+findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-apk-builder/FindApkHistory.json")).values())
+
+###########################
+# 窗口创建
+###########################
+win = tk.Tk()
+checkButtonBool1 = tk.BooleanVar()
+style = ttkthemes.ThemedStyle(win)
+style.set_theme("adapta")
+window = ttk.Frame(win)
+win.attributes('-alpha', 0.5)
+win.title(title)
+win.resizable(0, 0)
+win.iconphoto(False, tk.PhotoImage(file=iconPath))
+frame2 = ttk.Frame(window)
+label1 = ttk.Label(window, text="要打包的 apk 路径：")
+combobox1 = ttk.Combobox(window, width=100)
+button2 = ttk.Button(window, text="浏览", command=FindApk)
+button3 = ttk.Button(frame2, text="打包", command=BuildDeb)
+textbox1 = tk.Text(window, width=100)
+menu = tk.Menu(window, background="white")  # 设置菜单栏
+programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
+#adb = tk.Menu(menu, tearoff=0, background="white")
+uengine = tk.Menu(menu, tearoff=0, background="white")
+help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
+menu.add_cascade(label="程序", menu=programmenu)
+menu.add_cascade(label="帮助", menu=help)
+programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
+programmenu.add_separator()  # 设置分界线
+programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
+help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
+help.add_separator()
+help.add_command(label="小提示", command=helps)  # 设置“小提示”项
+help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
+help.add_command(label="这个程序使用的程序列表（部分）", command=ShowUseProgram)  # 设置“更新内容”项
+#help.add_command(label="关于 adb", command=AboutAdb)  # 设置“关于这个程序”项
+help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
+menu.configure(activebackground="white")
+help.configure(activebackground="white")
+uengine.configure(activebackground="white")
+#adb.configure(activebackground="white")
+programmenu.configure(activebackground="white")
+# 设置控件
+combobox1['value'] = findApkHistory
+textbox1.configure(state=tk.DISABLED)
+textbox1.config(foreground='white', background='black')
+#
+win.config(menu=menu)  # 显示菜单栏
+label1.grid(row=2, column=0)
+combobox1.grid(row=2, column=1)
+#button1.grid(column=0, row=0)
+button2.grid(row=2, column=2)
+button3.grid(row=0, column=0)
+frame2.grid(row=3, columnspa=3)
+textbox1.grid(row=4, columnspa=3)
+window.pack()
+win.mainloop()

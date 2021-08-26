@@ -1,8 +1,9 @@
 {
     "Url": [
-        "https://gitee.com/gfdgd-xi/uengine-runner"
+        "https://gitee.com/gfdgd-xi/uengine-runner",
+		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "1.4.0",
+    "Version": "1.4.1",
     "System": "Linux（deepin/UOS）",
     "Tips": [
         "    新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。",
@@ -12,6 +13,8 @@
         "卸载APK：在卸载APK下面的输入框内输入需要卸载的APK包名，点卸载按钮，如果无法获取包名，可以通过浏览APK文件程序自动获取包名进行卸载。",
         "",
         "保存APK图标：在安装APK下面的输入框浏览或输入APK的路径，然后点击“保存图标”按钮，选择保存位置即可",
+        "",
+        "键盘映射：详细请查看uengine键盘映射主界面",
         "",
         "重置（删除）uengine数据：点击菜单栏的“uengine”的“清空uengine数据”，输入密码重启即可",
         "    注意：如果任何安卓一遍打不开，多打开几遍应该就可以重新加载uengine配置了",
@@ -25,6 +28,10 @@
         "4、如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。"
     ],
     "Update": [
+		"V1.4.1：",
+        "※1、初步支持键盘映射",
+		"2、修复新版包在发送uengine列表快捷方式时会提示找不到文件",
+		"",
         "V1.4.0：",
         "※1、添加新版打包方式（deepin打包方式）;",
         "※2、支持测试运行/创建/删除uengine图标;",
@@ -91,7 +98,7 @@
         "9、chmod",
         "……"
     ],
-    "Time": "2021年08月19日",
+    "Time": "2021年08月26日",
     "Contribute": ["gfdgd xi<3025613752@qq.com>",
         "actionchen<917981399@qq.com>"]
 }

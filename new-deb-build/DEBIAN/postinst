@@ -2,9 +2,10 @@
 # 使用 pip 安装所需库
 python3 -m pip install --upgrade ttkthemes
 # 建立软链接
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner /usr/bin/uengine-runner
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder /usr/bin/uengine-apk-builder
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner        /usr/bin/uengine-runner
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder   /usr/bin/uengine-apk-builder
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-uninstall /usr/bin/uengine-app-uninstall
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-install /usr/bin/uengine-app-install
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-clean /usr/bin/uengine-clean
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-about /usr/bin/uengine-runner-about
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-install   /usr/bin/uengine-app-install
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-clean         /usr/bin/uengine-clean
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-about  /usr/bin/uengine-runner-about
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-keyboard      /usr/bin/uengine-keyboard

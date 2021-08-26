@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.3.2
-# 更新时间：2021年8月15日
+# 版本：1.4.0
+# 更新时间：2021年8月26日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：actionchen<917981399@qq.com>
@@ -369,6 +369,9 @@ def saveicon():
     print(iconSavePath+"iconpaths")
     SaveApkIcon(temppath, iconSavePath)
 
+def KeyboardToMouse():
+    threading.Thread(target=os.system, args=["pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-keyboard".format(programPath)]).start()
+
 # 用户自行保存APK
 def SaveIconToOtherPath():
     apkPath = ComboInstallPath.get()
@@ -696,7 +699,7 @@ title = "uengine 运行器 {}".format(version)
 updateTime = information["Time"]
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
-desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
+desktop = programPath + "/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 contribute = "\n".join(information["Contribute"])
 useProgram = "\n".join(information["Use"])
@@ -884,6 +887,7 @@ programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”
 
 uengine.add_command(label="uengine 应用打包", command=OpenUengineDebBuilder)
+uengine.add_command(label="uengine 键盘映射", command=KeyboardToMouse)
 uengine.add_cascade(label="uengine 服务", menu=uengineService)
 uengine.add_cascade(label="uengine 网络桥接", menu=uengineInternet)
 uengine.add_cascade(label="uengine 快捷方式", menu=uengineIcon)

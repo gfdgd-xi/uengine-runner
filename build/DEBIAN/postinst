@@ -1,2 +1,4 @@
 #!/bin/sh 
 python3 -m pip install --upgrade ttkthemes
+python3 -m pip install --upgrade pyautogui
+python3 -m pip install --upgrade keyboard

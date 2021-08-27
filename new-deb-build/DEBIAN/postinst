@@ -1,6 +1,8 @@
 #!/bin/sh 
 # 使用 pip 安装所需库
 python3 -m pip install --upgrade ttkthemes
+python3 -m pip install --upgrade pyautogui
+python3 -m pip install --upgrade keyboard
 # 建立软链接
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner        /usr/bin/uengine-runner
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder   /usr/bin/uengine-apk-builder

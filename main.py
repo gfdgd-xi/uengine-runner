@@ -873,10 +873,10 @@ programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”
 uengine = tk.Menu(menu, tearoff=0, background="white")
 help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
 
-uengineService = tk.Menu(uengine)
-uengineInternet = tk.Menu(uengine)
-uengineIcon = tk.Menu(uengine)
-uengineData = tk.Menu(uengine)
+uengineService = tk.Menu(uengine, tearoff=0, background="white")
+uengineInternet = tk.Menu(uengine, tearoff=0, background="white")
+uengineIcon = tk.Menu(uengine, tearoff=0, background="white")
+uengineData = tk.Menu(uengine, tearoff=0, background="white")
 
 menu.add_cascade(label="程序", menu=programmenu)
 menu.add_cascade(label="uengine", menu=uengine)

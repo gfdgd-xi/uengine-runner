@@ -1,7 +1,7 @@
 # uengine 运行器 1.4.0
 
 ### 介绍
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
 ![1.4.1](https://storage.deepin.org/thread/20210826151947783_截图_选择区域_20210826151312.png) 
 （测试平台：UOS 家庭版，deepin 20.2.2,UOS 专业版 1040）   
 （自己美术功底太差，图标直接用 anbox 的了）   
@@ -115,7 +115,7 @@ pip3 uninstall ttkthemes
 
 ### 使用说明
 1、需要你有使用 root 权限的能力；  
-2、需要安装 uengine 才能使用，UOS建议在商店安装一个安卓应用，让系统自动安装uengine及相关的依赖包；  
+2、需要安装 UEngine 才能使用，UOS建议在商店安装一个安卓应用，让系统自动安装 UEngine 及相关的依赖包；  
 3、提取 apk 图标的 apk 路径以“安装 apk”那栏为准;  
 4、如果报错是有关产生 .deksotp 文件有关，一般可以打开程序列表运行。如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。  
 

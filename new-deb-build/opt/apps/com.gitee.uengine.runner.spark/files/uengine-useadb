@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+#########################################
+# 版本：1.4.2
+# 更新时间：2021年08月30日
+#########################################
+import os
+import shutil
+import sys
+import traceback
+import ttkthemes
+import tkinter as tk
+import tkinter.ttk as ttk
+import tkinter.messagebox as messagebox
+########################
+#
+########################
+# 写入文本文档
+def write_txt(path: "路径", things: "内容")->"写入文本文档": 
+    file = open(path, 'w', encoding='UTF-8')  # 设置文件对象
+    file.write(things)  # 写入文本
+    file.close()  # 关闭文本对象
+
+# 读取文本文档
+def readtxt(path: "路径")->"读取文本文档":
+    f = open(path, "r")  # 设置文件对象
+    str = f.read()       # 获取内容
+    f.close()            # 关闭文本对象
+    return str           # 返回结果
+
+###################
+# 判断是不是 root
+###################
+if os.geteuid() != 0:
+    print("不是以 root 权限运行本程序！")
+    root = tk.Tk()
+    root.overrideredirect(1)
+    root.withdraw()
+    messagebox.showerror(title="错误", message="不是以 root 权限运行本程序！")
+    sys.exit(1)
+
+###################
+#
+###################
+window = tk.Tk()
+style = ttkthemes.ThemedStyle(window)
+style.set_theme("breeze")
+window.overrideredirect(1)
+window.withdraw()
+try:
+    if sys.argv[1] == "1" and messagebox.askokcancel(title="提示", message="你确定要删除吗？"):
+        os.remove("/data/uengine/data/data/misc/adb/adb_keys")
+        messagebox.showinfo(title="提示", message="完成")
+except:
+    traceback.print_exc()
+    messagebox.showerror(title="错误", message=traceback.format_exc())
+    sys.exit(2)
+if sys.argv[1] == "1":
+    sys.exit(0)
+
+if not messagebox.askyesno(title="提示", message='''请阅读以下提示然后确定是否继续：
+1、安装后即可使用 adb 连接 UEngine;
+2、重置 UEngine 或 adb 就需要重新设置该支持补丁;
+3、需要 root 权限;'''):
+    sys.exit(0)
+# 写入（需要 root）
+if not os.path.exists("/data/uengine/data/data/misc/adb"):
+    messagebox.showerror(title="错误", message="无法读取 UEngine 数据！")
+    sys.exit(1)
+try:
+    things = readtxt(sys.argv[2])
+    adbKey = []
+    # 提取内容
+    for i in things.split('\n'):
+        adbKey.append(i[0: i.find(" ")])
+    old = ""
+    if os.path.exists("/data/uengine/data/data/misc/adb/adb_keys"):
+        old = readtxt("/data/uengine/data/data/misc/adb/adb_keys") + "\n"
+    write_txt("/data/uengine/data/data/misc/adb/adb_keys", old + "\n".join(adbKey))
+    messagebox.showinfo(title="提示", message="完成")
+except:
+    traceback.print_exc()
+    messagebox.showerror(title="错误", message=traceback.format_exc())
+    sys.exit(2)

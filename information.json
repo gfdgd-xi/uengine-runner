@@ -3,10 +3,10 @@
         "https://gitee.com/gfdgd-xi/uengine-runner",
 		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "1.4.1",
+    "Version": "1.4.2",
     "System": "Linux（deepin/UOS）",
     "Tips": [
-        "    新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。",
+        "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis",
         "",
         "安装APK：点浏览按钮，选中需要安装的APK，然后点安装按钮",
         "",
@@ -14,20 +14,26 @@
         "",
         "保存APK图标：在安装APK下面的输入框浏览或输入APK的路径，然后点击“保存图标”按钮，选择保存位置即可",
         "",
-        "键盘映射：详细请查看uengine键盘映射主界面",
+        "重置（删除）UEngine数据：点击菜单栏的“UEngine”的“清空UEngine数据”，输入密码重启即可",
+        "    注意：如果任何安卓一遍打不开，多打开几遍应该就可以重新加载UEngine配置了",
         "",
-        "重置（删除）uengine数据：点击菜单栏的“uengine”的“清空uengine数据”，输入密码重启即可",
-        "    注意：如果任何安卓一遍打不开，多打开几遍应该就可以重新加载uengine配置了",
-        "",
-        "打开Uengine应用列表：打开系统已安装的应用列表（安卓界面）",
+        "打开UEngine应用列表：打开系统已安装的应用列表（安卓界面）",
         "",
         "提示：",
         "1、需要你有使用 root 权限的能力；",
-        "2、需要安装 uengine 才能使用；",
+        "2、需要安装 UEngine 才能使用；",
         "3、提取 apk 图标的 apk 路径以“安装 apk”那栏为准;",
-        "4、如果想要连接其他手机，请使用 1.2.0 以前的版本，可以使用 adb 连接。"
+        "4、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "V1.4.2：",
+        "※1、添加adb破解补丁（用于可以让adb连接UEngine）并支持adb的部分操作;",
+        "2、菜单栏的项目添加以及外观优化;",
+        "3、修复键盘映射无法添加新映射的问题并修改键盘映射启动方式;",
+        "4、把 uengine 改为 UEngine;",
+        "5、修改 pkexec 获取密码时显示的图标和文本;",
+        "6、添加了 UEngine 系统设置的快捷方式;",
+        "",
 		"V1.4.1：",
         "※1、初步支持键盘映射",
 		"2、修复新版包在发送uengine列表快捷方式时会提示找不到文件",
@@ -87,7 +93,7 @@
         "暂无数据"
     ],
     "Use": [
-        "1、uengine相关软件包（基于anbox开发）",
+        "1、UEngine相关软件包（基于anbox开发）",
         "2、Python3",
         "3、tkinter（tkinter.tk、ttkthemes、tkinter.messagebox、tkinter.simpledialog、tkinter.filedialog 和 tkinter.ttk）",
         "4、aapt",
@@ -96,9 +102,11 @@
         "7、mkdir",
         "8、echo",
         "9、chmod",
+        "10、adb",
+        "11、deepin 终端",
         "……"
     ],
-    "Time": "2021年08月26日",
+    "Time": "2021年08月30日",
     "Contribute": ["gfdgd xi<3025613752@qq.com>",
         "actionchen<917981399@qq.com>"]
 }

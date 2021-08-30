@@ -2,6 +2,7 @@
 #########################################
 # 版本：1.4.0
 # 更新时间：2021年08月26日
+# Need: unix, python3-tk, python3-pip, pymouse, keyboard
 #########################################
 import os
 import sys
@@ -17,17 +18,19 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
-
+import Xlib.threaded as threaded
+#import pymouse.unix as pymouse
 ########################
 #
 ########################
 def Inputt(key):
-    if key.event_type == "down":
+    if key.event_type == "up":
         global setting
         if setting:
             Setting(key)
         else:
             Mouse(key)
+            #Mouse(key)
 
 def Open():
     path = filedialog.askopenfilename(title="打开", filetypes=[["json 文件", "*.json"], ["全部文件", ["*.*"]]])
@@ -49,9 +52,14 @@ def ReStartProgram()->"重启本应用程序":
 
 
 def Mouse(key):
+    print(keybo)
     if keybo.__contains__(key.name):
         print(keybo[key.name]["MousePlace"])
-        pyautogui.click(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1])
+        pyautogui.FAILSAFE = False
+        #os.system(programPath + "/mouse.py {} {}".format(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1]))
+        #pyautogui.click(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1])
+        pyautogui.click(1500, 800)
+        #m.click(keybo[key.name]["MousePlace"][0],keybo[key.name]["MousePlace"][1])
 
 def Setting(key):
     if key.event_type == 'up':
@@ -84,10 +92,15 @@ def ShowTips():
         time.sleep(0.1)
         ShowTips()
     except:
-        pass
+        traceback.print_exc()
+        if not close:
+            ShowTips()
+
+def Closing():
+    close = True
+    window.destroy()
 
 def Key():
-    global inputs
     keyboard.hook(Inputt)
 
 # 获取用户主目录
@@ -95,11 +108,7 @@ def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
 
 # 写入文本文档
-def write_txt(path: "路径", things: "内容")->"写入文本文档":
-    TxtDir = os.path.dirname(path)
-    print(TxtDir)
-    if not os.path.exists(TxtDir):
-        os.makedirs(TxtDir,exist_ok=True)    
+def write_txt(path: "路径", things: "内容")->"写入文本文档": 
     file = open(path, 'w', encoding='UTF-8')  # 设置文件对象
     file.write(things)  # 写入文本
     file.close()  # 关闭文本对象
@@ -136,6 +145,7 @@ if not os.path.exists("{}/.config/uengine-keyboard/key.json".format(get_home()))
 #
 ###################
 setting = False
+close = False
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 keybo = json.loads(readtxt("{}/.config/uengine-keyboard/key.json".format(get_home())))
@@ -175,9 +185,10 @@ settingMouseToKeyboard.configure(state=tk.DISABLED)
 
 style = ttkthemes.ThemedStyle(window)
 style.set_theme("breeze")
+window.protocol('WM_DELETE_WINDOW', Closing)
 window.resizable(0, 0)
 window.iconphoto(False, tk.PhotoImage(file=iconPath))
-window.title("uengine 键盘映射 {}".format(version))
+window.title("UEngine 键盘映射 {}".format(version))
 
 menu.add_cascade(label="程序", menu=programMenu)
 menu.add_cascade(label="帮助", menu=aboutMenu)
@@ -202,8 +213,15 @@ settingMouseToKeyboard.grid(row=0, column=0)
 settingButton.grid(row=0, column=1)
 
 win.pack(fill="both", expand="yes")
-
+#threaded.lock.allocate_lock()
 threading.Thread(target=Key).start()
 threading.Thread(target=ShowTips).start()
-
+pyautogui.FAILSAFE = False
+'''def B(key):
+    if key.event_type == "up":
+        print(pyautogui.position())
+        print(key.name)
+        pyautogui.click(1500, 800)
+keyboard.hook(B)
+keyboard.wait()'''
 window.mainloop()

@@ -7,3 +7,4 @@ rm -fv /usr/bin/uengine-app-install
 rm -fv /usr/bin/uengine-clean
 rm -fv /usr/bin/uengine-runner-about
 rm -fv /usr/bin/uengine-keyboard
+rm -fv /usr/bin/uengine-useadb

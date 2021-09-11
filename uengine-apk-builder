@@ -187,6 +187,7 @@ def DisabledAndEnbled(choose):
     userChoose = {True: tk.DISABLED, False: tk.NORMAL}
     a = userChoose[choose]
     combobox1.configure(state=a)
+    check.configure(state=a)
     button2.configure(state=a)
     button3.configure(state=a)
 
@@ -256,6 +257,7 @@ def GetApkActivityName(apkFilePath):
             return line
 
 def GetApkPackageName(apkFilePath):
+    # 提示：此函数有被为此程序适配而调整，如果需要最原始（无调整的）请使用主程序（此为附属组件）里的函数
     info = GetApkInformation(apkFilePath)
     for line in info.split('\n'):
         if "package:" in line:
@@ -264,7 +266,10 @@ def GetApkPackageName(apkFilePath):
             line = line.replace("name=", "")
             line = line.replace("'", "")
             line = line.replace(" ", "")
-            return line
+            # 此较为特殊，因为需要判断用户是否要添加前缀
+            if qianZhui.get() == True:
+                return "uengine-dc-{}".format(line).lower()
+            return line.lower()
 
 def GetApkVersion(apkFilePath):
     info = GetApkInformation(apkFilePath)
@@ -381,7 +386,7 @@ iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 # 加载配置
 ###########################
 if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
-    os.mkdir(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
+    os.makedirs(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkBuildHistory.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/FindApkBuildHistory.json", json.dumps({}))  # 创建配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkBuild.json"):  # 如果没有配置文件
@@ -396,34 +401,40 @@ findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/F
 # 窗口创建
 ###########################
 win = tk.Tk()
+
+qianZhui = tk.BooleanVar()
+
 window = ttk.Frame(win)
-style = ttkthemes.ThemedStyle(win)
-style.set_theme("breeze")
-win.attributes('-alpha', 0.5)
-win.title(title)
-win.resizable(0, 0)
-win.iconphoto(False, tk.PhotoImage(file=iconPath))
 frame2 = ttk.Frame(window)
 label1 = ttk.Label(window, text="要打包的 apk 路径：")
 combobox1 = ttk.Combobox(window, width=100)
 button2 = ttk.Button(window, text="浏览", command=FindApk)
 button3 = ttk.Button(frame2, text="打包", command=BuildDeb)
+check = ttk.Checkbutton(frame2, variable=qianZhui,text="使用前缀“uengine-dc”")
 textbox1 = tk.Text(window, width=100)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
+
 menu.add_cascade(label="程序", menu=programmenu)
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
 # 设置控件
 combobox1['value'] = findApkHistory
 textbox1.configure(state=tk.DISABLED)
 textbox1.config(foreground='white', background='black')
+# 设置窗口
+style = ttkthemes.ThemedStyle(win)
+style.set_theme("breeze")
+win.attributes('-alpha', 0.5)
+win.title(title)
+win.resizable(0, 0)
+win.iconphoto(False, tk.PhotoImage(file=iconPath))
 #
 win.config(menu=menu)  # 显示菜单栏
 label1.grid(row=2, column=0)
 combobox1.grid(row=2, column=1)
-#button1.grid(column=0, row=0)
 button2.grid(row=2, column=2)
-button3.grid(row=0, column=0)
+button3.grid(row=0, column=1)
+check.grid(row=0, column=0)
 frame2.grid(row=3, columnspa=3)
 textbox1.grid(row=4, columnspa=3)
 window.pack()

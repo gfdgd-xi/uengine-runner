@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.4.0
-# 更新时间：2021年8月26日
+# 版本：1.4.3
+# 更新时间：2021年9月11日（开学了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：actionchen<917981399@qq.com>
@@ -99,7 +99,7 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
     try:
         if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
             print("Mkdir")
-            os.mkdir("{}/.local/share/applications/uengine/".format(get_home()))
+            os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
         print("start install apk")
         global findApkHistory
         commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
@@ -454,61 +454,19 @@ def UengineRestart()->"重启 uengine 服务":
     os.system("systemctl restart uengine*")
     DisabledAndEnbled(False)
 
-# 运行命令的窗口
-class InstallWindow():
-    # 显示窗口
-    def ShowWindows(command):
-        global message
-        global text
-        global installTipsText
-        global progressbar
-        message = tk.Toplevel()
-        message.iconphoto(False, tk.PhotoImage(file=iconPath))
-        messageFrame = ttk.Frame(message)
-        installTipsText = tk.StringVar()
-        message.title("正在操作……")
-        installTipsText.set("正在操作……")
-        installTips = ttk.Label(messageFrame, textvariable=installTipsText)
-        progressbar = ttk.Progressbar(messageFrame, length=500, mode='indeterminate')
-        text = tk.Text(messageFrame)
-        text.config(background="black", foreground="white")
-        installTips.pack()
-        progressbar.pack(fill="x")
-        text.pack(expand='yes', fill='both')
-        messageFrame.pack(expand='yes', fill='both')
-        print("Run!")
-        threading.Thread(target=InstallWindow.RunCommand, args=[command]).start()
-        message.mainloop()
-    
-    # 运行命令并显示
-    def RunCommand(command):
-        global message
-        global text
-        global progressbar
-        global installTipsText
-        InstallWindow.AddText("$>" + command + "\n")
-        progressbar.start()
-        result = subprocess.getoutput(command)
-        InstallWindow.AddText(result)
-        messagebox.showinfo(title="提示", message="操作完毕！")
-        installTipsText.set("操作完毕！")
-        message.title("操作完毕！")
-        progressbar.stop()
-        progressbar["value"] = 100
-        # 特意添加！
-        DisabledAndEnbled(False)
-        print("Clean!")
-        if messagebox.askyesno(title="提示", message="清空完毕，将会在重启后生效，是否要重启？"):
-            print("reboot")
-            os.system("reboot")
-
-    # 添加文本
-    def AddText(things):
-        global text
-        text.configure(state=tk.NORMAL)
-        text.insert("end", things)
-        text.configure(state=tk.DISABLED)
-
+def ScrcpyConnectUengine():
+    if os.path.exists("/snap/bin/scrcpy"):
+        threading.Thread(target=os.system, args=["/snap/bin/scrcpy -s '192.168.250.2:5555'"]).start()
+        return
+    if messagebox.askyesno(title="提示", message="你没有安装Scrcpy（指使用Snap安装），\n如果你使用了其他方法安装了Scrcpy，可以输入命令“scrcpy -s '192.168.250.2:5555'”，\n是否现在要使用Snap安装Scrcpy？"):
+        if not os.path.exists("/tmp/uengine-runner"):
+            os.makedirs("/tmp/uengine-runner")
+        write_txt("/tmp/uengine-runner/InstallScrcpy.sh", '''#!/bin/bash
+sudo apt install snapd -y
+sudo snap refresh
+sudo snap install scrcpy''')
+        threading.Thread(target=InstallWindow.ShowWindows, args=["chmod 777 /tmp/uengine-runner/InstallScrcpy.sh -Rv && pkexec /tmp/uengine-runner/InstallScrcpy.sh"]).start()
+        return
 
 # 获取用户桌面目录
 def get_desktop_path()->"获取用户桌面目录":
@@ -554,7 +512,7 @@ def CleanAllUengineDesktopLink():
     if messagebox.askokcancel(title="提示", message="你确定要删除所有的 UEngine 应用快捷方式吗？"):
         try:
             shutil.rmtree("{}/.local/share/applications/uengine".format(get_home()))
-            os.mkdir("{}/.local/share/applications/uengine".format(get_home()))
+            os.makedirs("{}/.local/share/applications/uengine".format(get_home()))
             messagebox.showinfo(title="提示", message="删除完毕！")
         except:
             traceback.print_exc()
@@ -631,6 +589,124 @@ def AdbAndroidInstallAppList():
 {}'''.format(subprocess.getoutput("adb -s 192.168.250.2:5555 shell pm list packages -s"),
     subprocess.getoutput("adb -s 192.168.250.2:5555 shell pm list package -3"),
     subprocess.getoutput("adb -s 192.168.250.2:5555 shell pm list packages -f")))
+
+class AdbChangeUengineDisplaySize():
+    def ShowWindows():
+        global displayX
+        global displayY
+        global displaySize
+        message = tk.Toplevel()
+        messageFrame = ttk.Frame(message)
+
+        displaySize = tk.StringVar()
+        displaySize.set("当前 UEngine 屏幕分辨率：正在获取")
+
+        displaySizeLabel = ttk.Label(messageFrame, textvariable=displaySize)
+
+        input = ttk.Frame(messageFrame)
+        displayX = ttk.Entry(input)
+        displayY = ttk.Entry(input)
+
+        settingBUtton = ttk.Button(messageFrame, text="设置分辨率", command=AdbChangeUengineDisplaySize.SettingDisplaySize)
+
+        message.title("修改 UEngine 分辨率")
+        message.resizable(0, 0)
+        message.iconphoto(False, tk.PhotoImage(file=iconPath))
+        # get screen width and height
+        screen_width = message.winfo_screenwidth()
+        screen_height = message.winfo_screenheight()
+        # calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。 
+        winwith=570
+        winhigh=236
+        x = (screen_width/2) - (winwith/2)
+        y = (screen_height/2) - (winhigh/2)
+        message.geometry("+{}+{}".format(int(x), int(y)))
+
+        displayX.grid(row=0, column=0)
+        displayY.grid(row=0, column=1)
+
+        displaySizeLabel.grid(row=0, column=0)
+        input.grid(row=1, column=0)
+        settingBUtton.grid(row=2, column=0)
+
+        messageFrame.pack()
+        threading.Thread(target=AdbChangeUengineDisplaySize.GetUengineDisplaySize).start()
+        message.mainloop()
+
+    def GetUengineDisplaySize():
+        global displaySize
+        displaySize.set("当前 UEngine 屏幕分辨率：\n" + subprocess.getoutput("adb -s '192.168.250.2:5555' shell wm size"))
+        #displaySize.set(subprocess.getoutput("adb -s '192.168.250.2:5555' shell wm size"))
+
+    def SettingDisplaySize():
+        global displayX
+        global displayY
+        try:
+            int(displayX.get())
+            int(displayY.get())
+        except:
+            messagebox.showerror(title="错误", message="你输入的数值不正确！")
+            return
+        os.system("adb -s '192.168.250.2:5555' shell wm size {}x{}".format(displayX.get(), displayY.get()))
+        AdbChangeUengineDisplaySize.GetUengineDisplaySize()
+        messagebox.showinfo(title="提示", message="执行完毕！")
+
+# 运行命令的窗口
+class InstallWindow():
+    # 显示窗口
+    def ShowWindows(command):
+        global message
+        global text
+        global installTipsText
+        global progressbar
+        global runCommand
+        message = tk.Toplevel()
+        message.iconphoto(False, tk.PhotoImage(file=iconPath))
+        messageFrame = ttk.Frame(message)
+        installTipsText = tk.StringVar()
+        message.title("正在操作……")
+        installTipsText.set("正在操作……")
+        installTips = ttk.Label(messageFrame, textvariable=installTipsText)
+        progressbar = ttk.Progressbar(messageFrame, length=500, mode='indeterminate')
+        text = tk.Text(messageFrame)
+        text.config(background="black", foreground="white")
+        installTips.pack()
+        progressbar.pack(fill="x")
+        text.pack(expand='yes', fill='both')
+        messageFrame.pack(expand='yes', fill='both')
+        print("Run!")
+        threading.Thread(target=InstallWindow.RunCommand, args=[command]).start()
+        message.mainloop()
+    
+    # 运行命令并显示
+    def RunCommand(command):
+        global message
+        global text
+        global progressbar
+        global installTipsText
+        InstallWindow.AddText("$>" + command + "\n")
+        progressbar.start()
+        result = subprocess.getoutput(command)
+        InstallWindow.AddText(result)
+        messagebox.showinfo(title="提示", message="操作完毕！")
+        installTipsText.set("操作完毕！")
+        message.title("操作完毕！")
+        progressbar.stop()
+        progressbar["value"] = 100
+        # 特意添加！
+        DisabledAndEnbled(False)
+        if command == "pkexec rm -rfv /data/uengine":
+            print("Clean!")
+            if messagebox.askyesno(title="提示", message="清空完毕，将会在重启后生效，是否要重启？"):
+                print("reboot")
+                os.system("reboot")
+
+    # 添加文本
+    def AddText(things):
+        global text
+        text.configure(state=tk.NORMAL)
+        text.insert("end", things)
+        text.configure(state=tk.DISABLED)
 
 class ShowTextTipsWindow():
     def ShowWindow(things):
@@ -749,6 +825,27 @@ class AddNewUengineDesktopLink():
         activityName.set(GetApkActivityName(path))
         write_txt(get_home() + "/.config/uengine-runner/FindApkName.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
 
+def UseProgram():
+    global useProgram
+    useProgram = '''1、UEngine：{}
+2、python3：{}
+3、tkinter：{}
+4、aapt：{}
+5、dpkg：{}
+6、mkdir：{}
+7、echo
+8、chmod：{}
+9、adb：{}
+10、deepin 终端：{}'''.format(subprocess.getoutput("uengine version"),
+    subprocess.getoutput("python3 --version"),
+    tk.TkVersion,
+    subprocess.getoutput("aapt version"),
+    subprocess.getoutput("dpkg --version"),
+    subprocess.getoutput("mkdir --version"),
+    subprocess.getoutput("chmod --version"),
+    subprocess.getoutput("adb version"),
+    subprocess.getoutput("deepin-terminal -v"))
+
 ###########################
 # 程序信息
 ###########################
@@ -776,33 +873,16 @@ iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = programPath + "/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 contribute = "\n".join(information["Contribute"])
-useProgram = '''1、UEngine：{}
-2、python3：{}
-3、tkinter：{}
-4、aapt：{}
-5、dpkg：{}
-6、mkdir：{}
-7、echo
-8、chmod：{}
-9、adb：{}
-10、deepin 终端：{}'''.format(subprocess.getoutput("uengine version"),
-    subprocess.getoutput("python3 --version"),
-    tk.TkVersion,
-    subprocess.getoutput("aapt version"),
-    subprocess.getoutput("dpkg --version"),
-    subprocess.getoutput("mkdir --version"),
-    subprocess.getoutput("chmod --version"),
-    subprocess.getoutput("adb version"),
-    subprocess.getoutput("deepin-terminal -v"))
-
+useProgram = ""
+threading.Thread(target=UseProgram).start()
 
 ###########################
 # 加载配置
 ###########################
 if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
-    os.mkdir("{}/.local/share/applications/uengine/".format(get_home()))
+    os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
 if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
-    os.mkdir(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
+    os.makedirs(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkHistory.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", json.dumps({}))  # 创建配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkNameHistory.json"):  # 如果没有配置文件
@@ -885,6 +965,9 @@ def showhelp():
         def ChgAbout():
             HelpStr.set(about)
         def ChgDep():
+            if useProgram == "":
+                BtnZujian.configure(state=tk.DISABLED)
+                return
             HelpStr.set(useProgram)
         def ChgCon():
             HelpStr.set(contribute)
@@ -987,9 +1070,11 @@ adb.add_separator()
 adb.add_cascade(label="adb 服务", menu=adbServer)
 adb.add_command(label="显示 adb 连接的设备", command=AdbConnectDeviceShow)
 adb.add_separator()
+adb.add_command(label="adb 修改 UEngine 分辨率", command=AdbChangeUengineDisplaySize.ShowWindows)
 adb.add_command(label="adb 查看 UEngine 应用列表", command=AdbAndroidInstallAppList)
 adb.add_command(label="adb 查看 UEngine 资源使用情况", command=AdbCPUAndRAWShowInTer)
 adb.add_command(label="打开 adb 连接 UEngine 的终端", command=AdbShellShowInTer)
+adb.add_command(label="使用 Scrcpy 连接 UEngine（只支持使用snap安装的Scrcpy）", command=ScrcpyConnectUengine)
 adb.add_separator()
 adb.add_cascade(label="UEngine 使用 adb", menu=uengineUseAdb)
 

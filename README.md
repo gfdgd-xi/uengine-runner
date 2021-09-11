@@ -1,12 +1,21 @@
-# uengine 运行器 1.4.0
+# uengine 运行器 1.4.3
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![1.4.2](https://storage.deepin.org/thread/202108301750554993_截图_选择区域_20210830134502.png)  
+![1.4.3](https://storage.deepin.org/thread/202109111635389828_截图_选择区域_20210911163449.png)
 （测试平台：UOS 家庭版，deepin 20.2.2,UOS 专业版 1040）   
 （自己美术功底太差，图标直接用 anbox 的了）   
 
 ### 更新内容
+#### V1.4.3（2021-09-11，开学第一版）：
+此版本在受伤宅家期间写的![表情](https://bbs.deepin.org/assets/image/raccoon/[sad].gif)  
+**※1、支持打包器打包的包名带前缀“uengine-dc”**  
+**※2、修复了两种情况可能导致程序卡住/出错无法继续运行的情况（配置文件夹不齐全和获取版本信息卡住两种情况）**  
+**※3、修改了 UEngine 打包器打包的应用包名可能有大写的情况**  
+4、支持一键使用 Scrcpy 连接 UEngine（①先安装 adb 破解补丁；②请确保是使用snap安装的 Scrcpy【目前只支持 snap 安装的 Scrcpy 进行连接】）  
+5、支持右键打包 apk  
+![1.4.3](https://storage.deepin.org/thread/202109111635389828_截图_选择区域_20210911163449.png)
+
 #### V1.4.2（2021-08-30，快开学了）：
 **※1、添加adb破解补丁（用于可以让adb连接UEngine）并支持adb的部分操作;**  
 2、菜单栏的项目添加以及外观优化;  

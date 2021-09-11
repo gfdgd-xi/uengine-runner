@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.4.2
-# 更新时间：2021年8月30日
+# 版本：1.4.3
+# 更新时间：2021年9月11日
 # 感谢：anbox、deepin 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -11,6 +11,7 @@
 # 引入所需的库
 #################
 import os
+import threading
 import time
 import json
 import ttkthemes
@@ -52,7 +53,16 @@ iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = "/opt/apps/uengine-runner/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 contribute = "\n".join(information["Contribute"])
-useProgram = '''1、UEngine：{}
+useProgram = ""
+threading.Thread(target=useProgram).start()
+
+# add sub window
+#添加窗口开启关闭开关，防止重复开启
+windowflag = "close"
+
+def UseProgram():
+    global useProgram
+    useProgram = '''1、UEngine：{}
 2、python3：{}
 3、tkinter：{}
 4、aapt：{}
@@ -70,10 +80,6 @@ useProgram = '''1、UEngine：{}
     subprocess.getoutput("chmod --version"),
     subprocess.getoutput("adb version"),
     subprocess.getoutput("deepin-terminal -v"))
-
-# add sub window
-#添加窗口开启关闭开关，防止重复开启
-windowflag = "close"
 
 def showhelp():
      
@@ -127,6 +133,9 @@ def showhelp():
         def ChgAbout():
             HelpStr.set(about)
         def ChgDep():
+            if useProgram == "":
+                BtnZujian.configure(state=tk.DISABLED)
+                return
             HelpStr.set(useProgram)
         def ChgCon():
             HelpStr.set(contribute)

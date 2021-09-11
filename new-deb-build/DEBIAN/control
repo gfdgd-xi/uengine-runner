@@ -1,6 +1,6 @@
 Package: com.gitee.uengine.runner.spark
 Source: com.gitee.uengine.runner.spark
-Version: 1.4.2
+Version: 1.4.3
 Architecture: all
 Maintainer: gfdgd xi <3025613752@qq.com>, actionchen<917981399@qq.com>
 Depends: deepin-elf-verify (>= 0.0.16.7-1), python3, python3-tk, python3-pip, aapt, adb, python3-pil, python3-setuptools, uengine, deepin-terminal

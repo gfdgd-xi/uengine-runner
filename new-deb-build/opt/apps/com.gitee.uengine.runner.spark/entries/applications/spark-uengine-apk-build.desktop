@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Categories=System;
+Terminal=false
+Exec=/usr/bin/uengine-apk-builder %F
+Icon=/opt/apps/com.gitee.uengine.runner.spark/files/icon.png
+Name=Build Apk To Deb(UEngine Runner)
+Comment=Build Apk To Deb(UEngine Runner)
+Comment[zh]=打包 deb（UEngine 运行器）
+Name[zh]=打包 deb（UEngine 运行器）
+StartupNotify=true
+Hidden=false
+NoDisplay=true
+MimeType=application/vnd.android.package-archive

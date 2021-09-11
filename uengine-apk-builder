@@ -421,6 +421,9 @@ programmenu.add_command(label="退出程序", command=window.quit)  # 设置“�
 combobox1['value'] = findApkHistory
 textbox1.configure(state=tk.DISABLED)
 textbox1.config(foreground='white', background='black')
+# 如果有参数
+if len(sys.argv) > 1:
+    combobox1.set(sys.argv[1])
 # 设置窗口
 style = ttkthemes.ThemedStyle(win)
 style.set_theme("breeze")

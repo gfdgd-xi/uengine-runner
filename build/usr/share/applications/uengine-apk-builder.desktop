@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Categories=System;
+Terminal=false
+Exec=/usr/bin/uengine-apk-builder %F
+Icon=/opt/apps/uengine-runner/icon.png
+Name=uengine Apk Builder
+Comment=UEngine Apk Builder
+Comment[zh]=UEngine 应用打包器
+Name[zh]=UEngine 应用打包器
+StartupNotify=true

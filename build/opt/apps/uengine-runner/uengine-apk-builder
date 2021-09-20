@@ -205,6 +205,10 @@ def ReStartProgram():
 def get_home():
     return os.path.expanduser('~')
 
+# 获取当前语言
+def get_now_lang()->"获取当前语言":
+    return os.getenv('LANG')
+
 # 获取用户桌面目录
 def get_desktop_path():
     for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
@@ -377,9 +381,13 @@ def get_home():
 # 程序信息
 ###########################
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+lang = get_now_lang()
+langFile = json.loads(readtxt(programPath + "/Language.json"))
+if not lang in langFile.keys():
+    lang = "en_US.UTF-8"
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]
-title = "UEngine APK 应用打包器 {}".format(version)
+title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 
 ###########################
@@ -406,17 +414,17 @@ qianZhui = tk.BooleanVar()
 
 window = ttk.Frame(win)
 frame2 = ttk.Frame(window)
-label1 = ttk.Label(window, text="要打包的 apk 路径：")
+label1 = ttk.Label(window, text=langFile[lang]["Uengine Apk Builder"]["label1"])
 combobox1 = ttk.Combobox(window, width=100)
-button2 = ttk.Button(window, text="浏览", command=FindApk)
-button3 = ttk.Button(frame2, text="打包", command=BuildDeb)
-check = ttk.Checkbutton(frame2, variable=qianZhui,text="使用前缀“uengine-dc”")
+button2 = ttk.Button(window, text=langFile[lang]["Uengine Apk Builder"]["button2"], command=FindApk)
+button3 = ttk.Button(frame2, text=langFile[lang]["Uengine Apk Builder"]["button3"], command=BuildDeb)
+check = ttk.Checkbutton(frame2, variable=qianZhui,text=langFile[lang]["Uengine Apk Builder"]["check"])
 textbox1 = tk.Text(window, width=100)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
 
-menu.add_cascade(label="程序", menu=programmenu)
-programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
+menu.add_cascade(label=langFile[lang]["Uengine Apk Builder"]["Menu"][0]["Name"], menu=programmenu)
+programmenu.add_command(label=langFile[lang]["Uengine Apk Builder"]["Menu"][0]["Menu"][0], command=window.quit)  # 设置“退出程序”项
 # 设置控件
 combobox1['value'] = findApkHistory
 textbox1.configure(state=tk.DISABLED)

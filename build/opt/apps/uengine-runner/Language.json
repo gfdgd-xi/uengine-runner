@@ -1,0 +1,247 @@
+{
+    "zh_CN.UTF-8": {
+        "Main": {
+            "MainWindow": {
+                "Title": "UEngine 运行器",
+                "LabApkPath": "安装 APK：",
+                "LabUninstallPath": "卸载 Apk：",
+                "BtnFindApk": "浏览",
+                "BtnInstall": "安装",
+                "BtnShowUengineApp": "打开 UEngine 应用列表",
+                "BtnUninstallApkBrowser": "浏览",
+                "BtnUninstall": "卸载",
+                "Btngeticon": "保存图标",
+                "BtnSaveApk": "保存Apk",
+                "Menu": [
+                    {
+                        "Name": "程序",
+                        "Menu": [
+                            "清空软件历史记录",
+                            "退出程序"
+                        ]
+                    },
+                    {
+                        "Name": "adb",
+                        "Menu": [
+                            "Adb 连接 UEngine",
+                            {
+                                "Name": "Adb 服务",
+                                "Menu": [
+                                    "打开 Adb 服务",
+                                    "停止 Adb 服务",
+                                    "杀死 Adb 进程"
+                                ]
+                            },
+                            "显示 Adb 连接的设备",
+                            "Adb 修改 UEngine 分辨率",
+                            "Adb 查看 UEngine 应用列表",
+                            "Adb 查看 UEngine 资源使用情况",
+                            "打开 Adb 连接 UEngine 的终端",
+                            "使用 Scrcpy 连接 UEngine（只支持使用 Snap 安装的 Scrcpy）",
+                            {
+                                "Name": "UEngine 使用 Adb",
+                                "Menu": [
+                                    "Adb 连接 Connect UEngine",
+                                    "允许此设备使用 Adb 连接本 UEngine（需要 Root）",
+                                    "禁止任何设备使用 Adb 连接本 UEngine（需要 Root）"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "UEngine",
+                        "Menu": [
+                            "UEngine 系统设置",
+                            "UEngine 应用打包",
+                            {
+                                "Name": "UEngine 服务",
+                                "Menu": [
+                                    "启动 UEngine 服务（需要 Root）",
+                                    "关闭 UEngine 服务（需要 Root）",
+                                    "重启 UEngine 服务（需要 Root）"
+                                ]
+                            },
+                            {
+                                "Name": "UEngine 网络桥接",
+                                "Menu": [
+                                    "启动 UEngine 网络桥接（需要 Root）",
+                                    "关闭 UEngine 网络桥接（需要 Root）",
+                                    "重启 UEngine 网络桥接（需要 Root）",
+                                    "加载 UEngine 网络桥接（需要 Root）",
+                                    "强制加载 UEngine 网络桥接（需要 Root）"
+                                ]
+                            },
+                            {
+                                "Name": "UEngine 快捷方式",
+                                "Menu": [
+                                    "发送 UEngine 应用列表到桌面",
+                                    "发送 UEngine 应用列表到启动器",
+                                    "添加/删除指定的 UEngine 快捷方式",
+                                    "清空所有 UEngine 快捷方式"
+                                ]
+                            },
+                            {
+                                "Name": "UEngine 使用 Adb",
+                                "Menu": null 
+                            },
+                            {
+                                "Name": "UEngine 数据",
+                                "Menu": [
+                                    "打开 UEngine 根目录",
+                                    "打开 UEngine 用户数据目录",
+                                    "清空 UEngine 数据（需要 Root）"
+                                ]
+                            },
+                            "UEngine 键盘映射"
+                        ]
+                    },
+                    {
+                        "Name": "关于",
+                        "Menu": [
+                            "程序官网",
+                            "关于"
+                        ]
+                    }
+                ]
+            }
+        },
+        "Uengine Apk Builder": {
+            "Title": "UEngine APK 应用打包器",
+            "label1": "要打包的 apk 路径：",
+            "button2": "浏览",
+            "button3": " 打包",
+            "check": "使用前缀“uengine-dc”",
+            "Menu": [
+                {
+                    "Name": "程序",
+                    "Menu": [
+                        "退出程序"
+                    ]
+                }
+            ]
+        }
+    },
+    "en_US.UTF-8": {
+        "Main": {
+            "MainWindow": {
+                "Title": "UEngine Runner",
+                "LabApkPath": "Install Apk:",
+                "LabUninstallPath": "Uninstall Apk",
+                "BtnFindApk": "Find",
+                "BtnInstall": "Install",
+                "BtnShowUengineApp": "Open UEngine App List",
+                "BtnUninstallApkBrowser": "Find",
+                "BtnUninstall": "Uninstall",
+                "Btngeticon": "Save Apk Icon",
+                "BtnSaveApk": "Saving Installed App Apk",
+                "Menu": [
+                    {
+                        "Name": "Program",
+                        "Menu": [
+                            "Clean Program History",
+                            "Exit The Program"
+                        ]
+                    },
+                    {
+                        "Name": "adb",
+                        "Menu": [
+                            "Use Adb To Connect UEngine",
+                            {
+                                "Name": "Adb Services",
+                                "Menu": [
+                                    "Open Adb Service",
+                                    "Close Adb Service",
+                                    "Kill Adb Program"
+                                ]
+                            },
+                            "Show Adb To Connect Devices",
+                            "Use Adb To Change UEngine Display Size",
+                            "Use Adb To Show UEngine Installing Program List",
+                            "Use Adb To Show UEngine Using System Resources",
+                            "Open Adb Console With UEngine",
+                            "Use Scrcpy Connect UEngine (Only Support Using Scrcpy With Installing the Scrcpy)",
+                            {
+                                "Name": "UEngine Use Adb",
+                                "Menu": [
+                                    "Use Adb To Connect UEngine",
+                                    "Allow This Devices Using Adb To Connect The UEngine (Allow Need Using For Root)",
+                                    "Unallow Any Devices Using Adb To Connect The UEngine (Unallow Need Using For Root)"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "UEngine",
+                        "Menu": [
+                            "UEngine System Control Panel",
+                            "UEngine Android App Builder",
+                            {
+                                "Name": "UEngine Service",
+                                "Menu": [
+                                    "Open UEngine Service (It Need Run With Root)",
+                                    "Close UEngine Service (It Need Run With Root)",
+                                    "Restart UEngine Service (It Need Run With Root)"
+                                ]
+                            },
+                            {
+                                "Name": "UEngine Internet Connecting",
+                                "Menu": [
+                                    "Open UEngine Internet Bridge (It Need Run With Root)",
+                                    "Close UEngine Internet Bridge (It Need Run With Root)",
+                                    "Restart UEngine Internet Bridge (It Need Run With Root)",
+                                    "Load UEngine Internet Bridge (It Need Run With Root)",
+                                    "Force Loading UEngine Internet Bridge (It Need Run With Root)"
+                                ]
+                            },
+                            {
+                                "Name": "UEngine App Link",
+                                "Menu": [
+                                    "Send UEngine Program List To Desktop",
+                                    "Send UEngine Program List To Launcher",
+                                    "Add Or Delete UEngine App Link",
+                                    "Delete All UEngine App Link"
+                                ]
+                            },
+                            {
+                                "Name": "UEngine Use Adb",
+                                "Menu": null 
+                            },
+                            {
+                                "Name": "UEngine Data",
+                                "Menu": [
+                                    "Open UEngine Root Folder",
+                                    "Open UEngine User Folder",
+                                    "Delete All UEngine Data (It Need Run With Root)"
+                                ]
+                            },
+                            "UEngine Keyboard"
+                        ]
+                    },
+                    {
+                        "Name": "About",
+                        "Menu": [
+                            "Program WebSize",
+                            "Program Help"
+                        ]
+                    }
+                ]
+            }
+        },
+        "Uengine Apk Builder": {
+            "Title": "UEngine APK Builder",
+            "label1": "Will Build APK Path",
+            "button2": "Find",
+            "button3": " Build",
+            "check": "Use Prefix With \"uengine-dc\"",
+            "Menu": [
+                {
+                    "Name": "Program",
+                    "Menu": [
+                        "Exit The Program"
+                    ]
+                }
+            ]
+        }
+    }
+    
+}

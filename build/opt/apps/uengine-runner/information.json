@@ -3,7 +3,7 @@
         "https://gitee.com/gfdgd-xi/uengine-runner",
 		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "1.4.3",
+    "Version": "1.5.0",
     "System": "Linux（deepin/UOS）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis",
@@ -26,6 +26,10 @@
         "4、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "V1.5.0：",
+        "※1、部分窗口支持英语",
+        "2、修复在英语状态下启动器图标名称异常的问题",
+        "",
         "V1.4.3：",
         "※1、支持打包器打包的包名带前缀“uengine-dc”",
         "※2、修复了两种情况可能导致程序卡住/出错无法继续运行的情况（配置文件夹不齐全和获取版本信息卡住两种情况）",

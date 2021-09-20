@@ -211,6 +211,10 @@ def CleanProgramHistory()->"清理历史记录":
 def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
 
+# 获取当前语言
+def get_now_lang()->"获取当前语言":
+    return os.getenv('LANG')
+
 # 发送“启动 uengine 所有程序”的 .desktop 文件到桌面
 def SendUengineAndroidListForDesktop()->"发送“启动 uengine 所有程序”的 .desktop 文件到桌面":
     global desktop
@@ -849,8 +853,12 @@ def UseProgram():
 ###########################
 # 程序信息
 ###########################
+lang = get_now_lang()
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(programPath + "/information.json"))
+langFile = json.loads(readtxt(programPath + "/Language.json"))
+if not lang in langFile.keys():
+    lang = "en_US.UTF-8"
 programUrl = information["Url"][0]
 version = information["Version"]
 goodRunSystem = information["System"]
@@ -866,7 +874,7 @@ about = '''介绍        ：一个基于 Python3 的 tkinter 制作的 UEngine �
 ©2021-{}'''.format(version, goodRunSystem, tk.TkVersion,  programUrl, time.strftime("%Y"))
 tips = "\n".join(information["Tips"])
 updateThingsString = "\n".join(information["Update"])
-title = "UEngine 运行器 {}".format(version)
+title = "{} {}".format(langFile[lang]["Main"]["MainWindow"]["Title"], version)
 updateTime = information["Time"]
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
@@ -1029,17 +1037,17 @@ win.geometry(""+"+{:.0f}+{:.0f}".format(x, y))
 # 创建控件
 FrmInstall = ttk.Frame(window)
 FrmUninstall = ttk.Frame(window)
-LabApkPath = ttk.Label(window, text="安装APK：")
-LabUninstallPath = ttk.Label(window, text="卸载APK：")
+LabApkPath = ttk.Label(window, text=langFile[lang]["Main"]["MainWindow"]["LabApkPath"])
+LabUninstallPath = ttk.Label(window, text=langFile[lang]["Main"]["MainWindow"]["LabUninstallPath"])
 ComboInstallPath = ttk.Combobox(window, width=50)
 ComboUninstallPath = ttk.Combobox(window, width=50)
-BtnFindApk = ttk.Button(FrmInstall, text="浏览", command=FindApk)
-BtnInstall = ttk.Button(FrmInstall, text="安装", command=Button3Install)
-BtnShowUengineApp = ttk.Button(window, text="打开 UEngine 应用列表", command=Button5Click)
-BtnUninstallApkBrowser = ttk.Button(FrmUninstall, text="浏览", command=BtnFindUninstallApkClk)
-BtnUninstall = ttk.Button(FrmUninstall, text="卸载", command=ButtonClick8)
-Btngeticon = ttk.Button(FrmInstall, text="保存图标", command=SaveIconToOtherPath)
-BtnSaveApk = ttk.Button(FrmInstall, text="保存apk", command=SaveInstallUengineApp)
+BtnFindApk = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnFindApk"], command=FindApk)
+BtnInstall = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnInstall"], command=Button3Install)
+BtnShowUengineApp = ttk.Button(window, text=langFile[lang]["Main"]["MainWindow"]["BtnShowUengineApp"], command=Button5Click)
+BtnUninstallApkBrowser = ttk.Button(FrmUninstall, text=langFile[lang]["Main"]["MainWindow"]["BtnUninstallApkBrowser"], command=BtnFindUninstallApkClk)
+BtnUninstall = ttk.Button(FrmUninstall, text=langFile[lang]["Main"]["MainWindow"]["BtnUninstall"], command=ButtonClick8)
+Btngeticon = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["Btngeticon"], command=SaveIconToOtherPath)
+BtnSaveApk = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnSaveApk"], command=SaveInstallUengineApp)
 # 设置菜单栏
 menu = tk.Menu(window, background="white")  
 
@@ -1056,70 +1064,70 @@ uengineIcon = tk.Menu(uengine, tearoff=0, background="white")
 uengineUseAdb = tk.Menu(uengine, tearoff=0, background="white")
 uengineData = tk.Menu(uengine, tearoff=0, background="white")
 
-menu.add_cascade(label="程序", menu=programmenu)
-menu.add_cascade(label="adb", menu=adb)
-menu.add_cascade(label="UEngine", menu=uengine)
-menu.add_cascade(label="关于", menu=help)
+menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Name"], menu=programmenu)
+menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Name"], menu=adb)
+menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Name"], menu=uengine)
+menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Name"], menu=help)
 
-programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
+programmenu.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][0], command=CleanProgramHistory)
 programmenu.add_separator()  # 设置分界线
-programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”
+programmenu.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][1], command=window.quit)  # 设置“退出程序”
 
-adb.add_command(label="adb 连接 UEngine", command=UengineConnectAdb)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][0], command=UengineConnectAdb)
 adb.add_separator()
-adb.add_cascade(label="adb 服务", menu=adbServer)
-adb.add_command(label="显示 adb 连接的设备", command=AdbConnectDeviceShow)
+adb.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Name"], menu=adbServer)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][2], command=AdbConnectDeviceShow)
 adb.add_separator()
-adb.add_command(label="adb 修改 UEngine 分辨率", command=AdbChangeUengineDisplaySize.ShowWindows)
-adb.add_command(label="adb 查看 UEngine 应用列表", command=AdbAndroidInstallAppList)
-adb.add_command(label="adb 查看 UEngine 资源使用情况", command=AdbCPUAndRAWShowInTer)
-adb.add_command(label="打开 adb 连接 UEngine 的终端", command=AdbShellShowInTer)
-adb.add_command(label="使用 Scrcpy 连接 UEngine（只支持使用snap安装的Scrcpy）", command=ScrcpyConnectUengine)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][3], command=AdbChangeUengineDisplaySize.ShowWindows)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][4], command=AdbAndroidInstallAppList)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][5], command=AdbCPUAndRAWShowInTer)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][6], command=AdbShellShowInTer)
+adb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][7], command=ScrcpyConnectUengine)
 adb.add_separator()
-adb.add_cascade(label="UEngine 使用 adb", menu=uengineUseAdb)
+adb.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Name"], menu=uengineUseAdb)
 
-adbServer.add_command(label="开启 adb 服务", command=AdbStartServer)
-adbServer.add_command(label="关闭 adb 服务", command=AdbStopServer)
-adbServer.add_command(label="杀死 adb 进程", command=AdbKillAdbProgress)
+adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][0], command=AdbStartServer)
+adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][1], command=AdbStopServer)
+adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2], command=AdbKillAdbProgress)
 
-uengine.add_command(label="UEngine 系统设置", command=UengineSettingShow)
-uengine.add_command(label="UEngine 应用打包", command=OpenUengineDebBuilder)
-#uengine.add_command(label="UEngine 键盘映射", command=KeyboardToMouse)
-uengine.add_cascade(label="UEngine 服务", menu=uengineService)
-uengine.add_cascade(label="UEngine 网络桥接", menu=uengineInternet)
-uengine.add_cascade(label="UEngine 快捷方式", menu=uengineIcon)
-uengine.add_cascade(label="UEngine 使用 adb", menu=uengineUseAdb)
-uengine.add_cascade(label="UEngine 数据", menu=uengineData)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][0], command=UengineSettingShow)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
+uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"], menu=uengineService)
+uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"], menu=uengineInternet)
+uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"], menu=uengineIcon)
+uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][5]["Name"], menu=uengineUseAdb)
+uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"], menu=uengineData)
 
-help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
-help.add_command(label="帮助", command=showhelp)  # 设置“关于这个程序”项
+help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
+help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1], command=showhelp)  # 设置“关于这个程序”项
 
-uengineService.add_command(label="启用 UEngine 服务（需要 root）", command=StartUengine)
-uengineService.add_command(label="关闭 UEngine 服务（需要 root）", command=StopUengine)
-uengineService.add_command(label="重启 UEngine 服务（需要 root）", command=UengineRestart)
+uengineService.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0], command=StartUengine)
+uengineService.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0], command=StopUengine)
+uengineService.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0], command=UengineRestart)
 
-uengineInternet.add_command(label="启用 UEngine 网络桥接（需要 root）", command=UengineBridgeStart)
-uengineInternet.add_command(label="关闭 UEngine 网络桥接（需要 root）", command=UengineBridgeStop)
-uengineInternet.add_command(label="重启 UEngine 网络桥接（需要 root）", command=UengineBridgeRestart)
-uengineInternet.add_command(label="加载 UEngine 网络桥接（需要 root）", command=UengineBridgeReload)
-uengineInternet.add_command(label="强制加载 UEngine 网络桥接（需要 root）", command=UengineBridgeForceReload)
+uengineInternet.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0], command=UengineBridgeStart)
+uengineInternet.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1], command=UengineBridgeStop)
+uengineInternet.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][2], command=UengineBridgeRestart)
+uengineInternet.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][3], command=UengineBridgeReload)
+uengineInternet.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][4], command=UengineBridgeForceReload)
 
-uengineIcon.add_command(label="发送 UEngine 应用列表到桌面", command=SendUengineAndroidListForDesktop)
-uengineIcon.add_command(label="发送 UEngine 应用列表到启动器", command=SendUengineAndroidListForLauncher)
+uengineIcon.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][0], command=SendUengineAndroidListForDesktop)
+uengineIcon.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][1], command=SendUengineAndroidListForLauncher)
 uengineIcon.add_separator()
-uengineIcon.add_command(label="添加/删除指定的 UEngine 快捷方式", command=AddNewUengineDesktopLink.ShowWindow)
+uengineIcon.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][2], command=AddNewUengineDesktopLink.ShowWindow)
 uengineIcon.add_separator()
-uengineIcon.add_command(label="清空所有 UEngine 快捷方式", command=CleanAllUengineDesktopLink)
+uengineIcon.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][3], command=CleanAllUengineDesktopLink)
 
-uengineUseAdb.add_command(label="adb 连接 UEngine", command=UengineConnectAdb)
+uengineUseAdb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][0], command=UengineConnectAdb)
 uengineUseAdb.add_separator()
-uengineUseAdb.add_command(label="允许此设备使用 adb 连接本 UEngine（需要 root）", command=UengineUseAdb)
-uengineUseAdb.add_command(label="禁止任何设备使用 adb 连接本 UEngine（需要 root）", command=UengineDoNotUseAdb)
+uengineUseAdb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][1], command=UengineUseAdb)
+uengineUseAdb.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][2], command=UengineDoNotUseAdb)
 
-uengineData.add_command(label="打开 UEngine 根目录", command=OpenUengineRootData)
-uengineData.add_command(label="打开 UEngine 用户数据目录", command=OpenUengineUserData)
+uengineData.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][0], command=OpenUengineRootData)
+uengineData.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1], command=OpenUengineUserData)
 uengineData.add_separator()
-uengineData.add_command(label="清空 UEngine 数据（需要 root）", command=BackUengineClean)
+uengineData.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2], command=BackUengineClean)
 
 menu.configure(activebackground="dodgerblue")
 help.configure(activebackground="dodgerblue")

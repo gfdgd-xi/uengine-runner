@@ -1,5 +1,8 @@
 #!/bin/sh 
+# 安装所需库
 python3 -m pip install --upgrade ttkthemes
 python3 -m pip install --upgrade pyautogui
 python3 -m pip install --upgrade keyboard
 python3 -m pip install --upgrade requests
+# 向服务器返回安装数加1（不显示内容且忽略错误）
+curl http://gfdgdxi.qicp.vip/uengine/Install.php -s > /dev/null | true

@@ -5,6 +5,6 @@ Homepage: [https://gitee.com/gfdgd-xi/uengine-runner, https://github.com/gfdgd-x
 Architecture: all
 Priority: optional
 Conflicts: com.gitee.uengine.runner.spark, spark-uengine-apk-builder
-Depends: python3, python3-tk, python3-pip, aapt, uengine, python3-pil, python3-setuptools, deepin-terminal
+Depends: python3, python3-tk, python3-pip, aapt, uengine, python3-pil, python3-setuptools, deepin-terminal, curl
 Description: UEngine Runner for deepin and UOS
 

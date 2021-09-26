@@ -313,16 +313,16 @@ def GetApkChineseLabel(apkFilePath):
             line = line.replace("'", "")
             return line
 
-def GetApkIconInApk(apkFilePath):
-    info = GetApkInformation(apkFilePath)
-    for line in info.split('\n'):
-        if "application:" in line:
-            line = line[line.index("icon='"): -1]
-            line = line.replace("icon='", "")
-            if "'" in line:
-                line = line[0: line.index("'")]
-            return line
-            return line
+#def GetApkIconInApk(apkFilePath):
+#    info = GetApkInformation(apkFilePath)
+#    for line in info.split('\n'):
+#        if "application:" in line:
+#            line = line[line.index("icon='"): -1]
+#            line = line.replace("icon='", "")
+#            if "'" in line:
+#                line = line[0: line.index("'")]
+#            return line
+#            return line
 
 #合并两个函数到一起
 def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":

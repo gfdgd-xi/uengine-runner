@@ -5,13 +5,14 @@ python3 -m pip install --upgrade requests
 python3 -m pip install --upgrade pyautogui
 python3 -m pip install --upgrade keyboard
 # 建立软链接
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner        /usr/bin/uengine-runner
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder   /usr/bin/uengine-apk-builder
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-uninstall /usr/bin/uengine-app-uninstall
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-install   /usr/bin/uengine-app-install
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-clean         /usr/bin/uengine-clean
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-about  /usr/bin/uengine-runner-about
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-keyboard      /usr/bin/uengine-keyboard
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-useadb        /usr/bin/uengine-useadb
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner              /usr/bin/uengine-runner
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder         /usr/bin/uengine-apk-builder
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-uninstall       /usr/bin/uengine-app-uninstall
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-install         /usr/bin/uengine-app-install
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-clean               /usr/bin/uengine-clean
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-about        /usr/bin/uengine-runner-about
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-keyboard            /usr/bin/uengine-keyboard
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-useadb              /usr/bin/uengine-useadb
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-launch.sh    /usr/bin/uengine-runner-launch.sh
 # 向服务器返回安装数加1（不显示内容且忽略错误）
 curl http://gfdgdxi.qicp.vip/uengine/Install.php -s > /dev/null | true

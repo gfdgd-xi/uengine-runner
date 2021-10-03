@@ -3,7 +3,7 @@ Categories=System;
 Comment=UEngine System Control Panel
 Comment[zh]=UEngine 系统设置
 Encoding=UTF-8
-Exec=/usr/bin/uengine-launch.sh --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings
+Exec=/usr/bin/uengine launch --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings
 Icon=/opt/apps/com.gitee.uengine.runner.spark/files/icon.png
 MimeType=
 Name=UEngine System Control Panel

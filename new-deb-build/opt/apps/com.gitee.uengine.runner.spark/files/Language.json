@@ -3,7 +3,7 @@
         "Main": {
             "MainWindow": {
                 "Title": "UEngine 运行器",
-                "LabApkPath": "安装 APK：",
+                "LabApkPath": "安装/卸载 APK：",
                 "LabUninstallPath": "卸载 Apk：",
                 "BtnFindApk": "浏览",
                 "BtnInstall": "安装",
@@ -12,6 +12,7 @@
                 "BtnUninstall": "卸载",
                 "Btngeticon": "保存图标",
                 "BtnSaveApk": "保存Apk",
+                "BtnApkInformation": "Apk 信息",
                 "Menu": [
                     {
                         "Name": "程序",
@@ -125,8 +126,7 @@
         "Main": {
             "MainWindow": {
                 "Title": "UEngine Runner",
-                "LabApkPath": "Install Apk:",
-                "LabUninstallPath": "Uninstall Apk",
+                "LabApkPath": "Install Or Uninstall Apk:",
                 "BtnFindApk": "Find",
                 "BtnInstall": "Install",
                 "BtnShowUengineApp": "Open UEngine App List",
@@ -134,6 +134,7 @@
                 "BtnUninstall": "Uninstall",
                 "Btngeticon": "Save Apk Icon",
                 "BtnSaveApk": "Saving Installed App Apk",
+                "BtnApkInformation": "Apk Information",
                 "Menu": [
                     {
                         "Name": "Program",

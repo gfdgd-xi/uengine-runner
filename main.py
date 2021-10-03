@@ -3,7 +3,7 @@
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
 # 版本：1.4.3
-# 更新时间：2021年9月20日（中秋了）
+# 更新时间：2021年10月03日（国庆了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>
@@ -156,13 +156,19 @@ def GetCommandReturn(cmd: "命令")->"运行系统命令并获取返回值":
     # cmd 是要获取输出的命令
     return subprocess.getoutput(cmd)
 
+def GetSystemVersion():
+    systemInformation = readtxt("/etc/os-release")
+    for systemInformation in systemInformation.split('\n'):
+        if "PRETTY_NAME=" in systemInformation:
+            return systemInformation.replace("PRETTY_NAME=", "").replace('"', '')
+
 # 打开所有窗口事件
 def Button5Click():
     threading.Thread(target=OpenUengineProgramList).start()
 
 # 打开“uengine 所有程序列表”
 def OpenUengineProgramList()->"打开“uengine 所有程序列表”":
-    os.system("/usr/bin/uengine-launch.sh --package=org.anbox.appmgr --component=org.anbox.appmgr.AppViewActivity")
+    os.system("uengine launch --package=org.anbox.appmgr --component=org.anbox.appmgr.AppViewActivity")
 
 # 显示“关于这个程序”窗口
 #def about_this_program()->"显示“关于这个程序”窗口":
@@ -329,7 +335,7 @@ def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", s
     things = '''[Desktop Entry]
 Categories=app;
 Encoding=UTF-8
-Exec=/usr/bin/uengine-launch.sh --action=android.intent.action.MAIN --package={} --component={}
+Exec=uengine launch --action=android.intent.action.MAIN --package={} --component={}
 GenericName={}
 Icon={}
 MimeType=
@@ -550,7 +556,7 @@ def AdbCPUAndRAWShowInTer():
     threading.Thread(target=os.system, args=["deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell top'"]).start()
 
 def UengineSettingShow():
-    threading.Thread(target=os.system, args=["/usr/bin/uengine-launch.sh --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings"]).start()
+    threading.Thread(target=os.system, args=["/usr/bin/uengine launch --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings"]).start()
 
 # 杀死 adb 进程
 def AdbKillAdbProgress():
@@ -648,7 +654,11 @@ class ApkInformation():
         # 获取图标
         SaveApkIcon(path, "/tmp/uengine-runner-android-app-icon.png")
         # 读取图标
-        ttk.Label(tab1, image=ImageTk.PhotoImage(Image.open("/tmp/uengine-runner-android-app-icon.png").resize((256, 256), Image.ANTIALIAS))).pack()
+        image = Image.open("/tmp/uengine-runner-android-app-icon.png")
+        if image.size[0] + image.size[1] <= 512:
+            ttk.Label(tab1, image=ImageTk.PhotoImage(image)).pack()
+        else:
+            ttk.Label(tab1, image=ImageTk.PhotoImage(image.resize((256, 256), Image.ANTIALIAS))).pack()
         info = '''包名：{}
 中文名：{}
 Activity：{}
@@ -879,7 +889,7 @@ class AddNewUengineDesktopLink():
 
     # 打开测试
     def TestOpen():
-        threading.Thread(target=os.system, args=["/usr/bin/uengine-launch.sh --package={} --component={}".format(packageName.get(), activityName.get())]).start()
+        threading.Thread(target=os.system, args=["/usr/bin/uengine launch --package={} --component={}".format(packageName.get(), activityName.get())]).start()
         AddNewUengineDesktopLink.SaveHistory()
 
     # 浏览文件
@@ -888,7 +898,7 @@ class AddNewUengineDesktopLink():
         if path == "" or path == ():
             return
         packageName.set(GetApkPackageName(path))
-        activityName.set(GetApkActivityName(path))
+        activityName.set(str(GetApkActivityName(path)))
         write_txt(get_home() + "/.config/uengine-runner/FindApkName.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
 
 def UseProgram():
@@ -925,15 +935,20 @@ programUrl = information["Url"][0]
 version = information["Version"]
 goodRunSystem = information["System"]
 aaptVersion = GetCommandReturn("aapt version")
+SystemVersion = GetSystemVersion()
 about = '''介绍        ：一个基于 Python3 的 tkinter 制作的 UEngine 运行器，在新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。
 
 版本        ：{}
 
 适用平台    ：{}
 
+Tk 版本     :{}
+
 程序官网    ：{}
 
-©2021-{}'''.format(version, goodRunSystem, tk.TkVersion,  programUrl, time.strftime("%Y"))
+系统版本    :{}
+
+©2021-{}'''.format(version, goodRunSystem, tk.TkVersion,  programUrl, SystemVersion, time.strftime("%Y"))
 tips = "\n".join(information["Tips"])
 updateThingsString = "\n".join(information["Update"])
 title = "{} {}".format(langFile[lang]["Main"]["MainWindow"]["Title"], version)

@@ -1,8 +1,42 @@
 #!/usr/bin/env python3
+import base64
+import urllib.parse as parse
 import requests
 import ttkthemes
 import tkinter as tk
 import tkinter.ttk as ttk
+import tkinter.messagebox as messagebox
+
+def 加密():
+    url = "http://"
+    bytes_url = url.encode("utf-8")
+    str_url = base64.b64encode(bytes_url)
+    print(str_url)
+
+def 解密():
+    url = ""
+    str_url = base64.b64decode(url).decode("utf-8")
+    print(str_url)
+
+def Update(name, stars, contact, things):
+    # 替换换行符
+    things = things.replace("\n", "\\n")
+    # url 编码
+    print(parse.quote(name))
+    print(parse.quote(stars))
+    print(parse.quote(contact))
+    print(parse.quote(things))
+    # post 内容
+    data = {
+        "Name": name,
+        "Starts": stars,
+        "Contact": contact,
+        "Things": things
+    }
+    requests.post(url, data=data)
+    
+def UpdateButtonClick():
+    Update(name=nameThings.get(), stars=starValue.get(), contact=contactThings.get(), things=updateThings.get(1.0, "end"))
 
 window = tk.Tk()
 win = ttk.Frame()
@@ -22,7 +56,7 @@ starMenu = ttk.OptionMenu(win, starValue, "5分", "5分", "4分", "3分", "2分"
 updateThingsTips = ttk.Label(win, text="反馈内容（支持 Markdown 格式）：")
 updateThings = tk.Text(win)
 
-updateButton = ttk.Button(win, text="提交")
+updateButton = ttk.Button(win, text="提交", command=UpdateButtonClick)
 
 name.grid(row=0, column=0)
 nameThings.grid(row=0, column=1)

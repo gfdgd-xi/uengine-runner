@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+import requests
+import ttkthemes
+import tkinter as tk
+import tkinter.ttk as ttk
+
+window = tk.Tk()
+win = ttk.Frame()
+
+starValue = tk.StringVar()
+starValue.set("5分")
+
+name = ttk.Label(win, text="你的昵称：")
+nameThings = ttk.Entry(win, width=25)
+
+contact = ttk.Label(win, text="联系方式：")
+contactThings = ttk.Entry(win, width=25)
+
+star = ttk.Label(win, text="评分：")
+starMenu = ttk.OptionMenu(win, starValue, "5分", "5分", "4分", "3分", "2分", "1分")
+
+updateThingsTips = ttk.Label(win, text="反馈内容（支持 Markdown 格式）：")
+updateThings = tk.Text(win)
+
+updateButton = ttk.Button(win, text="提交")
+
+name.grid(row=0, column=0)
+nameThings.grid(row=0, column=1)
+
+contact.grid(row=0, column=2)
+contactThings.grid(row=0, column=3)
+
+star.grid(row=0, column=4)
+starMenu.grid(row=0, column=5)
+
+updateThingsTips.grid(row=1, column=0, columnspan=2)
+updateThings.grid(row=2, column=0, columnspan=6)
+
+updateButton.grid(row=3, column=5)
+
+win.pack(expand="yes", fill="both")
+window.mainloop()

@@ -93,7 +93,8 @@
                                     "清空 UEngine 数据（需要 Root）"
                                 ]
                             },
-                            "UEngine 键盘映射"
+                            "UEngine 键盘映射",
+                            "UEngine 检测 CPU 是否支持运行"
                         ]
                     },
                     {
@@ -215,7 +216,8 @@
                                     "Delete All UEngine Data (It Need Run With Root)"
                                 ]
                             },
-                            "UEngine Keyboard"
+                            "UEngine Keyboard",
+                            "UEngine Check CPU Can Or Can't Run"
                         ]
                     },
                     {

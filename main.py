@@ -91,8 +91,8 @@ def FindApk()->"浏览窗口":
 
 # 安装按钮事件
 def Button3Install():
-    if ComboInstallPath.get() is "":
-        messagebox.showerror(title="提示", message="信息没有填写完整，无法继续安装 APK")
+    if ComboInstallPath.get() is "" or not os.path.exists(ComboInstallPath.get()):
+        messagebox.showerror(title="提示", message="信息没有填写完整或错误，无法继续安装 APK")
         return
     DisabledAndEnbled(True)
     threading.Thread(target=InstallApk, args=(ComboInstallPath.get(),)).start()
@@ -518,6 +518,14 @@ def SaveInstallUengineApp():
         traceback.print_exc()
         messagebox.showerror(title="错误", message=traceback.format_exc())
     
+def UengineCheckCpu():
+    english = GetCommandReturn("uengine check-features")
+    chinese = GetCommandReturn("trans -b \"{}\"".format(english))  # 获取中文翻译
+    for i in chinese.split("\n"):  # 删除提示
+        if "Did you mean:" in i:
+            chinese = chinese.replace(i, "").replace("\n", "") 
+    messagebox.showinfo(title="提示", message="{}\n{}".format(english, chinese))
+
 # 获取用户主目录
 def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
@@ -1171,6 +1179,7 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][0], command=UengineSettingShow)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"], menu=uengineService)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"], menu=uengineInternet)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"], menu=uengineIcon)

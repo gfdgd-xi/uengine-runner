@@ -93,14 +93,18 @@
                                     "清空 UEngine 数据（需要 Root）"
                                 ]
                             },
-                            "UEngine 键盘映射"
+                            "UEngine 键盘映射",
+                            "UEngine 检测 CPU 是否支持运行",
+                            "删除 UEngine 运行检查",
+                            "重新安装 UEngine"
                         ]
                     },
                     {
                         "Name": "关于",
                         "Menu": [
                             "程序官网",
-                            "关于"
+                            "关于",
+                            "反馈程序问题和建议"
                         ]
                     }
                 ]
@@ -215,14 +219,18 @@
                                     "Delete All UEngine Data (It Need Run With Root)"
                                 ]
                             },
-                            "UEngine Keyboard"
+                            "UEngine Keyboard",
+                            "UEngine Check CPU Can Or Can't Run",
+                            "Delete UEngine Runing Checking",
+                            "Reinstall UEngine"
                         ]
                     },
                     {
                         "Name": "About",
                         "Menu": [
                             "Program WebSize",
-                            "Program Help"
+                            "Program Help",
+                            "Upload Problem And Advice"
                         ]
                     }
                 ]

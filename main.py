@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.4.3
-# 更新时间：2021年10月03日（国庆了）
+# 版本：1.5.1
+# 更新时间：2021年10月05日（国庆了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>
@@ -520,11 +520,11 @@ def SaveInstallUengineApp():
     
 def UengineCheckCpu():
     english = GetCommandReturn("uengine check-features")
-    chinese = GetCommandReturn("trans -b \"{}\"".format(english))  # 获取中文翻译
-    for i in chinese.split("\n"):  # 删除提示
-        if "Did you mean:" in i:
-            chinese = chinese.replace(i, "").replace("\n", "") 
-    messagebox.showinfo(title="提示", message="{}\n{}".format(english, chinese))
+    #chinese = GetCommandReturn("trans -b \"{}\"".format(english))  # 获取中文翻译
+    #for i in chinese.split("\n"):  # 删除提示
+    #    if "Did you mean:" in i:
+    #        chinese = chinese.replace(i, "").replace("\n", "") 
+    messagebox.showinfo(title="提示", message="{}".format(english))
 
 # 获取用户主目录
 def get_home()->"获取用户主目录":
@@ -581,6 +581,16 @@ def AdbStartServer():
     os.system("adb start-server")
     messagebox.showinfo(title="提示", message="完成！")
 
+def ReinstallUengine():
+    threading.Thread(target=os.system, args=["deepin-terminal -C 'pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\"'"]).start()
+
+def DelUengineCheck():
+    if not os.path.exists("/usr/share/uengine/uengine-check-runnable.sh"):
+        messagebox.showinfo(title="提示", message="本功能已经被删除，无法重复删除！")
+        return
+    if messagebox.askokcancel(title="警告", message="删除后将无法使用本软件恢复\n如果需要恢复本功能，请重新安装 UEngine！"):
+        threading.Thread(target=InstallWindow.ShowWindows, args=["pkexec rm -v /usr/share/uengine/uengine-check-runnable.sh"]).start()
+
 # 使用 adb 连接 uengine
 def UengineConnectAdb():
     messagebox.showinfo(title="提示", message=subprocess.getoutput("adb connect 192.168.250.2:5555"))
@@ -599,6 +609,9 @@ def UengineDoNotUseAdb():
         messagebox.showinfo(title="提示", message="你的 uengine 在设置前已经禁用 adb 连接，无需重复设置")
         return
     threading.Thread(target=os.system, args=["pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-useadb 1".format(programPath)]).start()
+
+def UengineRunnerBugUpload():
+    threading.Thread(target=os.system, args=[programPath + "/uengine-runner-update-bug"]).start()
 
 def AdbConnectDeviceShow():
     ShowTextTipsWindow.ShowWindow(subprocess.getoutput("adb devices -l"))
@@ -1103,7 +1116,6 @@ win = tk.Tk()  # 创建窗口
 style = ttkthemes.ThemedStyle(win)
 style.set_theme("breeze")
 window = ttk.Frame(win)
-win.attributes('-alpha', 0.5)
 win.title(title)
 win.resizable(0, 0)
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
@@ -1176,7 +1188,7 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][1], command=AdbStopServer)
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2], command=AdbKillAdbProgress)
 
-uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][0], command=UengineSettingShow)
+#uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][0], command=UengineSettingShow)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)
@@ -1185,8 +1197,11 @@ uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"], menu=uengineIcon)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][5]["Name"], menu=uengineUseAdb)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"], menu=uengineData)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9], command=DelUengineCheck)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10], command=ReinstallUengine)
 
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
+help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“程序官网”项
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1], command=showhelp)  # 设置“关于这个程序”项
 
 uengineService.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0], command=StartUengine)

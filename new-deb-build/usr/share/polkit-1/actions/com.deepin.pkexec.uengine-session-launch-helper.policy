@@ -8,7 +8,7 @@
   <action id="com.deepin.pkexec.uengine-session-launch-helper">
     <message>Authentication is required to Change UEngine</message>
     <message xml:lang="zh_CN">设置 UEngine 需要输入密码</message>
-    <icon_name>/usr/share/uengine/ui/uengine_logo.svg</icon_name>
+    <icon_name>uengine</icon_name>
     <defaults>
       <allow_any>no</allow_any>
       <allow_inactive>no</allow_inactive>

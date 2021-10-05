@@ -1,15 +1,21 @@
 #!/bin/sh 
 # 使用 pip 安装所需库
-python3 -m pip install --upgrade ttkthemes
-python3 -m pip install --upgrade requests
-python3 -m pip install --upgrade pyautogui
-python3 -m pip install --upgrade keyboard
+python3 -m pip install --upgrade ttkthemes  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade requests   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade pyautogui  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade keyboard   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 # 建立软链接
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner        /usr/bin/uengine-runner
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder   /usr/bin/uengine-apk-builder
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-uninstall /usr/bin/uengine-app-uninstall
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-install   /usr/bin/uengine-app-install
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-clean         /usr/bin/uengine-clean
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-about  /usr/bin/uengine-runner-about
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-keyboard      /usr/bin/uengine-keyboard
-ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-useadb        /usr/bin/uengine-useadb
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner              /usr/bin/uengine-runner
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder         /usr/bin/uengine-apk-builder
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-uninstall       /usr/bin/uengine-app-uninstall
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-app-install         /usr/bin/uengine-app-install
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-clean               /usr/bin/uengine-clean
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-about        /usr/bin/uengine-runner-about
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-keyboard            /usr/bin/uengine-keyboard
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-useadb              /usr/bin/uengine-useadb
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-launch.sh    /usr/bin/uengine-runner-launch.sh
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-update-bug   /usr/bin/uengine-runner-update-bug
+# 刷新图标缓存
+#gtk-update-icon-cache /usr/share/icons/bloom
+# 向服务器返回安装数加1（不显示内容且忽略错误）
+curl http://gfdgdxi.qicp.vip/uengine/Install.php -s > /dev/null | true

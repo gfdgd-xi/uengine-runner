@@ -75,7 +75,6 @@ def ButtonClick8():
     threading.Thread(target=UninstallProgram, args=[path]).start()
 
 # 浏览窗口
-# temp strs
 temppath=""
 def FindApk()->"浏览窗口":
     path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApk.json"))["path"])
@@ -169,26 +168,6 @@ def Button5Click():
 # 打开“uengine 所有程序列表”
 def OpenUengineProgramList()->"打开“uengine 所有程序列表”":
     os.system("uengine launch --package=org.anbox.appmgr --component=org.anbox.appmgr.AppViewActivity")
-
-# 显示“关于这个程序”窗口
-#def about_this_program()->"显示“关于这个程序”窗口":
-#    global about
-#    global title
-#    global iconPath
-#    mess = tk.Toplevel()
-#    message = ttk.Frame(mess)
-#    mess.resizable(0, 0)
-#    mess.title("关于 {}".format(title))
-#    #mess.iconphoto(False, tk.PhotoImage(file=iconPath))
-#    img = ImageTk.PhotoImage(Image.open(iconPath))
-#    LabApkPath = ttk.Label(message, image=img)
-#    label2 = ttk.Label(message, text=about)
-#    button1 = ttk.Button(message, text="确定", command=mess.withdraw)
-#    LabApkPath.pack()
-#    label2.pack()
-#    button1.pack(side="bottom")
-#    message.pack()
-#    mess.mainloop()
 
 # 显示“提示”窗口
 def helps()->"显示“提示”窗口":
@@ -520,10 +499,6 @@ def SaveInstallUengineApp():
     
 def UengineCheckCpu():
     english = GetCommandReturn("uengine check-features")
-    #chinese = GetCommandReturn("trans -b \"{}\"".format(english))  # 获取中文翻译
-    #for i in chinese.split("\n"):  # 删除提示
-    #    if "Did you mean:" in i:
-    #        chinese = chinese.replace(i, "").replace("\n", "") 
     messagebox.showinfo(title="提示", message="{}".format(english))
 
 # 获取用户主目录
@@ -1270,11 +1245,6 @@ FrmInstall.grid(row=0, column=1,padx=3, rowspan=3)
 BtnFindApk.grid(row=0, column=0)
 BtnInstall.grid(row=0, column=1)
 
-#LabUninstallPath.grid(row=4, column=0,sticky= tk.W,padx=3)
-#ComboUninstallPath.grid(row=5, column=0,padx=3)
-
-#FrmUninstall.grid(row=5, column=1,padx=3)
-#BtnUninstallApkBrowser.grid(row=0, column=0)
 BtnUninstall.grid(row=1, column=0)
 
 BtnShowUengineApp.grid(row=2, column=0,sticky= tk.W,padx=3,pady=2)

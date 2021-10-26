@@ -1,0 +1,21 @@
+{
+    "Url": [
+        "https://gitee.com/gfdgd-xi/uengine-runner",
+		"https://github.com/gfdgd-xi/uengine-runner"
+    ],
+    "Version": "1.0.0 For arm64",
+    "System": "Linux（deepin/UOS）",
+    "Tips": [
+        "提示：",
+        ""
+    ],
+    "Update": [
+        ""
+    ],
+    "Use": [
+        ""
+    ],
+    "Time": "2021年10月17日",
+    "Contribute": ["gfdgd xi<3025613752@qq.com>",
+        "actionchen<917981399@qq.com>"]
+}

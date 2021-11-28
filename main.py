@@ -309,6 +309,18 @@ def GetApkPackageName(apkFilePath: "apk 所在路径")->"获取 apk 包名":
             line = line.replace(" ", "")
             return line
 
+def InstallRootUengineImage():
+    if not os.path.exists:
+        os.mkdir("/tmp/uengine-runner")
+    write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.org/gfdgd-xi/uengine-runner/releases/download/U1.1.14/uengine-android-image_1.1.14_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+
+def BuildRootUengineImage():
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/root-uengine.sh")]).start()
+    
+def ReinstallUengineImage():
+    threading.Thread(target=os.system, args=["deepin-terminal -e ''pkexec apt reinstall uengine-android-image"]).start()
+
 # 生成 uengine 启动文件到桌面
 def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", showName: "显示名称", iconPath: "程序图标所在目录", savePath:".desktop 文件保存路径")->"生成 uengine 启动文件到桌面":
     things = '''[Desktop Entry]
@@ -1136,6 +1148,7 @@ uengineInternet = tk.Menu(uengine, tearoff=0, background="white")
 uengineIcon = tk.Menu(uengine, tearoff=0, background="white")
 uengineUseAdb = tk.Menu(uengine, tearoff=0, background="white")
 uengineData = tk.Menu(uengine, tearoff=0, background="white")
+uengineRoot = tk.Menu(uengine, tearoff=0, background="white")
 
 menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Name"], menu=programmenu)
 menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Name"], menu=adb)
@@ -1174,6 +1187,7 @@ uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"], menu=uengineData)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9], command=DelUengineCheck)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10], command=ReinstallUengine)
+uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"], menu=uengineRoot)
 
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“程序官网”项
@@ -1205,6 +1219,11 @@ uengineData.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["M
 uengineData.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1], command=OpenUengineUserData)
 uengineData.add_separator()
 uengineData.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2], command=BackUengineClean)
+
+uengineRoot.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Menu"][0], command=InstallRootUengineImage)
+uengineRoot.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Menu"][1], command=BuildRootUengineImage)
+uengineRoot.add_separator()
+uengineRoot.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Menu"][2], command=ReinstallUengineImage)
 
 menu.configure(activebackground="dodgerblue")
 help.configure(activebackground="dodgerblue")

@@ -28,7 +28,7 @@ def Update(name, stars, contact, things, version):
         "Version": version
     }
     try:
-        messagebox.showinfo(message=requests.post(parse.unquote(base64.b64decode("aHR0cCUzQS8vZ2ZkZ2R4aS5xaWNwLnZpcC91ZW5naW5lL2J1Zy91cGxvYWQucGhw").decode("utf-8")), data=data).text)
+        messagebox.showinfo(message=requests.post(parse.unquote(base64.b64decode("aHR0cCUzQS8vMTIwLjI1LjE1My4xNDQvdWVuZ2luZS1ydW5uZXIvYnVnL3VwbG9hZC5waHA=").decode("utf-8")), data=data).text)
     except:
         traceback.print_exc()
         messagebox.showerror(title="错误", message="服务器疑似出现错误，可以进行以下尝试：①多尝试几次；②使用其他反馈途径\n错误信息：{}".format(traceback.format_exc()))

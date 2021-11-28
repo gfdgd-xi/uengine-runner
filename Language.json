@@ -96,7 +96,15 @@
                             "UEngine 键盘映射",
                             "UEngine 检测 CPU 是否支持运行",
                             "删除 UEngine 运行检查",
-                            "重新安装 UEngine"
+                            "重新安装 UEngine",
+                            {
+                                "Name": "获取 UEngine 最高权限",
+                                "Menu": [
+                                    "安装已经制作好的 UEngine 带最高权限的镜像",
+                                    "构建 UEngine 带最高权限的镜像到用户主目录",
+                                    "安装默认的 UEngine 镜像"
+                                ]
+                            }
                         ]
                     },
                     {
@@ -222,7 +230,15 @@
                             "UEngine Keyboard",
                             "UEngine Check CPU Can Or Can't Run",
                             "Delete UEngine Runing Checking",
-                            "Reinstall UEngine"
+                            "Reinstall UEngine",
+                            {
+                                "Name": "Get UEngine Root User",
+                                "Menu": [
+                                    "Install UEngine Image With Root User",
+                                    "Build An UEngine Image With Root User In Your Home Path",
+                                    "Install Defult UEngine Image"
+                                ]
+                            }
                         ]
                     },
                     {

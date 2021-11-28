@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.4.2
-# 更新时间：2021年8月30日
+# 版本：1.5.1
+# 更新时间：2021年10月06日
 # 感谢：anbox、deepin 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -435,7 +435,7 @@ if len(sys.argv) > 1:
 # 设置窗口
 style = ttkthemes.ThemedStyle(win)
 style.set_theme("breeze")
-win.attributes('-alpha', 0.5)
+#win.attributes('-alpha', 0.5)
 win.title(title)
 win.resizable(0, 0)
 win.iconphoto(False, tk.PhotoImage(file=iconPath))

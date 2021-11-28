@@ -954,7 +954,7 @@ Tk 版本     :{}
 
 程序官网    ：{}
 
-系统版本    :{}
+系统版本    : {}
 
 ©2021-{}'''.format(version, goodRunSystem, tk.TkVersion,  programUrl, SystemVersion, time.strftime("%Y"))
 tips = "\n".join(information["Tips"])

@@ -35,8 +35,9 @@ from getxmlimg import getsavexml
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":
     try:
-        global fineUninstallApkHistory
+        global fineUninstallApkHistory 
         Return = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(package))
+        print(Return)
         if os.path.exists("{}/.local/share/applications/{}.desktop".format(get_home(), package)):
             os.remove("{}/.local/share/applications/{}.desktop".format(get_home(), package))
         if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):

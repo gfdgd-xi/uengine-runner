@@ -1,9 +1,9 @@
-# uengine 运行器 1.5.2
+# uengine 运行器 1.5.3
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![1.5.2](https://storage.deepin.org/thread/202111281607295590_截图_选择区域_20211128160706.png)
-（测试平台：UOS 家庭版，deepin 20.2.2,UOS 专业版 1040）   
+![1.5.3](https://storage.deepin.org/thread/202112121231595786_截图_选择区域_20211212123106.png)
+（测试平台：UOS 家庭版 21.1，deepin 20.3,UOS 专业版 1040）   
 （自己美术功底太差，图标直接用 anbox 的了）   
 
 ## 安装前必读
@@ -15,10 +15,11 @@
 ### 更新内容
 #### V1.5.3（2021-12-12，DDUC11版，未完全完工）：
 ##### 更新内容
-**※1、“添加/删除 UEngine 图标”窗口的写入按钮在目录**`~/.local/share/icons/hicolor/256x256/apps`**不存在时点击无反应，参考报错1.5.3-1**    
-**※2、修复了“UEngine APK 应用打包器”打包的deb包的.desktop文件的**`Icon`**和**`Exec`**字段有误的问题以及使用“使用前缀‘uengine-dc’”前缀的问题**  
-3、“UEngine APK 应用打包器”支持打包完后自动删除临时目录  
-4、“UEngine APK 应用打包器”以及“添加/删除 UEngine 图标”支持在运行出现错误时显示报错  
+**※1、修复了在 UOS 家庭版安装 apk 文件安装包信息为 None 的问题**  
+**※2、“添加/删除 UEngine 图标”窗口的写入按钮在目录**`~/.local/share/icons/hicolor/256x256/apps`**不存在时点击无反应，参考报错1.5.3-1**    
+**※3、修复了“UEngine APK 应用打包器”打包的deb包的.desktop文件的**`Icon`**和**`Exec`**字段有误的问题以及使用“使用前缀‘uengine-dc’”前缀的问题**  
+4、“UEngine APK 应用打包器”支持打包完后自动删除临时目录  
+5、“UEngine APK 应用打包器”以及“添加/删除 UEngine 图标”支持在运行出现错误时显示报错  
 ##### 报错：
 *1.5.3-1*
 ```bash
@@ -34,6 +35,8 @@ Traceback (most recent call last):
     with open(dst, 'wb') as fdst:
 FileNotFoundError: [Errno 2] No such file or directory: '/home/gfdgd_xi/.local/share/icons/hicolor/256x256/apps/com.miHoYo.cloudgames.ys.png'
 ```
+##### 截图
+![1.5.3](https://storage.deepin.org/thread/202112121231595786_截图_选择区域_20211212123106.png)
 
 #### V1.5.2（2021-11-28）：
 **※1、支持安装和构建带 Root 的 UEngine 的镜像**  

@@ -21,11 +21,12 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
-        "V1.5.3（未完全完工）：",
-        "※1、“添加/删除 UEngine 图标”窗口的写入按钮在目录~/.local/share/icons/hicolor/256x256/apps不存在时点击无反应，参考报错",
-        "※2、修复了“UEngine APK应用打包器”打包的deb包的.desktop文件的Icon和Exec字段有误的问题以及使用“使用前缀‘uengine-dc’”前缀的问题",
-        "3、“UEngine APK应用打包器”支持打包完后自动删除临时目录",
-        "4、“UEngine APK应用打包器”以及“添加/删除UEngine图标”支持在运行出现错误时显示报错",
+        "V1.5.3：",
+        "※1、修复了在 UOS 家庭版安装 apk 文件安装包信息为 None 的问题",
+        "※2、“添加/删除 UEngine 图标”窗口的写入按钮在目录~/.local/share/icons/hicolor/256x256/apps不存在时点击无反应，参考报错",
+        "※3、修复了“UEngine APK应用打包器”打包的deb包的.desktop文件的Icon和Exec字段有误的问题以及使用“使用前缀‘uengine-dc’”前缀的问题",
+        "4、“UEngine APK应用打包器”支持打包完后自动删除临时目录",
+        "5、“UEngine APK应用打包器”以及“添加/删除UEngine图标”支持在运行出现错误时显示报错",
         "",
         "V1.5.2：",
         "※1、支持安装和构建带Root的UEngine的镜像",

@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.5.1
-# 更新时间：2021年10月05日（国庆了）
+# 版本：1.5.3
+# 更新时间：2021年12月12日（DDUC11了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>
@@ -35,8 +35,9 @@ from getxmlimg import getsavexml
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":
     try:
-        global fineUninstallApkHistory
+        global fineUninstallApkHistory 
         Return = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(package))
+        print(Return)
         if os.path.exists("{}/.local/share/applications/{}.desktop".format(get_home(), package)):
             os.remove("{}/.local/share/applications/{}.desktop".format(get_home(), package))
         if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
@@ -104,15 +105,13 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
             os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
         print("start install apk")
         global findApkHistory
-        commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
-        print(commandReturn)
         print("start install apk12")
         iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(path))
         tempstr1 = iconSavePath
         print("start install apk1")
         iconSaveDir = os.path.dirname(iconSavePath)
         if not os.path.exists(iconSaveDir):
-          os.makedirs(iconSaveDir,exist_ok=True)
+            os.makedirs(iconSaveDir,exist_ok=True)
         SaveApkIcon(path, iconSavePath)
         print("start install apk2")
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
@@ -120,6 +119,8 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
         print("start install apk3")
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
                             "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
+        commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
+        print(commandReturn)
         print("\nprint install complete")
         if quit:
             print(commandReturn)
@@ -857,31 +858,42 @@ class AddNewUengineDesktopLink():
 
     # 添加快捷方式
     def SaveDesktopLink():
-        if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
-            if not messagebox.askokcancel(title="提示", message="文件已存在，确定要覆盖吗？"):
-                return
-        global activityName
-        iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.get())
-        shutil.copy(programPath + "/defult.png", iconSavePath)
-        BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
-            "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
-        BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
-            "{}/{}.desktop".format(get_desktop_path(), packageName.get()))
-        AddNewUengineDesktopLink.SaveHistory()
-        messagebox.showinfo(title="提示", message="创建完毕！")
+        try:
+            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
+                if not messagebox.askokcancel(title="提示", message="文件已存在，确定要覆盖吗？"):
+                    return
+            if not os.path.exists("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home())):
+                os.makedirs("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home()))
+            global activityName
+            iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.get())
+            shutil.copy(programPath + "/defult.png", iconSavePath)
+            BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
+                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
+            BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
+                "{}/{}.desktop".format(get_desktop_path(), packageName.get()))
+            AddNewUengineDesktopLink.SaveHistory()
+            messagebox.showinfo(title="提示", message="创建完毕！")
+        except:
+            traceback.print_exc()
+            messagebox.showerror(title="错误", message=traceback.format_exc())
+
 
     # 删除快捷方式
     def DelDesktopLink():
-        global packageName
-        if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
-            messagebox.showerror(title="错误", message="此包名对应的 UEngine 桌面快捷方式不存在！")
-            return
-        if not messagebox.askyesno(title="提示", message="你确定要删除吗？删除后将无法恢复！"):
-            return
         try:
-            os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
-            AddNewUengineDesktopLink.SaveHistory()
-            messagebox.showinfo(title="提示", message="已删除")
+            global packageName
+            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
+                messagebox.showerror(title="错误", message="此包名对应的 UEngine 桌面快捷方式不存在！")
+                return
+            if not messagebox.askyesno(title="提示", message="你确定要删除吗？删除后将无法恢复！"):
+                return
+            try:
+                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
+                AddNewUengineDesktopLink.SaveHistory()
+                messagebox.showinfo(title="提示", message="已删除")
+            except:
+                traceback.print_exc()
+                messagebox.showerror(title="错误", message=traceback.format_exc())
         except:
             traceback.print_exc()
             messagebox.showerror(title="错误", message=traceback.format_exc())
@@ -954,7 +966,7 @@ Tk 版本     :{}
 
 程序官网    ：{}
 
-系统版本    :{}
+系统版本    : {}
 
 ©2021-{}'''.format(version, goodRunSystem, tk.TkVersion,  programUrl, SystemVersion, time.strftime("%Y"))
 tips = "\n".join(information["Tips"])

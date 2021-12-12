@@ -66,14 +66,14 @@ starValue.set("5分")
 name = ttk.Label(win, text="你的昵称：")
 nameThings = ttk.Entry(win, width=25)
 
-contact = ttk.Label(win, text="联系方式：")
+contact = ttk.Label(win, text="联系方式（电子邮箱）：")
 contactThings = ttk.Entry(win, width=25)
 
 star = ttk.Label(win, text="评分：")
 starMenu = ttk.OptionMenu(win, starValue, "5分", "5分", "4分", "3分", "2分", "1分")
 
 updateThingsTips = ttk.Label(win, text="反馈内容（支持 Markdown 格式）：")
-updateThings = tk.Text(win)
+updateThings = tk.Text(win, width=100)
 
 otherUpload = ttk.Frame(win)
 # 所属内容
@@ -106,7 +106,7 @@ starMenu.grid(row=0, column=5)
 updateThingsTips.grid(row=1, column=0, columnspan=2)
 updateThings.grid(row=2, column=0, columnspan=6)
 
-otherUpload.grid(row=3, column=0, columnspan=4)
+otherUpload.grid(row=3, column=0, columnspan=4, sticky=tk.W)
 updateButton.grid(row=3, column=5)
 
 win.pack(expand="yes", fill="both")

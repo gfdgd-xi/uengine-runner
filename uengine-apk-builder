@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.5.1
-# 更新时间：2021年10月06日
+# 版本：1.5.3
+# 更新时间：2021年12月12日（DDUC11了）
 # 感谢：anbox、deepin 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -43,11 +43,19 @@ def BuildDeb():
         messagebox.showerror(title="提示", message="信息填写错误，无法继续打包 APK")
         return
     DisabledAndEnbled(True)
-    threading.Thread(target=BuildApkDeb, args=(combobox1.get(),)).start()
+    threading.Thread(target=GetBuildApkDebError, args=(combobox1.get(),)).start()
 
 def RunCommandShow(command):
     TextboxAddText1("$> {}".format(command))
     TextboxAddText1(GetCommandReturn(command))
+
+def GetBuildApkDebError(apkPath):
+    try:
+        BuildApkDeb(apkPath)
+    except:
+        traceback.print_exc()
+        messagebox.showerror(title="错误", message=traceback.format_exc())
+        DisabledAndEnbled(False)
 
 def BuildApkDeb(apkPath):
     tempPath = "/tmp/uengine-apk-builder-{}".format(int(random.randint(0, 1024)))
@@ -58,11 +66,12 @@ def BuildApkDeb(apkPath):
     RunCommandShow("mkdir -pv '{}/usr/share/uengine/apk'".format(tempPath))
     RunCommandShow("mkdir -pv '{}/usr/share/uengine/icons'".format(tempPath))
     RunCommandShow("echo '写入文件，因为写入过程过于复杂，不显示写入命令……'")
-    apkPackageName = GetApkPackageName(apkPath)
+    apkPackageName = GetApkPackageName(apkPath, False)
+    apkPackageNameNew = GetApkPackageName(apkPath, True)
     apkPackageVersion = GetApkVersion(apkPath)
     apkChineseLabel = GetApkChineseLabel(apkPath)
     apkActivityName = GetApkActivityName(apkPath)
-    iconSavePath = "{}/usr/share/uengine/icons/{}.png".format(tempPath, apkPackageName)
+    iconSavePath = "{}/usr/share/uengine/icons/{}.png".format(tempPath, apkPackageNameNew)
     debControl = '''Package: {}
 Version: {}
 Architecture: all
@@ -70,82 +79,66 @@ Maintainer: {}
 Depends: deepin-elf-verify (>= 0.0.16.7-1), uengine (>= 1.0.1)
 Section: utils
 Priority: optional
-Description: {}\n'''.format(apkPackageName, apkPackageVersion, apkChineseLabel, apkChineseLabel)
+Description: {}\n'''.format(apkPackageNameNew, apkPackageVersion, apkChineseLabel, apkChineseLabel)
     debPostinst = '''#!/bin/sh
 
 APK_DIR="/usr/share/uengine/apk"
-APK_NAME="{}.apk"
+APK_NAME="{}"
 APK_PATH="$APK_DIR/$APK_NAME"
-DESKTOP_FILE="/usr/share/applications/{}.desktop"
-ICON_FILE="/usr/share/uengine/icons/{}.png"
+DESKTOP_FILE="{}"
+
 
 if [ -f $APK_PATH ]; then
     echo "Installing $APK_NAME"
 else 
-    echo "ERROR: $APK_NAME file not found."
-    exit 1
+    echo "ERROR: $APK_NAME does not exist."
+    exit 0
 fi
 
 session_manager=`ps -ef | grep "uengine session-manager" | grep -v grep`
 if test -z "$session_manager"; then
-    echo "ERROR: app install failed(session-manager not start)."
-    #sudo rm -f $DESKTOP_FILE
-    #sudo rm -f $ICON_FILE
-    #sudo rm -f "$APK_PATH"
-    exit 1
+    echo "ERROR: app install failed(session-manager is not running)."
+    sess_dir="/usr/share/uengine/session_install"
+    if [ ! -d $sess_dir ]; then
+        mkdir $sess_dir
+        chmod 777 $sess_dir
+    fi
+    apk_name=${{APK_PATH##*/}}
+    fileName="$sess_dir/$apk_name"
+    echo $DESKTOP_FILE > $fileName
+    abistr=""
+    if test -n "$abistr"; then
+        abi=`echo $abistr |awk -F \= '{{print $2}}'`
+        echo $abi >> $fileName
+    fi
+    chmod 766 $fileName
 fi
 
-ret=`/usr/bin/uengine-session-launch-helper -- uengine install  --apk="$APK_PATH"`
-if [ $? -ne 0 ]; then
-    echo "ERROR: apk install error..."
-    #sudo rm -f $DESKTOP_FILE
-    #sudo rm -f $ICON_FILE
-    #sudo rm -f "$APK_PATH"
-    exit 1
-fi
-chkfail=`echo $ret |grep "Failed"`
-if test -n "$chkfail" ; then
-    echo "ERROR: $ret"
-    #sudo rm -f $DESKTOP_FILE
-    #sudo rm -f $ICON_FILE
-    #sudo rm -f "$APK_PATH"
-    exit 1
-fi
+/usr/bin/uengine-session-launch-helper -- uengine install  --apk="$APK_PATH"
 
-sudo rm -f "$APK_PATH"
-
-exit 0'''.format(apkPackageName, apkPackageName, apkPackageName)
+exit 0'''.format(apkPackageNameNew + ".apk", "/usr/share/applications/{}.desktop".format(apkPackageNameNew))
     debPrerm = '''#!/bin/sh
 
 APP_NAME="{}"
+DESKTOP_FILE="{}"
 
 session_manager=`ps -ef | grep "uengine session-manager" | grep -v grep`
 if test -z "$session_manager"; then
-    echo "ERROR: app install failed(session-manager not start)."
-    exit 1
+    echo "ERROR: app uninstall failed(session-manager is not running)."
+    sess_dir="/usr/share/uengine/session_uninstall"
+    if [ ! -d $sess_dir ]; then
+        mkdir $sess_dir
+        chmod 777 $sess_dir
+    fi
+    fileName="$sess_dir/$APP_NAME"
+    echo $DESKTOP_FILE > $fileName
+    chmod 766 $fileName
 fi
 
 echo "Uninstalling $APP_NAME"
-ret=`/usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg="$APP_NAME"`
-if [ $? -ne 0 ]; then
-    echo "ERROR: app uninstall error..."
-    exit 1
-fi
-chkfail=`echo $ret |grep "Failed"`
-if test -n "$chkfail" ; then
-    echo "ERROR: $ret"
-    exit 1
-fi
+/usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg="$APP_NAME"
 
-cat /etc/passwd | awk -F: '$3>=1000' | cut -f 1 -d : | while read line
-do
-    inifile="/home/$line/.config/uengineAppGeometry.ini"
-    if [ -f $inifile ]; then
-        sed -i "/$APP_NAME/d" $inifile
-    fi
-done
-
-exit 0'''.format(apkPackageName)
+exit 0'''.format(apkPackageName, "/usr/share/applications/{}.desktop".format(apkPackageNameNew))
     desktopFile = '''[Desktop Entry]
 Categories=Other;
 Exec=uengine launch --action=android.intent.action.MAIN --package={} --component={}
@@ -162,20 +155,22 @@ Name={}
     write_txt("{}/DEBIAN/postinst".format(tempPath), debPostinst)
     RunCommandShow("echo 正在写入文件：'{}/DEBIAN/prerm'".format(tempPath))
     write_txt("{}/DEBIAN/prerm".format(tempPath), debPrerm)
-    RunCommandShow("echo 正在写入文件：'/usr/share/applications/{}.desktop'".format(apkPackageName))
-    #write_txt("{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageName), desktopFile)
-    BuildUengineDesktop(apkPackageName, apkActivityName, apkChineseLabel, iconSavePath,
-                        "{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageName))
+    RunCommandShow("echo 正在写入文件：'/usr/share/applications/{}.desktop'".format(apkPackageNameNew))
+    #write_txt("{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageNameNew), desktopFile)
+    BuildUengineDesktop(apkPackageName, apkActivityName, apkChineseLabel, "/usr/share/uengine/icons/{}.png".format(apkPackageNameNew),
+                        "{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageNameNew))
     RunCommandShow("echo '复制文件'")
     RunCommandShow("echo '写入 APK 软件图标'")
     SaveApkIcon(apkPath, iconSavePath)
     RunCommandShow("echo '复制 APK 文件'")
-    RunCommandShow("cp -rv '{}' '{}/usr/share/uengine/apk/{}.apk'".format(apkPath, tempPath, apkPackageName))
+    RunCommandShow("cp -rv '{}' '{}/usr/share/uengine/apk/{}.apk'".format(apkPath, tempPath, apkPackageNameNew))
     RunCommandShow("echo '正在设置文件权限……'")
     RunCommandShow("chmod 0775 -vR '{}/DEBIAN/postinst'".format(tempPath))
     RunCommandShow("chmod 0775 -vR '{}/DEBIAN/prerm'".format(tempPath))
     RunCommandShow("echo '打包 deb 到桌面……'")
-    RunCommandShow("dpkg -b '{}' '{}/{}_{}.deb'".format(tempPath, get_desktop_path(),apkPackageName, apkPackageVersion))
+    RunCommandShow("dpkg -b '{}' '{}/{}_{}.deb'".format(tempPath, get_desktop_path(),apkPackageNameNew, apkPackageVersion))
+    RunCommandShow("echo '正在删除临时目录……'")
+    RunCommandShow("rm -rfv '{}'".format(tempPath))
     RunCommandShow("echo '完成！'")
     findApkHistory.append(apkPath)
     combobox1['value'] = findApkHistory
@@ -260,7 +255,7 @@ def GetApkActivityName(apkFilePath):
             line = line.replace("icon=", "")
             return line
 
-def GetApkPackageName(apkFilePath):
+def GetApkPackageName(apkFilePath, setting):
     # 提示：此函数有被为此程序适配而调整，如果需要最原始（无调整的）请使用主程序（此为附属组件）里的函数
     info = GetApkInformation(apkFilePath)
     for line in info.split('\n'):
@@ -271,7 +266,7 @@ def GetApkPackageName(apkFilePath):
             line = line.replace("'", "")
             line = line.replace(" ", "")
             # 此较为特殊，因为需要判断用户是否要添加前缀
-            if qianZhui.get() == True:
+            if setting:
                 return "uengine-dc-{}".format(line).lower()
             return line.lower()
 
@@ -294,7 +289,7 @@ def BuildUengineDesktop(packageName, activityName, showName, iconPath, savePath)
     [Desktop Entry]
 Categories=app;
 Encoding=UTF-8
-Exec=/usr/bin/uengine launch.sh --action=android.intent.action.MAIN --package={} --component={}
+Exec=/usr/bin/uengine launch --action=android.intent.action.MAIN --package={} --component={}
 GenericName={}
 Icon={}
 MimeType=

@@ -6,7 +6,35 @@
 （测试平台：UOS 家庭版，deepin 20.2.2,UOS 专业版 1040）   
 （自己美术功底太差，图标直接用 anbox 的了）   
 
+## 安装前必读
++ releases 里有两个 deb 包，**是一样的除了包名和打包标准不同**，**只能选择其中一个安装**，**两个都安装会产生冲突**，两个deb包的作用如下：
+    - 包名为`spark-uengine-runner`的，是旧包，按照**正常标准打包**，适用于从**星火应用商店安装**以及**从低版本（即1.3.2即以下版本升级上来的用户）升级**或者**之前就安装该版本的用户**甚至**想跨平台的用户**等等
+    - 包名为`com.gitee.uengine.runner.spark`的，是按照**deepin/UOS的标准打包的**，适用于**之前就安装该版本并升级上来的用户**以及**希望按照该方法打包的用户**等等
++ **近期升级的 UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版**
+
 ### 更新内容
+#### V1.5.3（2021-12-12，DDUC11版，未完全完工）：
+##### 更新内容
+**※1、“添加/删除 UEngine 图标”窗口的写入按钮在目录**`~/.local/share/icons/hicolor/256x256/apps`**不存在时点击无反应，参考报错1.5.3-1**    
+**※2、修复了“UEngine APK 应用打包器”打包的deb包的.desktop文件的**`Icon`**和**`Exec`**字段有误的问题以及使用“使用前缀‘uengine-dc’”前缀的问题**  
+3、“UEngine APK 应用打包器”支持打包完后自动删除临时目录  
+4、“UEngine APK 应用打包器”以及“添加/删除 UEngine 图标”支持在运行出现错误时显示报错  
+##### 报错：
+*1.5.3-1*
+```bash
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/tkinter/__init__.py", line 1705, in __call__
+    return self.func(*args)
+  File "/home/gfdgd_xi/Desktop/uengine-runner/main.py", line 865, in SaveDesktopLink
+    shutil.copy(programPath + "/defult.png", iconSavePath)
+  File "/usr/lib/python3.7/shutil.py", line 245, in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/usr/lib/python3.7/shutil.py", line 121, in copyfile
+    with open(dst, 'wb') as fdst:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/gfdgd_xi/.local/share/icons/hicolor/256x256/apps/com.miHoYo.cloudgames.ys.png'
+```
+
 #### V1.5.2（2021-11-28）：
 **※1、支持安装和构建带 Root 的 UEngine 的镜像**  
 2、更新了反馈链接  

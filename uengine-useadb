@@ -4,7 +4,6 @@
 # 更新时间：2021年08月30日
 #########################################
 import os
-import shutil
 import sys
 import traceback
 import ttkthemes

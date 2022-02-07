@@ -3,7 +3,7 @@
 ###########################################################################################
 # 作者：gfdgd xi
 # 版本：1.5.3
-# 更新时间：2021年12月12日（DDUC11了）
+# 更新时间：2022年02月07日（要开学了）
 # 感谢：anbox、deepin 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -285,6 +285,8 @@ def GetApkVersion(apkFilePath):
             return line
 
 def BuildUengineDesktop(packageName, activityName, showName, iconPath, savePath):
+    if showName == "" or showName == None:
+        showName = "未知应用"
     things = '''
     [Desktop Entry]
 Categories=app;
@@ -308,17 +310,6 @@ def GetApkChineseLabel(apkFilePath):
             line = line.replace("'", "")
             return line
 
-#def GetApkIconInApk(apkFilePath):
-#    info = GetApkInformation(apkFilePath)
-#    for line in info.split('\n'):
-#        if "application:" in line:
-#            line = line[line.index("icon='"): -1]
-#            line = line.replace("icon='", "")
-#            if "'" in line:
-#                line = line[0: line.index("'")]
-#            return line
-#            return line
-
 #合并两个函数到一起
 def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
     try:
@@ -335,6 +326,9 @@ def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
                     iconData = zip.read(xmlpath)
                     with open(iconSavePath, 'w+b') as saveIconFile:
                         saveIconFile.write(iconData)
+                return
+        print("Show defult icon")
+        shutil.copy(programPath + "/defult.png", iconSavePath)
     except:
         traceback.print_exc()
         print("Error, show defult icon")
@@ -383,7 +377,7 @@ if not lang in langFile.keys():
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]
 title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+iconPath = "{}/builer.png".format(os.path.split(os.path.realpath(__file__))[0])
 
 ###########################
 # 加载配置

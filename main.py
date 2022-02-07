@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.5.3
-# 更新时间：2021年12月12日（DDUC11了）
+# 版本：1.6.1
+# 更新时间：2022年2月6日（要开学了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>
@@ -19,9 +19,16 @@ import shutil
 import zipfile
 import traceback
 import threading
+import easygui
 import ttkthemes
 import webbrowser
 import subprocess
+import matplotlib
+import requests
+import numpy
+import matplotlib.figure
+import matplotlib.pylab
+import matplotlib.font_manager
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 import tkinter as tk
@@ -52,16 +59,6 @@ def UninstallProgram(package: "apk 包名")->"卸载程序":
         traceback.print_exc()
         messagebox.showerror(title="错误", message=traceback.format_exc())
         DisabledAndEnbled(False)
-
-# 卸载文本框的浏览按钮事件
-#def BtnFindUninstallApkClk():
-#    path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindUninstallApk.json"))["path"])
-#    if path != "" and path != "()":
-#        try:
-#            ComboUninstallPath.set(path)
-#            write_txt(get_home() + "/.config/uengine-runner/FindUninstallApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
-#        except:
-#            pass
 
 # 卸载按钮事件
 def ButtonClick8():
@@ -324,6 +321,8 @@ def ReinstallUengineImage():
 
 # 生成 uengine 启动文件到桌面
 def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", showName: "显示名称", iconPath: "程序图标所在目录", savePath:".desktop 文件保存路径")->"生成 uengine 启动文件到桌面":
+    if showName == "" or showName == None:
+        showName = "未知应用"
     things = '''[Desktop Entry]
 Categories=app;
 Encoding=UTF-8
@@ -358,11 +357,15 @@ def SaveApkIcon(apkFilePath, iconSavePath)->"保存 apk 文件的图标":
                         xmlsave = getsavexml()
                         print(xmlpath)
                         xmlsave.savexml(apkFilePath,xmlpath,iconSavePath)
+                        return
                 else:
                     zip = zipfile.ZipFile(apkFilePath)
                     iconData = zip.read(xmlpath)
                     with open(iconSavePath, 'w+b') as saveIconFile:
                         saveIconFile.write(iconData)
+                        return
+        print("None Icon! Show defult icon")
+        shutil.copy(programPath + "/defult.png", iconSavePath)
     except:
         traceback.print_exc()
         print("Error, show defult icon")
@@ -634,8 +637,12 @@ class ApkInformation():
         global path
         global tab1
         path = ComboInstallPath.get()
-
+        package = GetApkPackageName(path)
+        if package == None or package == "":
+            messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
+            return
         message = tk.Toplevel()
+        message.iconphoto(False, tk.PhotoImage(file=iconPath))
         
         tab = ttk.Notebook(message)
 
@@ -673,6 +680,49 @@ class ApkInformation():
 Activity：{}
 版本：{}'''.format(GetApkPackageName(path), GetApkChineseLabel(path), GetApkActivityName(path), GetApkVersion(path))
         ttk.Label(tab1, text=info).pack()
+        ttk.Button(tab1, text="查看程序评分情况", command=ApkInformation.ShowMap).pack()
+        ttk.Button(tab1, text="上传程序评分情况", command=ApkInformation.UpdateMark).pack()
+
+    def UpdateMark():
+        #message = tk.Toplevel()
+        #message.iconphoto(False, tk.PhotoImage(file=iconPath))
+        choose = easygui.indexbox(title="选择评分", choices=["含有不良信息", "0分", "1分", "2分", "3分", "4分", "5分", "取消"], msg="""选择应用“{}”的使用评分。建议参考如下规范进行评分：
+含有不良信息（-1分）：含有色情、暴力、欺凌、赌博等违法违规信息（如果有就不要选择其它选项了）
+0星：完全无法使用，连安装都有问题
+1星：完全无法使用，但是能正常安装
+2星：可以打开，但只能使用一点点功能
+3星：勉强能使用，运行也不大流畅
+4星：大部分功能正常，运行流畅（可能会有点小卡）
+5星：完全正常且非常流畅，没有任何功能和性能问题，就和直接在手机上用一样
+""".format(GetApkChineseLabel(path)))
+        print(choose)
+        if choose == None or choose == 7:
+            return
+        try:
+            messagebox.showinfo(title="提示", message=requests.post("http://120.25.153.144/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
+        except:
+            messagebox.showerror(title="错误", message="无法连接服务器！无法进行评分！")
+
+    def ShowMap():
+        package = GetApkPackageName(path)
+        if package == None or package == "":
+            messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
+            return
+        try:
+            data = json.loads(requests.get("http://120.25.153.144/uengine-runner/app/check/" + package +"/data.json").text)
+            print(data)
+        except:
+            messagebox.showinfo(title="错误", message="此程序暂时没有评分，欢迎您贡献第一个评分！")
+            return
+        index = numpy.arange(len(data))
+        print(index)
+        fonts = matplotlib.font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')  # 用于支持中文显示，需要依赖fonts-noto-cjk
+        matplotlib.pylab.barh(index, data)
+        matplotlib.pylab.yticks(index, ["不良信息", "0分", "1分", "2分", "3分", "4分", "5分"], fontproperties=fonts)
+        matplotlib.pylab.xlabel("用户评分数", fontproperties=fonts)
+        matplotlib.pylab.ylabel("等级", fontproperties=fonts)
+        matplotlib.pylab.title("“" + GetApkChineseLabel(path) + "”的用户评分（数据只供参考）", fontproperties=fonts)
+        matplotlib.pylab.show()
 
 
 class AdbChangeUengineDisplaySize():
@@ -681,6 +731,7 @@ class AdbChangeUengineDisplaySize():
         global displayY
         global displaySize
         message = tk.Toplevel()
+        message.iconphoto(False, tk.PhotoImage(file=iconPath))
         messageFrame = ttk.Frame(message)
 
         displaySize = tk.StringVar()
@@ -819,6 +870,7 @@ class AddNewUengineDesktopLink():
         global activityName
         global packageName
         message = tk.Toplevel()
+        message.iconphoto(False, tk.PhotoImage(file=iconPath))
 
         tipsLabel = ttk.Label(message, text=AddNewUengineDesktopLink.addTips)
         packageName = ttk.Combobox(message, width=30)
@@ -974,7 +1026,7 @@ updateThingsString = "\n".join(information["Update"])
 title = "{} {}".format(langFile[lang]["Main"]["MainWindow"]["Title"], version)
 updateTime = information["Time"]
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+iconPath = "{}/runner.png".format(os.path.split(os.path.realpath(__file__))[0])
 desktop = programPath + "/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 contribute = "\n".join(information["Contribute"])
@@ -1134,13 +1186,10 @@ win.geometry(""+"+{:.0f}+{:.0f}".format(x, y))
 FrmInstall = ttk.Frame(window)
 #FrmUninstall = ttk.Frame(window)
 LabApkPath = ttk.Label(window, text=langFile[lang]["Main"]["MainWindow"]["LabApkPath"])
-#LabUninstallPath = ttk.Label(window, text=langFile[lang]["Main"]["MainWindow"]["LabUninstallPath"])
 ComboInstallPath = ttk.Combobox(window, width=50)
-#ComboUninstallPath = ttk.Combobox(window, width=50)
 BtnFindApk = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnFindApk"], command=FindApk)
 BtnInstall = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnInstall"], command=Button3Install)
 BtnShowUengineApp = ttk.Button(window, text=langFile[lang]["Main"]["MainWindow"]["BtnShowUengineApp"], command=Button5Click)
-#BtnUninstallApkBrowser = ttk.Button(FrmUninstall, text=langFile[lang]["Main"]["MainWindow"]["BtnUninstallApkBrowser"], command=BtnFindUninstallApkClk)
 BtnUninstall = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnUninstall"], command=ButtonClick8)
 Btngeticon = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["Btngeticon"], command=SaveIconToOtherPath)
 BtnSaveApk = ttk.Button(FrmInstall, text=langFile[lang]["Main"]["MainWindow"]["BtnSaveApk"], command=SaveInstallUengineApp)
@@ -1188,7 +1237,6 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][1], command=AdbStopServer)
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2], command=AdbKillAdbProgress)
 
-#uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][0], command=UengineSettingShow)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)
@@ -1249,7 +1297,6 @@ uengineUseAdb.configure(activebackground="dodgerblue")
 uengineData.configure(activebackground="dodgerblue")
 
 # 设置控件
-#ComboUninstallPath['value'] = fineUninstallApkHistory
 ComboInstallPath['value'] = findApkHistory
 try:
     if sys.argv[1] == "-i":

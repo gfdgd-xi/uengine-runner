@@ -160,8 +160,14 @@ FileNotFoundError: [Errno 2] No such file or directory: '/home/gfdgd_xi/.local/s
 1.  安装所需依赖
 
 ```bash
-sudo apt install python3 python3-tk git python3-pip aapt uengine
-python3 -m pip install ttkthemes
+sudo apt install deepin-elf-verify python3 python3-tk python3-pip
+sudo apt install aapt uengine python3-setuptools deepin-terminal curl
+sudo apt install python3-pil python3-pil.imagetk python3-requests adb
+sudo apt install translate-shell python3-xlib python3-requests fonts-noto-cjk python3-numpy
+python3 -m pip install pip -U
+python3 -m pip install --upgrade ttkthemes  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade pyautogui  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade keyboard   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 ```
 
 2.  下载本程序
@@ -200,13 +206,13 @@ pip3 uninstall ttkthemes
 如果出现故障，尝试终端运行，如果是可以自行解决的问题，就**自行解决**，如果可以就**提 issues 并提供解决方案**，不行就**提 isscue 并提供程序和终端报错以及程序版本**
 
 ### 下载量
-这里只统计蓝奏云的下载量，链接（每周更新一次）：  
+这里只统计蓝奏云的下载量，链接（懒得更了）：  
 [https://kdocs.cn/l/smrvazWGuKcY](https://kdocs.cn/l/smrvazWGuKcY)  
 
 ### 已知问题
 <p align="center"><img src='https://bbs.deepin.org/assets/image/raccoon/[sad].gif'></p>  
 
-![Error](https://storage.deepin.org/thread/202108101105396531_截图___tk__messagebox_20210810110449.png)
+![Error](https://storage.deepin.org/thread/202108101105396531_截图___tk__messagebox_20210810110449.png)  
 部分 app 无法读取出图片，已知：
 | 程序 | 下载链接 |
 | :-: | :-: |
@@ -238,7 +244,8 @@ pip3 uninstall ttkthemes
 | Root UEngine | https://gitee.com/Limexb/root-uengine |
 
 ### 附测试生成图标无问题列表：
-**至于能不能用就不测试了，这暂时不是重点**
+**至于能不能用就不测试了，这暂时不是重点**  
+**现在新加了评分功能，就看大家的评分了！**  
 | 程序 | 下载链接 |
 |:-:|:-:|
 | QQ 全家桶（完整版、极速版、Android Pad 版） | https://im.qq.com |

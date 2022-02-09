@@ -631,6 +631,41 @@ def GetApkVersion(apkFilePath):
             line = line.replace(" ", "")
             return line
 
+def VersionCheck(version1, version2):
+    return version1 == version2
+        
+class UpdateWindow():
+    def ShowWindow():
+        update = tk.Toplevel()
+        update.title("检查更新")
+        versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：未知\n更新内容：".format(version))
+        updateText = tk.Text(update)
+        controlFrame = ttk.Frame(update)
+        ok = ttk.Button(controlFrame, text="更新", command=UpdateWindow.Update)
+        cancel = ttk.Button(controlFrame, text="取消", command=update.destroy)
+        try:
+            data = json.loads(requests.get("http://120.25.153.144/uengine-runner/update.json").text)
+            versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：{}\n更新内容：".format(version, data["Version"]))
+            if data["Version"] == version:
+                updateText.insert("0.0", "此为最新版本，无需更新")
+                ok.configure(state=tk.DISABLED)
+            else:
+                updateText.insert("0.0", data["New"])
+        except:
+            traceback.print_exc()
+            messagebox.showerror(title="错误", message="无法连接服务器！")
+
+        updateText.configure(state=tk.DISABLED)
+        versionLabel.pack(anchor=tk.W)
+        updateText.pack()
+        controlFrame.pack(anchor=tk.E)
+        cancel.grid(row=0, column=0)
+        ok.grid(row=0, column=1)
+        update.mainloop()
+    def Update():
+        os.system("")
+        
+
 class ApkInformation():
     def ShowWindows():
         global fullInformation
@@ -687,7 +722,7 @@ Activity：{}
         #message = tk.Toplevel()
         #message.iconphoto(False, tk.PhotoImage(file=iconPath))
         choose = easygui.indexbox(title="选择评分", choices=["含有不良信息", "0分", "1分", "2分", "3分", "4分", "5分", "取消"], msg="""选择应用“{}”的使用评分。建议参考如下规范进行评分：
-含有不良信息（-1分）：含有色情、暴力、欺凌、赌博等违法违规信息（如果有就不要选择其它选项了）
+含有不良信息（-1分）：含有违法违规信息（如果有就不要选择其它选项了）
 0星：完全无法使用，连安装都有问题
 1星：完全无法使用，但是能正常安装
 2星：可以打开，但只能使用一点点功能
@@ -716,12 +751,15 @@ Activity：{}
             return
         index = numpy.arange(len(data))
         print(index)
+        chinese = GetApkChineseLabel(path)
+        fig = matplotlib.pylab.figure()
+        fig.canvas.set_window_title("“" + chinese + "”的用户评分（数据只供参考）")
         fonts = matplotlib.font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')  # 用于支持中文显示，需要依赖fonts-noto-cjk
         matplotlib.pylab.barh(index, data)
         matplotlib.pylab.yticks(index, ["不良信息", "0分", "1分", "2分", "3分", "4分", "5分"], fontproperties=fonts)
         matplotlib.pylab.xlabel("用户评分数", fontproperties=fonts)
         matplotlib.pylab.ylabel("等级", fontproperties=fonts)
-        matplotlib.pylab.title("“" + GetApkChineseLabel(path) + "”的用户评分（数据只供参考）", fontproperties=fonts)
+        matplotlib.pylab.title("“" + chinese + "”的用户评分（数据只供参考）", fontproperties=fonts)
         matplotlib.pylab.show()
 
 
@@ -1131,12 +1169,32 @@ def showhelp():
         def ChgTips():
             HelpStr.set(tips)
             LabText.config(wraplength=350)
+        def Egg(event):
+            try:
+                lists = json.loads(requests.get("http://120.25.153.144/uengine-runner/VersionList.json").text)
+                data = []
+                for i in lists:
+                    data.append(int(requests.get("http://120.25.153.144/uengine-runner/{}/data.txt".format(i)).text))
+            except:
+                messagebox.showerror(title="错误", message="服务器出错！数据获取失败！")
+                return
+            fig = matplotlib.pylab.figure()
+            fig.canvas.set_window_title("“UEngine 运行器”安装数（数据只供参考）")
+            matplotlib.pylab.plot(lists, data)
+            index = numpy.arange(len(lists))
+            fonts = matplotlib.font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')  # 用于支持中文显示，需要依赖fonts-noto-cjk
+            matplotlib.pylab.xlabel("版本号", fontproperties=fonts)
+            matplotlib.pylab.ylabel("安装数", fontproperties=fonts)
+            
+            matplotlib.pylab.title("“UEngine 运行器”安装数（数据只供参考）", fontproperties=fonts)
+            matplotlib.pylab.show()
 
         BtnReadme = ttk.Button(FrmMenu, text="使用说明",width=14,command=ChgTips)
         BtnLog = ttk.Button(FrmMenu, text="更新内容",width=14,command=ChgLog)
         BtnZujian = ttk.Button(FrmMenu, text="程序依赖的组件",width=14,command=ChgDep)
         BtnGongxian = ttk.Button(FrmMenu, text="有贡献的开发者",width=14,command=ChgCon)
         BtnAbout = ttk.Button(FrmMenu, text="关于",width=14,command=ChgAbout)
+        BtnAbout.bind("<Double-Button-1>", Egg)
 
 
         #layout
@@ -1251,6 +1309,7 @@ uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"
 
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“程序官网”项
+help.add_command(label="检查更新", command=UpdateWindow.ShowWindow)
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1], command=showhelp)  # 设置“关于这个程序”项
 
 uengineService.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0], command=StartUengine)

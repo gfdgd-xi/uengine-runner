@@ -2,7 +2,6 @@
 # 使用 pip 安装所需库
 python3 -m pip install --upgrade pip        -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade ttkthemes  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-#python3 -m pip install --upgrade requests   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade pyautogui  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade keyboard   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 # 建立软链接

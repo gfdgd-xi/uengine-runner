@@ -49,7 +49,7 @@ def OpenGithubIssues():
 ###########################
 # 程序信息
 ###########################
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+iconPath = "{}/runner.png".format(os.path.split(os.path.realpath(__file__))[0])
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]

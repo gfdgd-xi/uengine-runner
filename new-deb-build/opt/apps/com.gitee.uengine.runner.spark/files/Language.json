@@ -18,7 +18,8 @@
                         "Name": "程序",
                         "Menu": [
                             "清空软件历史记录",
-                            "退出程序"
+                            "退出程序",
+                            "程序设置"
                         ]
                     },
                     {
@@ -112,7 +113,9 @@
                         "Menu": [
                             "程序官网",
                             "关于",
-                            "反馈程序问题和建议"
+                            "反馈程序问题和建议",
+                            "检查更新",
+                            "更多帮助"
                         ]
                     }
                 ]
@@ -152,7 +155,8 @@
                         "Name": "Program",
                         "Menu": [
                             "Clean Program History",
-                            "Exit The Program"
+                            "Exit The Program",
+                            "Program Setting"
                         ]
                     },
                     {
@@ -246,7 +250,9 @@
                         "Menu": [
                             "Program WebSize",
                             "Program Help",
-                            "Upload Problem And Advice"
+                            "Upload Problem And Advice",
+                            "ABout This Program",
+                            "More Help"
                         ]
                     }
                 ]

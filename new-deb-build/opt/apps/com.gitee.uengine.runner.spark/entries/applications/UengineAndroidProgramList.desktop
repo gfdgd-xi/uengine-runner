@@ -3,7 +3,7 @@ Categories=System;
 Comment=UEngine 程序菜单
 Encoding=UTF-8
 Exec=/usr/bin/uengine launch --package=org.anbox.appmgr --component=org.anbox.appmgr.AppViewActivity
-Icon=/opt/apps/com.gitee.uengine.runner.spark/files/icon.png
+Icon=/opt/apps/com.gitee.uengine.runner.spark/files/menu.svg
 MimeType=
 Name=UEngine App List
 Name[zh]=UEngine 程序菜单

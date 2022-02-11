@@ -67,7 +67,10 @@ def BuildApkDeb(apkPath):
     RunCommandShow("mkdir -pv '{}/usr/share/uengine/icons'".format(tempPath))
     RunCommandShow("echo '写入文件，因为写入过程过于复杂，不显示写入命令……'")
     apkPackageName = GetApkPackageName(apkPath, False)
-    apkPackageNameNew = GetApkPackageName(apkPath, True)
+    if qianZhui.get():
+        apkPackageNameNew = GetApkPackageName(apkPath, True)
+    else:
+        apkPackageNameNew = GetApkPackageName(apkPath, False)
     apkPackageVersion = GetApkVersion(apkPath)
     apkChineseLabel = GetApkChineseLabel(apkPath)
     apkActivityName = GetApkActivityName(apkPath)
@@ -333,13 +336,6 @@ def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
         traceback.print_exc()
         print("Error, show defult icon")
         shutil.copy(programPath + "/defult.png", iconSavePath)
-
-
-#def SaveApkIcon(apkFilePath, iconSavePath):
-#    zip = zipfile.ZipFile(apkFilePath)
-#    iconData = zip.read(GetApkIconInApk(apkFilePath))
-#    with open(iconSavePath, 'w+b') as saveIconFile:
-#        saveIconFile.write(iconData)
 
 def TextboxAddText1(message):
     global textbox1

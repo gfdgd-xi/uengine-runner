@@ -38,6 +38,7 @@ import tkinter.filedialog as filedialog
 import tkinter.simpledialog as simpledialog
 from getxmlimg import getsavexml
 
+win = tk.Tk()  # 创建窗口
 
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":
@@ -45,8 +46,8 @@ def UninstallProgram(package: "apk 包名")->"卸载程序":
         global fineUninstallApkHistory 
         Return = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(package))
         print(Return)
-        if os.path.exists("{}/.local/share/applications/{}.desktop".format(get_home(), package)):
-            os.remove("{}/.local/share/applications/{}.desktop".format(get_home(), package))
+        if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package)):
+            os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package))
         if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
             os.remove("{}/{}.desktop".format(get_desktop_path(), package))
         findApkHistory.append(ComboInstallPath.get())
@@ -70,6 +71,7 @@ def ButtonClick8():
         path = GetApkPackageName(ComboInstallPath.get())
     else:
         path = ComboInstallPath.get()
+    print(path)
     threading.Thread(target=UninstallProgram, args=[path]).start()
 
 # 浏览窗口
@@ -97,9 +99,14 @@ def Button3Install():
 # 安装应用
 def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
     try:
+        if not os.path.exists("/tmp/uengine-runner"):
+            os.makedirs("/tmp/uengine-runner")
         if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
             print("Mkdir")
             os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
+        # 读取设置
+        setting = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
+        # 安装应用
         print("start install apk")
         global findApkHistory
         print("start install apk12")
@@ -110,6 +117,14 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
         if not os.path.exists(iconSaveDir):
             os.makedirs(iconSaveDir,exist_ok=True)
         SaveApkIcon(path, iconSavePath)
+        try:
+            if setting["SaveApk"]:
+                shutil.copy(path, "/tmp/uengine-runner/bak.apk")
+        except:
+            if not messagebox.askyesno(title="错误", message="无法备份安装包，是否不备份安装包继续安装？\n提示：新版UEngine安装后会自动删除安装包"):
+                DisabledAndEnbled(False)
+                return
+            setting["SaveApk"] = False
         print("start install apk2")
         BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
@@ -118,6 +133,11 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
                             "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
         commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
         print(commandReturn)
+        try:
+            if setting["SaveApk"]:
+                shutil.copy("/tmp/uengine-runner/bak.apk", path)
+        except:
+            messagebox.showerror(title="错误", message="无法还原安装包\n提示：新版UEngine安装后会自动删除安装包，备份的Apk在/tmp/uengine-runner/bak.apk，电脑重启后就会丢失！")
         print("\nprint install complete")
         if quit:
             print(commandReturn)
@@ -349,6 +369,8 @@ def GetApkChineseLabel(apkFilePath)->"获取软件的中文名称":
 # 保存apk图标
 def SaveApkIcon(apkFilePath, iconSavePath)->"保存 apk 文件的图标":
     try:
+        if os.path.exists(iconSavePath):
+            os.remove(iconSavePath)
         info = GetApkInformation(apkFilePath)
         for line in info.split('\n'):
             if "application:" in line:
@@ -633,24 +655,61 @@ def GetApkVersion(apkFilePath):
 
 def VersionCheck(version1, version2):
     return version1 == version2
-        
+
+def ShowHelp():
+    webbrowser.open_new_tab(programPath + "/Help/index.html")
+
+class SettingWindow():
+    saveApkOption = tk.IntVar()
+    def ShowWindow():
+        setting = tk.Toplevel()
+        setting.resizable(0, 0)
+        setting.iconphoto(False, tk.PhotoImage(file=iconPath))
+        setting.title("设置 UEngine 运行器" + version)
+        saveApkFrame = ttk.LabelFrame(setting, text="Apk 安装设置")
+        try:
+            data = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
+        except:
+            messagebox.showerror(title="错误", message="读取设置错误！无法打开设置窗口！")
+            setting.destroy()
+        SettingWindow.saveApkOption = tk.IntVar()
+        SettingWindow.saveApkOption.set(int(data["SaveApk"]))
+        ttk.Radiobutton(saveApkFrame, text="不备份Apk包直接安装", value=0, variable=SettingWindow.saveApkOption).pack(anchor=tk.W)
+        ttk.Radiobutton(saveApkFrame, text="备份Apk包然后在安装后自动拷贝原先目录", value=1, variable=SettingWindow.saveApkOption).pack(anchor=tk.W)
+        controlFrame = ttk.Frame(setting)
+        ttk.Button(controlFrame, text="取消", command=setting.destroy).grid(row=0, column=0)
+        ttk.Button(controlFrame, text="保存", command=SettingWindow.SaveSetting).grid(row=0, column=1)
+        saveApkFrame.pack()
+        controlFrame.pack(anchor=tk.E)
+    def SaveSetting():
+        try:
+            write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": bool(SettingWindow.saveApkOption.get())}))
+        except:
+            traceback.print_exc()
+            messagebox.showerror(title="错误", message="保存设置错误！")
+            return
+        messagebox.showinfo(title="提示", message="设置保存完毕！")
+
 class UpdateWindow():
+    data = {}
     def ShowWindow():
         update = tk.Toplevel()
         update.title("检查更新")
+        update.resizable(0, 0)
+        update.iconphoto(False, tk.PhotoImage(file=iconPath))
         versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：未知\n更新内容：".format(version))
         updateText = tk.Text(update)
         controlFrame = ttk.Frame(update)
-        ok = ttk.Button(controlFrame, text="更新", command=UpdateWindow.Update)
+        ok = ttk.Button(controlFrame, text="更新（更新过程中会关闭所有Python应用，包括这个应用）", command=UpdateWindow.Update)
         cancel = ttk.Button(controlFrame, text="取消", command=update.destroy)
         try:
-            data = json.loads(requests.get("http://120.25.153.144/uengine-runner/update.json").text)
-            versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：{}\n更新内容：".format(version, data["Version"]))
-            if data["Version"] == version:
+            UpdateWindow.data = json.loads(requests.get("http://120.25.153.144/uengine-runner/update.json").text)
+            versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：{}\n更新内容：".format(version, UpdateWindow.data["Version"]))
+            if UpdateWindow.data["Version"] == version:
                 updateText.insert("0.0", "此为最新版本，无需更新")
                 ok.configure(state=tk.DISABLED)
             else:
-                updateText.insert("0.0", data["New"])
+                updateText.insert("0.0", UpdateWindow.data["New"].replace("\\n", "\n"))
         except:
             traceback.print_exc()
             messagebox.showerror(title="错误", message="无法连接服务器！")
@@ -663,9 +722,29 @@ class UpdateWindow():
         ok.grid(row=0, column=1)
         update.mainloop()
     def Update():
-        os.system("")
+        if not os.path.exists("/tmp/uengine-runner/update"):
+            os.makedirs("/tmp/uengine-runner/update")
+        try:            
+            write_txt("/tmp/uengine-runner/update.sh", """#!/bin/bash
+echo 删除多余的安装包
+rm -rfv /tmp/uengine-runner/update/*
+echo 关闭“UEngine 运行器”以及其它“Python 应用”
+killall python3
+echo 下载安装包
+wget -P /tmp/uengine-runner/update {}
+echo 安装安装包
+dpkg -i /tmp/uengine-runner/update/*.deb
+echo 修复依赖关系
+apt install -f -y
+notify-send -i uengine "更新完毕！"
+zenity --info --text=\"更新完毕！\" --ellipsize
+""".format(UpdateWindow.data["Url"][int(information["Package"] == "com.gitee.uengine.runner.spark")], iconPath))
+        except:
+            traceback.print_exc()
+            easygui.textbox(title="错误", msg="更新出现错误，无法继续更新！", text=traceback.format_exc())
+        os.system("deepin-terminal -e pkexec bash /tmp/uengine-runner/update.sh")
         
-
+image = None
 class ApkInformation():
     def ShowWindows():
         global fullInformation
@@ -677,6 +756,7 @@ class ApkInformation():
             messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
             return
         message = tk.Toplevel()
+        message.title("“{}“的Apk信息".format(GetApkChineseLabel(path)))
         message.iconphoto(False, tk.PhotoImage(file=iconPath))
         
         tab = ttk.Notebook(message)
@@ -705,11 +785,13 @@ class ApkInformation():
         # 获取图标
         SaveApkIcon(path, "/tmp/uengine-runner-android-app-icon.png")
         # 读取图标
+        global image
         image = Image.open("/tmp/uengine-runner-android-app-icon.png")
         if image.size[0] + image.size[1] <= 512:
-            ttk.Label(tab1, image=ImageTk.PhotoImage(image)).pack()
+            ttk.Label(tab1, image=ImageTk.PhotoImage(Image.open("/tmp/uengine-runner-android-app-icon.png"))).pack()
         else:
-            ttk.Label(tab1, image=ImageTk.PhotoImage(image.resize((256, 256), Image.ANTIALIAS))).pack()
+            ttk.Label(tab1, image=ImageTk.PhotoImage(Image.open("/tmp/uengine-runner-android-app-icon.png").resize((256, 256), Image.ANTIALIAS))).pack()
+        image.close()
         info = '''包名：{}
 中文名：{}
 Activity：{}
@@ -1096,6 +1178,24 @@ if not os.path.exists(get_home() + "/.config/uengine-runner/SaveApkIcon.json"): 
     write_txt(get_home() + "/.config/uengine-runner/SaveApkIcon.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/SaveApk.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/SaveApk.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/uengine-runner/setting.json"):
+    choose = None
+    choose = easygui.indexbox(msg="""在使用本程序前，请选择安装Apk包的设置以便更好的运行，下列选项的详细介绍：
+
+不备份Apk包直接安装：适用于Deepin（旧版UEngine），安装较快，不受/tmp大小所限，但Deepin23和UOS（新版UEngine）不推荐此选项，因为安装后会自动删除Apk安装包；
+备份Apk包然后在安装后自动拷贝原先目录：适用于Deepin23和UOS（新版UEngine），安装较慢，受/tmp大小所限，安装后不会丢失Apk，Deepin（旧版UEngine）不推荐使用该选项；
+
+
+后期可以在程序主界面的菜单栏的“程序”=>“设置”里进行修改，
+如果不知道正在使用的系统是什么版本可以打开系统设置查看。
+""", title="设置", choices=["不备份Apk包直接安装", "备份Apk包然后在安装后自动拷贝原先目录"])
+    if choose == None:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showinfo(title="提示", message="必须选择一个选项！否则无法进入程序！")
+        sys.exit()            
+    write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": int(choose)}))
+
 
 ###########################
 # 设置变量
@@ -1219,7 +1319,7 @@ def showhelp():
 ###########################
 # 窗口创建
 ###########################
-win = tk.Tk()  # 创建窗口
+
 
 # 设置窗口
 style = ttkthemes.ThemedStyle(win)
@@ -1275,6 +1375,7 @@ menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Name"], 
 menu.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Name"], menu=help)
 
 programmenu.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][0], command=CleanProgramHistory)
+programmenu.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][2], command=SettingWindow.ShowWindow)
 programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][1], command=window.quit)  # 设置“退出程序”
 
@@ -1308,8 +1409,9 @@ uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"], menu=uengineRoot)
 
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
-help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“程序官网”项
-help.add_command(label="检查更新", command=UpdateWindow.ShowWindow)
+help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“传bug”项
+help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4], command=ShowHelp)  # 设置“更多帮助”项
+help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3], command=UpdateWindow.ShowWindow)
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1], command=showhelp)  # 设置“关于这个程序”项
 
 uengineService.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0], command=StartUengine)

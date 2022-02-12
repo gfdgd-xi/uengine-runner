@@ -10,5 +10,6 @@ rm -fv /usr/bin/uengine-keyboard
 rm -fv /usr/bin/uengine-useadb
 rm -fv /usr/bin/uengine-runner-launch.sh
 rm -fv /usr/bin/uengine-runner-update-bug
+rm -fv /usr/bin/uengine-root
 # 刷新图标缓存
 gtk-update-icon-cache /usr/share/icons/bloom

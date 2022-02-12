@@ -1,12 +1,165 @@
+<!doctype html>
+<html>
 <head>
-    <title>UEngine 运行器 1.6.0 帮助</title>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>index</title>
 </head>
-<body>
-    <h1>UEngine 运行器 1.6.0 帮助</h1>
-    <hr/>
-    <h2>安装自定义 APK 应用</h2>
-    <h3>方法1</h3>
-    <h3>方法2</h3>
-    <hr/>
-    <h2>高级功能</h2>
+<body><h1 id='uengine-运行器帮助'>UEngine 运行器帮助</h1>
+<hr />
+<h2 id='帮助简述'>帮助简述</h2>
+<blockquote><p>安装APK：点浏览按钮，选中需要安装的APK，然后点安装按钮<br/>卸载APK：在卸载APK下面的输入框内输入需要卸载的APK包名，点卸载按钮，如果无法获取包名，可以通过浏览APK文件程序自动获取包名进行卸载。<br/>保存APK图标：在安装APK下面的输入框浏览或输入APK的路径，然后点击“保存图标”按钮，选择保存位置即可<br/>重置（删除）UEngine数据：点击菜单栏的“UEngine”的“清空UEngine数据”，输入密码重启即可<br/>注意：如果任何安卓一遍打不开，多打开几遍应该就可以重新加载UEngine配置了<br/>打开UEngine应用列表：打开系统已安装的应用列表（安卓界面）<br/><strong>提示：</strong> <br/><strong>※1、近期升级的 UEngine 安装时会自动把要安装的 apk 删除，如果这个 apk 文件非常重要请拷贝一个备份版并安装这个备份版</strong> <br/><strong>2、需要你有使用 root 权限的能力；</strong><br/><strong>3、需要安装 UEngine 才能使用；</strong><br/><strong>4、提取 apk 图标的 apk 路径以“安装 apk”那栏为准;</strong><br/><strong>5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）</strong>  </p>
+</blockquote>
+<hr />
+<h2 id='详细帮助'>详细帮助</h2>
+<h3 id='如何安装自己的-apk'>如何安装自己的 Apk</h3>
+<p><em>请保证您已经把要安装的Apk下载到电脑本地并保证Apk完整且有权限</em></p>
+<h4 id='方法一-1'>方法一</h4>
+<ol start='' >
+<li>打开 UEngine 运行器 <br/><img src="1-1-1.png" referrerpolicy="no-referrer">  </li>
+<li>点击浏览按钮，找到想要安装的Apk<br/><img src="1-1-2.png" referrerpolicy="no-referrer">  </li>
+<li>点击安装按钮，输入密码
+<img src="1-1-3.png" referrerpolicy="no-referrer">  </li>
+<li>提示“操作完成”，在启动器找到新安装的图标启动即可<br/><img src="1-1-4.png" referrerpolicy="no-referrer"><br/><img src="1-1-5.png" referrerpolicy="no-referrer">  </li>
+
+</ol>
+<h4 id='方法二-1'>方法二</h4>
+<ol start='' >
+<li>打开要安装的Apk所在目录，右击=&gt;打开方式=&gt;安装或卸载 APK（UEngine 运行器）<br/><img src="1-2-1.png" referrerpolicy="no-referrer">  </li>
+<li>点击安装按钮，输入密码<br/><img src="1-1-3.png" referrerpolicy="no-referrer">  </li>
+<li>提示“操作完成”，在启动器找到新安装的图标启动即可<br/><img src="1-1-4.png" referrerpolicy="no-referrer"><br/><img src="1-2-2.png" referrerpolicy="no-referrer">  </li>
+
+</ol>
+<h3 id='卸载apk'>卸载Apk</h3>
+<h4 id='方法一-2'>方法一</h4>
+<ol start='' >
+<li>打开 UEngine 运行器 <br/><img src="1-1-1.png" referrerpolicy="no-referrer">  </li>
+<li>点击浏览按钮，找到想要卸载的Apk<br/><img src="1-1-2.png" referrerpolicy="no-referrer">  </li>
+<li>点击卸载按钮，输入密码<br/><img src="1-1-3.png" referrerpolicy="no-referrer">  </li>
+<li>提示“操作完成”，卸载完成  <br/><img src="1-1-4.png" referrerpolicy="no-referrer">  </li>
+
+</ol>
+<h4 id='方法二-2'>方法二</h4>
+<ol start='' >
+<li>打开要安装的Apk所在目录，右击=&gt;打开方式=&gt;安装或卸载 APK（UEngine 运行器）<br/><img src="1-2-1.png" referrerpolicy="no-referrer">  </li>
+<li>点击卸载按钮，输入密码<br/><img src="1-1-3.png" referrerpolicy="no-referrer">  </li>
+<li>提示“操作完成”，卸载完成<br/><img src="1-1-4.png" referrerpolicy="no-referrer">  </li>
+
+</ol>
+<h3 id='查询apk信息'>查询Apk信息</h3>
+<ol start='' >
+<li>打开 UEngine 运行器 <br/><img src="1-1-1.png" referrerpolicy="no-referrer"> </li>
+<li>点击“Apk 信息” 按钮即可查询Apk信息</li>
+
+</ol>
+<p>  <img src="1-3-1.png" referrerpolicy="no-referrer"></p>
+<h3 id='查看程序评分'>查看程序评分</h3>
+<ol start='' >
+<li>打开 UEngine 运行器 <br/><img src="1-1-1.png" referrerpolicy="no-referrer"> </li>
+<li>点击“Apk 信息” 按钮即可查询Apk信息
+<img src="1-3-1.png" referrerpolicy="no-referrer"></li>
+<li>点击“查看程序评分情况”即可查看其他用户对程序的评分</li>
+
+</ol>
+<p>  <img src="1-4-1.png" referrerpolicy="no-referrer"></p>
+<h3 id='上传用户评分'>上传用户评分</h3>
+<ol start='' >
+<li>打开 UEngine 运行器   </li>
+
+</ol>
+<p>  <img src="1-1-1.png" referrerpolicy="no-referrer"> </p>
+<ol start='2' >
+<li>点击“Apk 信息” 按钮即可查询Apk信息</li>
+
+</ol>
+<p>  <img src="1-3-1.png" referrerpolicy="no-referrer"></p>
+<ol start='3' >
+<li>点击“上传程序评分情况”，按照要求进行评分</li>
+
+</ol>
+<p>  <img src="1-5-1.png" referrerpolicy="no-referrer"></p>
+<ol start='4' >
+<li>如果提示“提交成功！感谢您的提交”就代表评分成功</li>
+
+</ol>
+<p>  <img src="1-5-2.png" referrerpolicy="no-referrer"></p>
+<h3 id='更新程序'>更新程序</h3>
+<ol start='' >
+<li>打开 UEngine 运行器   </li>
+
+</ol>
+<p>  <img src="1-1-1.png" referrerpolicy="no-referrer"></p>
+<ol start='2' >
+<li>点击“关于”=&gt;“检查更新”，打开更新窗口</li>
+
+</ol>
+<p>  <img src="1-6-1.png" referrerpolicy="no-referrer"></p>
+<ol start='3' >
+<li><strong>保证您的电脑没有运行其它Python应用以及本程序所有工作都已经完成</strong>，再点击“更新（更新过程中会关闭所有Python应用，包括这个应用）”，输入密码以进行更新</li>
+
+</ol>
+<p>  <img src="1-6-2.png" referrerpolicy="no-referrer"></p>
+<ol start='4' >
+<li>提示“更新完毕！”后重新启动 UEngine 运行器就更新完毕了</li>
+
+</ol>
+<p>  <img src="1-6-3.png" referrerpolicy="no-referrer"></p>
+<h3 id='保存图标'>保存图标</h3>
+<ol start='' >
+<li>打开 UEngine 运行器   </li>
+
+</ol>
+<p>  <img src="1-1-1.png" referrerpolicy="no-referrer"></p>
+<ol start='2' >
+<li>选择要保存图标的Apk，点击“保存图标”按钮，选择要保存的位置即可</li>
+
+</ol>
+<p>  <img src="1-7-1.png" referrerpolicy="no-referrer"></p>
+<h3 id='打开已安装的程序列表'>打开已安装的程序列表</h3>
+<h4 id='方法一-3'>方法一</h4>
+<p>打开启动器=&gt;UEngine 程序菜单 即可</p>
+<h4 id='方法二-3'>方法二</h4>
+<ol start='' >
+<li>打开 UEngine 运行器 <br/><img src="1-1-1.png" referrerpolicy="no-referrer"></li>
+<li>点击“打开 UEngine 应用列表”即可</li>
+
+</ol>
+<p>  <img src="1-8-1.png" referrerpolicy="no-referrer"></p>
+<h3 id='将-apk-打包成可以无需本应用即可安装的-deb-包'>将 Apk 打包成可以无需本应用即可安装的 deb 包</h3>
+<h4 id='打开-uengine-打包器的三种方法'>打开 UEngine 打包器的三种方法</h4>
+<h5 id='方法一-4'>方法一</h5>
+<p>启动器=&gt;UEngine 应用打包器</p>
+<h5 id='方法二-4'>方法二</h5>
+<p>打开要打包的 Apk 所在目录，右击=&gt;“打开方式”=&gt;“打包 deb（UEngine 运行器）”（接下来可以略过步骤一）</p>
+<p><img src="1-9-1.png" referrerpolicy="no-referrer"></p>
+<h5 id='方式三'>方式三</h5>
+<p>打开 UEngine 运行器，点击菜单栏的“UEngine”=&gt;“UEngine 应用打包”</p>
+<p><img src="1-9-2.png" referrerpolicy="no-referrer"></p>
+<h4 id='打包-deb'>打包 deb</h4>
+<ol start='' >
+<li>打开“UEngine Apk 应用打包器”，点击“浏览按钮”选择apk</li>
+
+</ol>
+<p>  <img src="1-9-3.png" referrerpolicy="no-referrer"></p>
+<ol start='2' >
+<li>根据实际情况勾选选项，然后点击“打包”进行打包</li>
+
+</ol>
+<p>  <img src="1-9-4.png" referrerpolicy="no-referrer"></p>
+<ol start='3' >
+<li>当提示“打包完成”时，打包完成，可以在桌面（一般是<code>/home/XXX/Desktop</code>）找到您打包的 deb 包，可以双击安装</li>
+
+</ol>
+<p>  <img src="1-9-5.png" referrerpolicy="no-referrer"></p>
+<p>  <img src="1-9-6.png" referrerpolicy="no-referrer"></p>
+<p>  <img src="1-9-7.png" referrerpolicy="no-referrer"></p>
+<p>           </p>
+<p>        </p>
+<p>        </p>
+<p>     </p>
+<p>     </p>
+<p>     </p>
+<p>  </p>
+<p>  </p>
+<p>  ©2021-2022</p>
 </body>
+</html>

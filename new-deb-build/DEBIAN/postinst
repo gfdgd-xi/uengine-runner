@@ -4,6 +4,7 @@ python3 -m pip install --upgrade pip        -i http://mirrors.aliyun.com/pypi/si
 python3 -m pip install --upgrade ttkthemes  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade pyautogui  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade keyboard   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade easygui    -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 # 建立软链接
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner              /usr/bin/uengine-runner
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder         /usr/bin/uengine-apk-builder

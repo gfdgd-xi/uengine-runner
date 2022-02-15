@@ -72,6 +72,10 @@ def BuildApkDeb(apkPath):
     else:
         apkPackageNameNew = GetApkPackageName(apkPath, False)
     apkPackageVersion = GetApkVersion(apkPath)
+    if apkPackageVersion[0].upper() == "V":
+        package = list(apkPackageVersion)
+        package.pop(0)
+        apkPackageVersion = "".join(package)
     apkChineseLabel = GetApkChineseLabel(apkPath)
     apkActivityName = GetApkActivityName(apkPath)
     iconSavePath = "{}/usr/share/uengine/icons/{}.png".format(tempPath, apkPackageNameNew)

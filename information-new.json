@@ -4,7 +4,7 @@
         "https://gitee.com/gfdgd-xi/uengine-runner",
 		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "1.6.0",
+    "Version": "1.6.1",
     "System": "Linux（deepin/UOS）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis",
@@ -22,6 +22,8 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "V1.6.1：",
+        "※1、修复了打包 deb 包在 APK 的包名有大写时无法启动的问题",
         "V1.6.0：",
         "※1、更换了新的图标",
         "※2、支持程序的评分和查看分数详情的功能（如果炸了我的服务器，这个就作废了）",

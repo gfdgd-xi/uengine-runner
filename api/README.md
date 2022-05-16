@@ -11,6 +11,7 @@
 | version | API 版本 |
 | updateTime | 更新时间 |
 | websize | 程序官网 |
+| home | 用户 home（用户文件）目录 |
 
 ## Check
 用于检查 API 所需的东西是否完整，详细如下：  
@@ -41,11 +42,13 @@ xxx = api.APK("APK 所在路径")
 | xxx.chineseLabel() | 获取 APK 中文名称 |
 | xxx.saveApkIcon("图标保存路径") | 保存 APK 的图标到指定路径 |
 | xxx.version() | 获取 APK 版本号 |
+| xxx.saveDesktopFile("图标保存路径", "快捷方式保存路径") | 保存支持 UEngine 启动的 APK 快捷方式 |
 
 ## UEngine
 用于对 UEngine 进行一点点操控，详细如下：
 | 函数名 | 函数介绍 |
 |:-:|:-:|
+| RemoveUengineCheck() | 删除 UEngine 的检查脚本 |
 | CPUCheck() | 检查 CPU 是否支持运行 UEngine |
 | Services | 用于操控 UEngine 服务的类，见下 |
 | InternetBridge | 用于操控 UEngine 网络桥接的类，见下 |
@@ -65,3 +68,25 @@ xxx = api.APK("APK 所在路径")
 | InternetBridge.Restart() | 重启 UEngine 网络桥接 |
 | InternetBridge.Reload() | 重新加载 UEngine 网络桥接 |
 | InternetBridge.ForceReload() | 强制加载 UEngine 网络桥接 |
+## Adb
+用于对 Adb 的部分操控
+| 函数名 | 函数介绍 |
+|:-:|:-:|
+| Services | 用于操控 Adb 服务的类，见下 |
+### Service
+关于 Adb 的服务控制：
+| 函数名 | 函数介绍 |
+|:-:|:-:|
+| Services.Open() | 打开 Adb 服务 | 
+| Services.Close() | 关闭 Adb 服务 |
+| Services.Kill() | 杀死 Adb 进程 |
+## File
+关于文件的读取和写入，这是面向对象的写法，所以应用方式也不一样：
+```python
+import api
+xxx = api.File("文件所在路径")
+```
+| 函数名 | 函数介绍 |
+|:-:|:-:|
+| xxx.read() | 读取这个文件 |
+| xxx.write("写入内容") | 写入这个文件 |

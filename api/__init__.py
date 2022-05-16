@@ -10,6 +10,7 @@ class ProgramInformation:
     version = "1.6.0Alpha1"
     updateTime = "2022年05月15日"
     websize = ["https://gitee.com/gfdgd-xi/uengine-runner", "https://github.com/gfdgd-xi/uengine-runner"]
+    home = os.path.expanduser('~')
 
 # 判断程序以正确方式运行
 class Check:
@@ -110,7 +111,29 @@ class APK:
                 line = line.replace("'", "")
                 line = line.replace(" ", "")
                 return line
+            
+    def saveDesktopFile(self, desktopPath, iconPath):
+        showName = self.chineseLabel()
+        if showName == "" or showName == None:
+            showName = "未知应用"
+        self.saveApkIcon(iconPath)
+        things = '''[Desktop Entry]
+        Categories=app;
+        Encoding=UTF-8
+        Exec=uengine launch --action=android.intent.action.MAIN --package={} --component={}
+        GenericName={}
+        Icon={}
+        MimeType=
+        Name={}
+        StartupWMClass={}
+        Terminal=false
+        Type=Application
+        '''.format(self.packageName(), self.activityName(), showName, iconPath, showName, showName)
+        File(desktopPath).write(things)
+
 class UEngine:
+    def RemoveUengineCheck():
+        os.remove("/usr/share/uengine/uengine-check-runnable.sh")
     def CPUCheck():
         return subprocess.getoutput("uengine check-features")
     class Services:
@@ -132,6 +155,34 @@ class UEngine:
             os.system("pkexec uengine-bridge.sh reload")
         def ForceReload():
             os.system("pkexec uengine-bridge.sh force-reload")
+
+class Adb:
+    class Service:
+        def Open():
+            os.system("adb start-server")
+        def Close():
+            os.system("adb kill-server")
+        def Kill():
+            os.system("killall adb")
+
+class File:
+    def __init__(self, filePath):
+        self.filePath = filePath
+
+    def read(self):
+        f = open(self.filePath, "r")  # 设置文件对象
+        str = f.read()  # 获取内容
+        f.close()  # 关闭文本对象
+        return str  # 返回结果
+
+    def write(self, things) -> "写入文本文档":
+        TxtDir = os.path.dirname(self.filePath)
+        print(TxtDir)
+        if not os.path.exists(TxtDir):
+            os.makedirs(TxtDir, exist_ok=True)
+        file = open(self.filePath, 'w', encoding='UTF-8')  # 设置文件对象
+        file.write(things)  # 写入文本
+        file.close()  # 关闭文本对象
 
 if __name__ == "__main__":
     print("本 API 不支持直接运行，请通过引入的方式使用此 API")

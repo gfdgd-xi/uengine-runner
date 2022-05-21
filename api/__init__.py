@@ -12,7 +12,8 @@ class ProgramInformation:
     updateTime = "2022年05月21日"
     websize = ["https://gitee.com/gfdgd-xi/uengine-runner", "https://github.com/gfdgd-xi/uengine-runner"]
     home = os.path.expanduser('~')
-    developer = ["gfdgd xi", "为什么您不喜欢熊出没和阿布呢"]
+    developer = ["gfdgd xi<3025613752@qq.com>", "为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>", "星空露光<https://gitee.com/Cynorkyle>", "actionchen<917981399@qq.com>", "柚子<https://gitee.com/Limexb>"]
+    lang = os.getenv('LANG')
     # 获取用户桌面目录
     def DesktopPath() -> "获取用户桌面目录":
         for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
@@ -289,6 +290,15 @@ class UEngine:
         os.remove("/usr/share/uengine/uengine-check-runnable.sh")
     def CPUCheck():
         return subprocess.getoutput("uengine check-features")
+    def BuildUengineRootImage():
+        os.system(ProgramInformation.programPath + "/root-uengine.sh")
+    def OpenUengineRootData():
+        os.system("xdg-open /data/uengine/data/data")
+    def InstallRootUengineImage():
+        if not os.path.exists:
+            os.mkdir("/tmp/uengine-runner")
+        File("/tmp/uengine-runner/install.sh").write("sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
+        os.system("wget -P '/tmp/uengine-runner' 'https://hub.fastgit.org/gfdgd-xi/uengine-runner/releases/download/U1.1.14/uengine-android-image_1.1.14_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'")
     class Services:
         def Open():
             os.system("pkexec systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")
@@ -296,7 +306,6 @@ class UEngine:
             os.system("pkexec systemctl disable uengine-container uengine-session")
         def Restart():
             os.system("pkexec systemctl restart uengine*")
-
     class InternetBridge:
         def Open():
             os.system("pkexec uengine-bridge.sh start")
@@ -321,13 +330,11 @@ class Adb:
 class File:
     def __init__(self, filePath):
         self.filePath = filePath
-
     def read(self):
         f = open(self.filePath, "r")  # 设置文件对象
         str = f.read()  # 获取内容
         f.close()  # 关闭文本对象
         return str  # 返回结果
-
     def write(self, things) -> "写入文本文档":
         TxtDir = os.path.dirname(self.filePath)
         print(TxtDir)
@@ -336,6 +343,10 @@ class File:
         file = open(self.filePath, 'w', encoding='UTF-8')  # 设置文件对象
         file.write(things)  # 写入文本
         file.close()  # 关闭文本对象
+
+class UengineRunner:
+    def CleanHistory():
+        shutil.rmtree(ProgramInformation.home + "/.config/uengine-runner")
 
 if __name__ == "__main__":
     print("本 API 不支持直接运行，请通过引入的方式使用此 API")

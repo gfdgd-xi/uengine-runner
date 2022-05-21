@@ -13,6 +13,7 @@
 | websize | 程序官网 |
 | home | 用户 home（用户文件）目录 |
 | developer | 参与的开发者列表 |
+| language | 当前语言 |
 | DesktopPath() | （函数）用户桌面目录 |
 
 ## Check
@@ -46,7 +47,7 @@ xxx = api.APK("APK 所在路径")
 | xxx.version() | 获取 APK 版本号 |
 | xxx.saveDesktopFile("图标保存路径", "快捷方式保存路径") | 保存支持 UEngine 启动的 APK 快捷方式 |
 | xxx.run() | 运行该应用（需要保证已经安装） |
-| xxx.buildDeb("deb 包保存路径", qianZhui) | 打包为 deb 包（“qianZhui”是布尔值，True代表有前缀为“uengine-dc”，False代表没有前缀） |
+| xxx.buildDeb("deb 包保存路径", qianZhui) | 打包为 deb 包（“qianZhui”是布尔值，可略，True代表有前缀为“uengine-dc”，False代表没有前缀） |
 
 ## UEngine
 用于对 UEngine 进行一点点操控，详细如下：
@@ -57,6 +58,9 @@ xxx = api.APK("APK 所在路径")
 | UengineDataClean() | 清空 UEngine 数据（需要 Root） |
 | RemoveUengineCheck() | 删除 UEngine 的检查脚本（需要 Root） |
 | CPUCheck() | 检查 CPU 是否支持运行 UEngine |
+| BuildUengineRootImage() | 构建 UEngine 的 Root 镜像 |
+| OpenUengineRootData() | 打开 UEngine 数据目录 |
+| InstallRootUengineImage() | 安装已经被 Root 过的 UEngine 镜像（需要 Root） |
 | Services | 用于操控 UEngine 服务的类，见下（需要 Root） |
 | InternetBridge | 用于操控 UEngine 网络桥接的类，见下（需要 Root） |
 ### Services
@@ -97,3 +101,9 @@ xxx = api.File("文件所在路径")
 |:-:|:-:|
 | xxx.read() | 读取这个文件 |
 | xxx.write("写入内容") | 写入这个文件 |
+
+## UengineRunner
+用于 UEngine 运行器的部分操控（请保证安装了 UEngine 运行器）
+| 函数名 | 函数介绍 |
+|:-:|:-:|
+| CleanHistory() | 清理 UEngine 运行器的历史记录 |

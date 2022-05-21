@@ -3,10 +3,10 @@
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
 # 版本：1.6.1
-# 更新时间：2022年2月6日（要开学了）
+# 更新时间：2022年5月21日（要开学了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
-# 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>
+# 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
 ###########################################################################################
 #################
 # 引入所需的库
@@ -331,7 +331,7 @@ def InstallRootUengineImage():
     if not os.path.exists:
         os.mkdir("/tmp/uengine-runner")
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-    threading.Thread(target=os.system, args=["deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.org/gfdgd-xi/uengine-runner/releases/download/U1.1.14/uengine-android-image_1.1.14_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
 
 def BuildRootUengineImage():
     threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/root-uengine.sh")]).start()

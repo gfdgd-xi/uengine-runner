@@ -4,7 +4,7 @@
         "https://gitee.com/gfdgd-xi/uengine-runner",
 		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "1.6.0",
+    "Version": "1.6.1",
     "System": "Linux（deepin/UOS）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis",
@@ -22,6 +22,14 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "V1.6.1：",
+        "※1、修复了打包 deb 包在 APK 的包名有大写时无法启动的问题",
+        "※2、提供新版本的 UEngine Root 镜像",
+        "※3、更新了 UEngine Root 的下载地址",
+        "※4、修复了本程序的“UEngine 键盘映射”无法启动的问题",
+        "5、把构建 UEngine Root 镜像修改为多线程下载（wget=>aria2）",
+        "6、提供了 UEngine 运行器的 API（可以从项目地址中获取）",
+        "7、补上遗漏的项目参与者“星空露光”，新加项目参与者“为什么您不喜欢熊出没和阿布呢”",
         "V1.6.0：",
         "※1、更换了新的图标",
         "※2、支持程序的评分和查看分数详情的功能（如果炸了我的服务器，这个就作废了）",
@@ -147,6 +155,8 @@
     "Contribute": [
         "gfdgd xi<3025613752@qq.com>",
         "actionchen<917981399@qq.com>",
-        "柚子<https://gitee.com/Limexb>"
+        "柚子<https://gitee.com/Limexb>",
+        "为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>",
+        "星空露光<https://gitee.com/Cynorkyle>"
     ]
 }

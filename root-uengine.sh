@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#sudo apt install squashfs-tools
+sudo apt install squashfs-tools
 
 mkdir -p ~/temp
 cd ~/temp
 echo "正在下载supersu"
-wget -P ~/temp http://supersuroot.org/downloads/SuperSU-v2.82-201705271822.zip 
+aria2c -x 16 -s 16 -d ~/temp http://supersuroot.org/downloads/SuperSU-v2.82-201705271822.zip
 cd ..
 mkdir -p ~/temp/work/dabao/extract/DEBIAN
 echo "正在解压supersu" 

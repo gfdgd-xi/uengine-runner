@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################
-# 版本：1.5.1
-# 更新时间：2021年10月06日
+# 版本：1.6.1
+# 更新时间：2022年10月06日
 # Need: unix, python3-tk, python3-pip, pymouse, keyboard
 #########################################
 import os
@@ -57,7 +57,10 @@ def Mouse(key):
         print(keybo[key.name]["MousePlace"])
         pyautogui.FAILSAFE = False
         #os.system(programPath + "/mouse.py {} {}".format(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1]))
-        pyautogui.click(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1])
+        try:
+            pyautogui.click(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1])
+        except:
+            traceback.print_exc()
         #pyautogui.click(1500, 800)
         #m.click(keybo[key.name]["MousePlace"][0],keybo[key.name]["MousePlace"][1])
 
@@ -72,6 +75,7 @@ def Setting(key):
         return False
 
 def ShowTips():
+    global close
     try:
         if setting:
             settingLabelText.set('''设置方法：把鼠标移动带所需位置然后按下需要设置的按键即可（{}x{}）
@@ -90,15 +94,23 @@ def ShowTips():
 4、映射时会占用鼠标，所以在使用时最好不要使用鼠标;'''.format(pyautogui.position()[0], pyautogui.position()[1]))
             settingButton.configure(state=tk.NORMAL) 
         time.sleep(0.1)
-        ShowTips()
+        if not close:
+            ShowTips()
     except:
         traceback.print_exc()
+        print(close)
         if not close:
             ShowTips()
 
 def Closing():
+    global close
     close = True
     window.destroy()
+    #key.close()
+    #stop_thread(keys)
+    keyboard.unhook(Inputt)
+    sys.exit(0)
+
 
 def Key():
     keyboard.hook(Inputt)
@@ -150,6 +162,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 keybo = json.loads(readtxt("{}/.config/uengine-keyboard/key.json".format(get_home())))
 version = json.loads(readtxt("{}/information.json".format(programPath)))["Version"]
+pyautogui.PAUSE = 0
 
 ###################
 # 判断是不是 root
@@ -214,7 +227,8 @@ settingButton.grid(row=0, column=1)
 
 win.pack(fill="both", expand="yes")
 #threaded.lock.allocate_lock()
-threading.Thread(target=Key).start()
+keys = threading.Thread(target=Key)
+keys.start()
 threading.Thread(target=ShowTips).start()
 pyautogui.FAILSAFE = False
 '''def B(key):

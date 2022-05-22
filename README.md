@@ -2,7 +2,7 @@
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![截图_tk_20220521175128.png](https://storage.deepin.org/thread/202205211806252353_截图_tk_20220521175128.png)
+![截图_tk_20220521175128.png](https://storage.deepin.org/thread/202205211806252353_截图_tk_20220521175128.png)  
 （测试平台：UOS 家庭版 21.1，deepin 20.6,UOS 专业版 1040）   
 （自己美术功底太差，图标直接用 anbox 的了）   
 
@@ -10,24 +10,47 @@
 + releases 里有两个 deb 包，**是一样的除了包名和打包标准不同**，**只能选择其中一个安装**，**两个都安装会产生冲突**，两个deb包的作用如下：
     - 包名为`spark-uengine-runner`的，是旧包，按照**正常标准打包**，适用于从**星火应用商店安装**以及**从低版本（即1.3.2即以下版本升级上来的用户）升级**或者**之前就安装该版本的用户**甚至**想跨平台的用户**等等
     - 包名为`com.gitee.uengine.runner.spark`的，是按照**deepin/UOS的标准打包的**，适用于**之前就安装该版本并升级上来的用户**以及**希望按照该方法打包的用户**等等
-+ **近期升级的 UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版或者在程序设置里面选择“备份APK包然后在安装后自动拷贝原先目录”选项**
++ **近期升级的 UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版或者在程序设置里面选择“备份APK包然后在安装后自动拷贝原先目录”选项**  
 ![image.png](https://storage.deepin.org/thread/202205211808393526_image.png)
+
+## 如何升级至最新版本
+### 一、使用星火应用商店更新到最新版本
+**1、打开星火应用商店并打开到对应的界面，点击“升级”**    
+![image.png](https://storage.deepin.org/thread/202205220755222083_image.png)
+**2、然后安装**  
+![image.png](https://storage.deepin.org/thread/202205220756248090_image.png)
+**3、结束**
+### 二、通过源更新（需要添加星火应用商店源）
+输入以下命令即可：  
+```bash
+sudo apt update
+sudo apt upgrade
+```
+![image.png](https://storage.deepin.org/thread/202205220758088497_image.png)
+### 三、使用程序自带的更新程序更新
+**1、打开 UEngine 运行器然后点击“关于”=>“检查更新”，点击“更新（更新过程中会关闭所有Python应用，包括这个应用）”**   
+![image.png](https://storage.deepin.org/thread/202205220759382269_image.png)
+**2、输入密码进行更新**  
+![image.png](https://storage.deepin.org/thread/202205220801175784_image.png)
+**3、提示更新完毕即可**  
+![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)
+
 
 
 ### 更新内容
 #### V1.6.1（2022年05月21日，521）
-**※1、修复了打包 deb 包在 APK 的包名有大写时无法启动的问题**
-**※2、提供新版本的 UEngine Root 镜像**
-**※3、更新了 UEngine Root 的下载地址**
-**※4、修复了本程序的“UEngine 键盘映射”无法启动的问题**
-5、把构建 UEngine Root 镜像修改为多线程下载（wget=>aria2）
-6、提供了 UEngine 运行器的 API（可以从项目地址中获取）
-7、补上遗漏的项目参与者“星空露光”，新加项目参与者“为什么您不喜欢熊出没和阿布呢”
-![截图_选择区域_20220521175308.png](https://storage.deepin.org/thread/202205211806261045_截图_选择区域_20220521175308.png)
-![截图_选择区域_20220521175238.png](https://storage.deepin.org/thread/202205211806269003_截图_选择区域_20220521175238.png)
-![截图_选择区域_20220521175156.png](https://storage.deepin.org/thread/202205211806255140_截图_选择区域_20220521175156.png)
-![截图_tk_20220521175128.png](https://storage.deepin.org/thread/202205211806252353_截图_tk_20220521175128.png)
-![截图_选择区域_20220521175342.png](https://storage.deepin.org/thread/202205211806254882_截图_选择区域_20220521175342.png)
+**※1、修复了打包 deb 包在 APK 的包名有大写时无法启动的问题**  
+**※2、提供新版本的 UEngine Root 镜像**  
+**※3、更新了 UEngine Root 的下载地址**  
+**※4、修复了本程序的“UEngine 键盘映射”无法启动的问题**  
+5、把构建 UEngine Root 镜像修改为多线程下载（wget=>aria2）  
+6、提供了 UEngine 运行器的 API（可以从项目地址中获取）  
+7、补上遗漏的项目参与者“星空露光”，新加参与者    
+![截图_选择区域_20220521175308.png](https://storage.deepin.org/thread/202205211806261045_截图_选择区域_20220521175308.png)  
+![截图_选择区域_20220521175238.png](https://storage.deepin.org/thread/202205211806269003_截图_选择区域_20220521175238.png)  
+![截图_选择区域_20220521175156.png](https://storage.deepin.org/thread/202205211806255140_截图_选择区域_20220521175156.png)  
+![截图_tk_20220521175128.png](https://storage.deepin.org/thread/202205211806252353_截图_tk_20220521175128.png)  
+![截图_选择区域_20220521175342.png](https://storage.deepin.org/thread/202205211806254882_截图_选择区域_20220521175342.png)  
 
 
 #### V1.6.0（开学版，开学前一天完成）
@@ -182,14 +205,16 @@ FileNotFoundError: [Errno 2] No such file or directory: '/home/gfdgd_xi/.local/s
 1.  安装所需依赖
 
 ```bash
-sudo apt install deepin-elf-verify python3 python3-tk python3-pip
-sudo apt install aapt uengine python3-setuptools deepin-terminal curl
-sudo apt install python3-pil python3-pil.imagetk python3-requests adb
-sudo apt install translate-shell python3-xlib python3-requests fonts-noto-cjk python3-numpy
-python3 -m pip install pip -U
+sudo apt install python3 python3-tk python3-pip aapt uengine
+sudo apt install python3-setuptools deepin-terminal curl python3-pil
+sudo apt install python3-pil.imagetk python3-requests adb 
+sudo apt install translate-shell python3-xlib fonts-noto-cjk
+sudo apt install python3-numpy python3-matplotlib wget inotify-tools aria2
+python3 -m pip install --upgrade pip        -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade ttkthemes  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade pyautogui  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 python3 -m pip install --upgrade keyboard   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+python3 -m pip install --upgrade easygui    -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 ```
 
 2.  下载本程序
@@ -201,20 +226,8 @@ git clone https://gitee.com/gfdgd-xi/uengine-runner.git
 3.  运行本程序
 
 ```bash
-sudo mkdir /opt/apps/uengine-runner
-sudo cp uengine-runner /opt/apps/uengine-runner -rv
-sudo cp getxmlimg.py /opt/apps/uengine-runner -rv
-sudo cp icon.png /opt/apps/uengine-runner -rv
-chmod 777 /opt/apps/uengine-runner/main.py
-sudo cp /opt/apps/uengine-runner/main.py /usr/bin/uengine-runner
-./main.py
-```
-
-4.  卸载本程序
-```bash
-sudo rm /usr/bin/uengine-runner -v
-sudo rm /opt/apps/uengine-runner/ -rfv
-pip3 uninstall ttkthemes
+chmod 777 uengine-runner/main.py
+./uengine-runner/main.py
 ```
 
 ### 使用说明
@@ -226,10 +239,6 @@ pip3 uninstall ttkthemes
 ### 故障排除
 提 issue 最好，当然有些问题自己无法解决，请大佬 push 一下
 如果出现故障，尝试终端运行，如果是可以自行解决的问题，就**自行解决**，如果可以就**提 issues 并提供解决方案**，不行就**提 isscue 并提供程序和终端报错以及程序版本**
-
-### 下载量
-这里只统计蓝奏云的下载量，链接（懒得更了）：  
-[https://kdocs.cn/l/smrvazWGuKcY](https://kdocs.cn/l/smrvazWGuKcY)  
 
 ### 已知问题
 <p align="center"><img src='https://bbs.deepin.org/assets/image/raccoon/[sad].gif'></p>  
@@ -257,12 +266,14 @@ pip3 uninstall ttkthemes
 | gfdgd xi | 3025613752@qq.com |
 | actionchen | 917981399@qq.com |
 | 柚子 | https://gitee.com/Limexb |
+| 星空露光 | https://gitee.com/Cynorkyle |
+| 为什么您不喜欢熊出没和阿布呢 | https://weibo.com/u/7755040136 |
 
 ### 相关项目  
 | 项目名称 | 项目地址 |
 |   :-:  |      :-:|
 | uengine-installer | https://gitee.com/Maicss/uengine-installer |  
-| uengine APK 打包器 | https://gitee.com/gfdgd-xi/uengine-apk-builder |
+| UEngine APK 打包器 | https://gitee.com/gfdgd-xi/uengine-apk-builder |
 | Root UEngine | https://gitee.com/Limexb/root-uengine |
 
 ### 附测试生成图标无问题列表：

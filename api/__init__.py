@@ -298,7 +298,7 @@ class UEngine:
         if not os.path.exists:
             os.mkdir("/tmp/uengine-runner")
         File("/tmp/uengine-runner/install.sh").write("sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-        os.system("wget -P '/tmp/uengine-runner' 'https://hub.fastgit.org/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'")
+        os.system("wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'")
     class Services:
         def Open():
             os.system("pkexec systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")

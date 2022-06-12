@@ -64,7 +64,8 @@ def UninstallProgram(package: "apk 包名")->"卸载程序":
 # 卸载按钮事件
 def ButtonClick8():
     if ComboInstallPath.get() is "":
-        messagebox.showerror(title="提示", message="信息没有填写完整，无法继续卸载 APK")
+        messagebox.showerror(title="提示", message=langFile[lang]["Main"]["MainWindow"]["Error"]["UninstallError"])
+
         return
     DisabledAndEnbled(True)
     if os.path.exists(ComboInstallPath.get()):
@@ -91,7 +92,7 @@ def FindApk()->"浏览窗口":
 # 安装按钮事件
 def Button3Install():
     if ComboInstallPath.get() is "" or not os.path.exists(ComboInstallPath.get()):
-        messagebox.showerror(title="提示", message="信息没有填写完整或错误，无法继续安装 APK")
+        messagebox.showerror(title="提示", message=langFile[lang]["Main"]["MainWindow"]["Error"]["InstallError"])
         return
     DisabledAndEnbled(True)
     threading.Thread(target=InstallApk, args=(ComboInstallPath.get(),)).start()
@@ -137,7 +138,7 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
             if setting["SaveApk"]:
                 shutil.copy("/tmp/uengine-runner/bak.apk", path)
         except:
-            messagebox.showerror(title="错误", message="无法还原安装包\n提示：新版UEngine安装后会自动删除安装包，备份的Apk在/tmp/uengine-runner/bak.apk，电脑重启后就会丢失！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["BackApkError"])
         print("\nprint install complete")
         if quit:
             print(commandReturn)
@@ -333,6 +334,9 @@ def InstallRootUengineImage():
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
     threading.Thread(target=os.system, args=["deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
 
+def UengineUbuntuInstall():
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
+
 def BuildRootUengineImage():
     threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/root-uengine.sh")]).start()
     
@@ -407,7 +411,7 @@ def KeyboardToMouse():
 def SaveIconToOtherPath():
     apkPath = ComboInstallPath.get()
     if apkPath == "":
-        messagebox.showerror(title="错误", message="你没有选择 apk 文件")
+        messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ChooseApkError"])
         return
     path = filedialog.asksaveasfilename(title="保存图标", filetypes=[("PNG 图片", "*.png"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApkIcon.json"))["path"])
     if not path == "":
@@ -415,7 +419,7 @@ def SaveIconToOtherPath():
             SaveApkIcon(apkPath, path)
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message="本程序不支持保存该 apk 的图标")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SaveApkIconError"])
             return
         write_txt(get_home() + "/.config/uengine-runner/SaveApkIcon.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
         findApkHistory.append(ComboInstallPath.get())
@@ -523,7 +527,7 @@ def SaveInstallUengineApp():
             return
         if os.path.exists("/data/uengine/data/data/app/{}-1".format(result)):
             break
-        messagebox.showerror(title="错误", message="路径不存在，请重试！")
+        messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["PathError"])
     path = filedialog.asksaveasfilename(title="保存apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApk.json"))["path"])
     if path == "" or path == ():
         return
@@ -1399,6 +1403,7 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12], command=UengineUbuntuInstall)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"], menu=uengineService)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"], menu=uengineInternet)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"], menu=uengineIcon)

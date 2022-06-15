@@ -674,7 +674,7 @@ class SettingWindow():
         try:
             data = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
         except:
-            messagebox.showerror(title="错误", message="读取设置错误！无法打开设置窗口！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SettingReadError"])
             setting.destroy()
         SettingWindow.saveApkOption = tk.IntVar()
         SettingWindow.saveApkOption.set(int(data["SaveApk"]))

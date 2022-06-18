@@ -690,7 +690,7 @@ class SettingWindow():
             write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": bool(SettingWindow.saveApkOption.get())}))
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message="保存设置错误！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SettingSaveError"])
             return
         messagebox.showinfo(title="提示", message="设置保存完毕！")
 
@@ -716,8 +716,7 @@ class UpdateWindow():
                 updateText.insert("0.0", UpdateWindow.data["New"].replace("\\n", "\n"))
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message="无法连接服务器！")
-
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerError"])
         updateText.configure(state=tk.DISABLED)
         versionLabel.pack(anchor=tk.W)
         updateText.pack()
@@ -757,7 +756,7 @@ class ApkInformation():
         path = ComboInstallPath.get()
         package = GetApkPackageName(path)
         if package == None or package == "":
-            messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         message = tk.Toplevel()
         message.title("“{}“的Apk信息".format(GetApkChineseLabel(path)))
@@ -822,12 +821,13 @@ Activity：{}
         try:
             messagebox.showinfo(title="提示", message=requests.post("http://120.25.153.144/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
         except:
-            messagebox.showerror(title="错误", message="无法连接服务器！无法进行评分！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerStarError"])
+
 
     def ShowMap():
         package = GetApkPackageName(path)
         if package == None or package == "":
-            messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
             data = json.loads(requests.get("http://120.25.153.144/uengine-runner/app/check/" + package +"/data.json").text)
@@ -905,7 +905,7 @@ class AdbChangeUengineDisplaySize():
             int(displayX.get())
             int(displayY.get())
         except:
-            messagebox.showerror(title="错误", message="你输入的数值不正确！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["InputDataError"])
             return
         os.system("adb -s '192.168.250.2:5555' shell wm size {}x{}".format(displayX.get(), displayY.get()))
         AdbChangeUengineDisplaySize.GetUengineDisplaySize()

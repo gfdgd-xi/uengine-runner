@@ -20,7 +20,12 @@
                     "ChooseApkError": "你没有选择 apk 文件",
                     "SaveApkIconError": "本程序不支持保存该 apk 的图标",
                     "PathError": "路径不存在，请重试！",
-                    "SettingReadError": "读取设置错误！无法打开设置窗口！"
+                    "SettingReadError": "读取设置错误！无法打开设置窗口！",
+                    "SettingSaveError": "保存设置错误！",
+                    "ConnectServerError": "无法连接服务器！",
+                    "ConnectServerStarError": "无法连接服务器！无法进行评分！",
+                    "ApkFileError": "该应用安装包异常，无法查询相关数据！",
+                    "InputDataError": "你输入的数值不正确！"
                 },
                 "Menu": [
                     {
@@ -167,7 +172,12 @@
                     "ChooseApkError": "You don't choose any APK file.",
                     "SaveApkIconError": "This APK file isn't allow to save the icon file.",
                     "PathError": "Path not found, please try again",
-                    "SettingReadError": "Read user setting error! Can't to continue to set!"
+                    "SettingReadError": "Read user setting error! Can't to continue to set!",
+                    "SettingSaveError": "Setting can't save",
+                    "ConnectServerError": "Can't connect the cloud server!",
+                    "ConnectServerStarError": "Can't connect the cloud server! So can't give star for the app!",
+                    "ApkFileError": "This apk file is error and can't find any data about the apk file!",
+                    "InputDataError": "Your input error data!"
                 },
                 "Menu": [
                     {

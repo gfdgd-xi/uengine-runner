@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.6.1
-# 更新时间：2022年5月21日（要开学了）
+# 版本：1.6.2 Alpha
+# 更新时间：2022年6月19日（要期末考试了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
@@ -12,6 +12,7 @@
 # 引入所需的库
 #################
 import os
+import api
 import sys
 import time
 import json
@@ -663,6 +664,21 @@ def VersionCheck(version1, version2):
 def ShowHelp():
     webbrowser.open_new_tab(programPath + "/Help/index.html")
 
+def AllowOrDisallowUpdateAndroidApp():
+    if not os.path.exists("/data/uengine/data/data/misc/adb/adb_keys"):
+        if not messagebox.askyesno(title=langFile[lang]["Main"]["MainWindow"]["Answer"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["UseAdbPackageAnswer"]):
+            return
+        os.system("pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-useadb 0 '{}'".format(programPath,
+                                                                                                       "{}/.android/adbkey.pub".format(
+                                                                                                           get_home())))  # 写入配置
+
+    adb = api.Adb("192.168.250.2:5555")
+    adb.Service.Close()
+    adb.connect()
+    if messagebox.askyesno(title=langFile[lang]["Main"]["MainWindow"]["Answer"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["AllowOrDisallowUpdateAndroidAppAnswer"][int(adb.boolAndroidInstallOtherAppSetting())]):
+        adb.setAndroidInstallOtherAppSetting(not adb.boolAndroidInstallOtherAppSetting())
+        messagebox.showinfo(title=langFile[lang]["Main"]["MainWindow"]["Information"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["CompleteInformation"])
+
 class SettingWindow():
     saveApkOption = tk.IntVar()
     def ShowWindow():
@@ -847,7 +863,6 @@ Activity：{}
         matplotlib.pylab.ylabel("等级", fontproperties=fonts)
         matplotlib.pylab.title("“" + chinese + "”的用户评分（数据只供参考）", fontproperties=fonts)
         matplotlib.pylab.show()
-
 
 class AdbChangeUengineDisplaySize():
     def ShowWindows():
@@ -1400,6 +1415,7 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][1], command=AdbStopServer)
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2], command=AdbKillAdbProgress)
 
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13], command=AllowOrDisallowUpdateAndroidApp)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)

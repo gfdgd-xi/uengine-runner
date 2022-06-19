@@ -27,6 +27,18 @@
                     "ApkFileError": "该应用安装包异常，无法查询相关数据！",
                     "InputDataError": "你输入的数值不正确！"
                 },
+                "Information": {
+                    "Title": "提示",
+                    "CompleteInformation": "完成"
+                },
+                "Answer": {
+                    "Title": "提示",
+                    "AllowOrDisallowUpdateAndroidAppAnswer": [
+                        "你确定要启用 UEngine 可以安装以及使用默认的更新程序升级应用？（即允许未知来源）",
+                        "你确定要禁用 UEngine 可以安装以及使用默认的更新程序升级应用？（即禁止未知来源）"
+                    ],
+                    "UseAdbPackageAnswer": "你没有安装 adb 补丁，必须安装才能继续。是否安装？"
+                },
                 "Menu": [
                     {
                         "Name": "程序",
@@ -120,7 +132,8 @@
                                     "安装默认的 UEngine 镜像"
                                 ]
                             },
-                            "在 Ubuntu 上安装 UEngine"
+                            "在 Ubuntu 上安装 UEngine",
+                            "（不）允许安装未知来源应用（即支持UEngine安装的安卓程序程序更新）"
                         ]
                     },
                     {
@@ -178,6 +191,18 @@
                     "ConnectServerStarError": "Can't connect the cloud server! So can't give star for the app!",
                     "ApkFileError": "This apk file is error and can't find any data about the apk file!",
                     "InputDataError": "Your input error data!"
+                },
+                "Information": {
+                    "Title": "Tips",
+                    "CompleteInformation": "Complete!"
+                },
+                "Answer": {
+                    "Title": "Tips",
+                    "AllowOrDisallowUpdateAndroidAppAnswer": [
+                        "Are you sure to allow UEngine to install or update other android program? (Allow )（即允许未知来源）",
+                        "Are you sure to disallow UEngine to install or update other android program? (Allow )（即允许未知来源）"
+                    ],
+                    "UseAdbPackageAnswer": "You don't install adb package with UEngine, you must install, and after install you can connect to set.\nDo you want to install?"
                 },
                 "Menu": [
                     {
@@ -272,7 +297,8 @@
                                     "Install Defult UEngine Image"
                                 ]
                             },
-                            "Install UEngine On Ubuntu"
+                            "Install UEngine On Ubuntu",
+                            "Allow/Disallow UEngine To Install Or Update Other Android Program"
                         ]
                     },
                     {

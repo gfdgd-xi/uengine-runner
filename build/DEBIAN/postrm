@@ -1,3 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 # 刷新图标缓存
-gtk-update-icon-cache /usr/share/icons/bloom
+# 因为 Ubuntu 的问题，省略
+# gtk-update-icon-cache /usr/share/icons/bloom

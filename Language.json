@@ -133,7 +133,8 @@
                                 ]
                             },
                             "在 Ubuntu 上安装 UEngine",
-                            "（不）允许安装未知来源应用（即支持UEngine安装的安卓程序程序更新）"
+                            "启动/禁用UEngine安装的安卓程序程序更新",
+                            "在 Ubuntu 上安装 UEngine"
                         ]
                     },
                     {
@@ -298,7 +299,8 @@
                                 ]
                             },
                             "Install UEngine On Ubuntu",
-                            "Allow/Disallow UEngine To Install Or Update Other Android Program"
+                            "Allow/Disallow UEngine To Install Or Update Other Android Program",
+                            "Install UEngine On Ubuntu"
                         ]
                     },
                     {

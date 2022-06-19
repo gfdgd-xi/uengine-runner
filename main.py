@@ -338,6 +338,9 @@ def InstallRootUengineImage():
 def UengineUbuntuInstall():
     threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
 
+def UbuntuInstallUengine():
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
+
 def BuildRootUengineImage():
     threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/root-uengine.sh")]).start()
     
@@ -668,10 +671,7 @@ def AllowOrDisallowUpdateAndroidApp():
     if not os.path.exists("/data/uengine/data/data/misc/adb/adb_keys"):
         if not messagebox.askyesno(title=langFile[lang]["Main"]["MainWindow"]["Answer"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["UseAdbPackageAnswer"]):
             return
-        os.system("pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-useadb 0 '{}'".format(programPath,
-                                                                                                       "{}/.android/adbkey.pub".format(
-                                                                                                           get_home())))  # 写入配置
-
+        os.system("pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-useadb 0 '{}'".format(programPath,"{}/.android/adbkey.pub".format(get_home())))  # 写入配
     adb = api.Adb("192.168.250.2:5555")
     adb.Service.Close()
     adb.connect()
@@ -1334,6 +1334,26 @@ def showhelp():
         #helpwindow.mainloop()
         helpwindow.protocol("WM_DELETE_WINDOW", on_closing)
 
+###########################
+# 检查 UEngine 是否安装
+###########################
+if not os.path.exists("/usr/bin/uengine"):
+    # 不渲染窗口
+    style = ttkthemes.ThemedStyle(win)
+    style.set_theme("breeze")
+    win.withdraw()
+    # Deepin/UOS 用户
+    if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
+        if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可"):
+            os.system("deepin-terminal -C \"pkexec apt install uengine\"")
+            sys.exit(0)
+    # 非 Deepin/UOS 用户
+    else:
+        if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可"):
+            os.system(f"deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            sys.exit(0)
+    # 重新显示窗口
+    win.wm_deiconify()
 
 ###########################
 # 窗口创建
@@ -1428,6 +1448,7 @@ uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9], command=DelUengineCheck)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10], command=ReinstallUengine)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"], menu=uengineRoot)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14], command=UbuntuInstallUengine)
 
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“传bug”项

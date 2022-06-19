@@ -1,8 +1,10 @@
 Package: com.gitee.uengine.runner.spark
+Replaces: spark-uengine-runner
+Breaks: spark-uengine-runner
 Source: com.gitee.uengine.runner.spark
-Version: 1.6.1
+Version: 1.6.2Alpha1
 Architecture: all
-Maintainer: gfdgd xi <3025613752@qq.com>, actionchen<917981399@qq.com>, 柚子<https://gitee.com/Limexb>, 为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>, 星空露光<https://gitee.com/Cynorkyle>
+Maintainer: gfdgd xi <3025613752@qq.com>, actionchen<917981399@qq.com>, 柚子<https://gitee.com/Limexb>, 为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>, 星空露光<https://gitee.com/Cynorkyle>, shenmo
 Depends: deepin-elf-verify (>= 0.0.16.7-1), python3, python3-tk, python3-pip, aapt, uengine, python3-setuptools, deepin-terminal, curl, python3-pil, python3-pil.imagetk, python3-requests, adb, translate-shell, python3-xlib, fonts-noto-cjk, python3-numpy, python3-matplotlib, wget, inotify-tools, aria2
 Section: utils
 Priority: optional

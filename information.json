@@ -1,5 +1,5 @@
 {
-    "Package": "spark-uengine-runner",
+    "Package": "com.gitee.uengine.runner.spark",
     "Url": [
         "https://gitee.com/gfdgd-xi/uengine-runner",
 		"https://github.com/gfdgd-xi/uengine-runner"
@@ -162,6 +162,7 @@
         "actionchen<917981399@qq.com>",
         "柚子<https://gitee.com/Limexb>",
         "为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>",
-        "星空露光<https://gitee.com/Cynorkyle>"
+        "星空露光<https://gitee.com/Cynorkyle>",
+        "shenmo"
     ]
 }

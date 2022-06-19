@@ -13,6 +13,32 @@
                 "Btngeticon": "保存图标",
                 "BtnSaveApk": "保存Apk",
                 "BtnApkInformation": "Apk 信息",
+                "Error": {
+                    "InstallError": "信息没有填写完整，无法继续安装 APK",
+                    "UninstallError": "信息没有填写完整，无法继续卸载 APK",
+                    "BackApkError": "无法还原安装包\n提示：新版UEngine安装后会自动删除安装包，备份的Apk在/tmp/uengine-runner/bak.apk，电脑重启后就会丢失！",
+                    "ChooseApkError": "你没有选择 apk 文件",
+                    "SaveApkIconError": "本程序不支持保存该 apk 的图标",
+                    "PathError": "路径不存在，请重试！",
+                    "SettingReadError": "读取设置错误！无法打开设置窗口！",
+                    "SettingSaveError": "保存设置错误！",
+                    "ConnectServerError": "无法连接服务器！",
+                    "ConnectServerStarError": "无法连接服务器！无法进行评分！",
+                    "ApkFileError": "该应用安装包异常，无法查询相关数据！",
+                    "InputDataError": "你输入的数值不正确！"
+                },
+                "Information": {
+                    "Title": "提示",
+                    "CompleteInformation": "完成"
+                },
+                "Answer": {
+                    "Title": "提示",
+                    "AllowOrDisallowUpdateAndroidAppAnswer": [
+                        "你确定要启用 UEngine 可以安装以及使用默认的更新程序升级应用？（即允许未知来源）",
+                        "你确定要禁用 UEngine 可以安装以及使用默认的更新程序升级应用？（即禁止未知来源）"
+                    ],
+                    "UseAdbPackageAnswer": "你没有安装 adb 补丁，必须安装才能继续。是否安装？"
+                },
                 "Menu": [
                     {
                         "Name": "程序",
@@ -105,7 +131,10 @@
                                     "构建 UEngine 带最高权限的镜像到用户主目录",
                                     "安装默认的 UEngine 镜像"
                                 ]
-                            }
+                            },
+                            "在 Ubuntu 上安装 UEngine",
+                            "启动/禁用UEngine安装的安卓程序程序更新",
+                            "在 Ubuntu 上安装 UEngine"
                         ]
                     },
                     {
@@ -150,6 +179,32 @@
                 "Btngeticon": "Save Apk Icon",
                 "BtnSaveApk": "Saving Installed App Apk",
                 "BtnApkInformation": "Apk Information",
+                "Error": {
+                    "InstallError": "You don't input the APK file path, Can't install Android program by now.",
+                    "UninstallError": "You don't input the APK file path or android program package name, Can't uninstall Android program by now.",
+                    "BackApkError": "Can't recover the apk\nTips: Newer UEngine will delete the APK installing file when finish install, recover apk is in \"tmp/uengine-runner/bak.apk\", but it will be lose when you restart your computer.",
+                    "ChooseApkError": "You don't choose any APK file.",
+                    "SaveApkIconError": "This APK file isn't allow to save the icon file.",
+                    "PathError": "Path not found, please try again",
+                    "SettingReadError": "Read user setting error! Can't to continue to set!",
+                    "SettingSaveError": "Setting can't save",
+                    "ConnectServerError": "Can't connect the cloud server!",
+                    "ConnectServerStarError": "Can't connect the cloud server! So can't give star for the app!",
+                    "ApkFileError": "This apk file is error and can't find any data about the apk file!",
+                    "InputDataError": "Your input error data!"
+                },
+                "Information": {
+                    "Title": "Tips",
+                    "CompleteInformation": "Complete!"
+                },
+                "Answer": {
+                    "Title": "Tips",
+                    "AllowOrDisallowUpdateAndroidAppAnswer": [
+                        "Are you sure to allow UEngine to install or update other android program? (Allow )（即允许未知来源）",
+                        "Are you sure to disallow UEngine to install or update other android program? (Allow )（即允许未知来源）"
+                    ],
+                    "UseAdbPackageAnswer": "You don't install adb package with UEngine, you must install, and after install you can connect to set.\nDo you want to install?"
+                },
                 "Menu": [
                     {
                         "Name": "Program",
@@ -242,16 +297,19 @@
                                     "Build An UEngine Image With Root User In Your Home Path",
                                     "Install Defult UEngine Image"
                                 ]
-                            }
+                            },
+                            "Install UEngine On Ubuntu",
+                            "Allow/Disallow UEngine To Install Or Update Other Android Program",
+                            "Install UEngine On Ubuntu"
                         ]
                     },
                     {
                         "Name": "About",
                         "Menu": [
                             "Program WebSize",
-                            "Program Help",
+                            "About This Program",
                             "Upload Problem And Advice",
-                            "ABout This Program",
+                            "Update This Program",
                             "More Help"
                         ]
                     }

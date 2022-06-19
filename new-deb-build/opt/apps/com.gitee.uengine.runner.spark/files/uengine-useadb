@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################
-# 版本：1.4.2
-# 更新时间：2021年08月30日
+# 版本：1.6.2
+# 更新时间：2022年06月19日
 #########################################
 import os
 import sys
@@ -43,7 +43,6 @@ if os.geteuid() != 0:
 window = tk.Tk()
 style = ttkthemes.ThemedStyle(window)
 style.set_theme("breeze")
-window.overrideredirect(1)
 window.withdraw()
 try:
     if sys.argv[1] == "1" and messagebox.askokcancel(title="提示", message="你确定要删除吗？"):

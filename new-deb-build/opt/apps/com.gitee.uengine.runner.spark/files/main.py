@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.6.1
-# 更新时间：2022年5月21日（要开学了）
+# 版本：1.6.2 Alpha
+# 更新时间：2022年6月19日（要期末考试了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
@@ -12,6 +12,7 @@
 # 引入所需的库
 #################
 import os
+import api
 import sys
 import time
 import json
@@ -64,7 +65,8 @@ def UninstallProgram(package: "apk 包名")->"卸载程序":
 # 卸载按钮事件
 def ButtonClick8():
     if ComboInstallPath.get() is "":
-        messagebox.showerror(title="提示", message="信息没有填写完整，无法继续卸载 APK")
+        messagebox.showerror(title="提示", message=langFile[lang]["Main"]["MainWindow"]["Error"]["UninstallError"])
+
         return
     DisabledAndEnbled(True)
     if os.path.exists(ComboInstallPath.get()):
@@ -91,7 +93,7 @@ def FindApk()->"浏览窗口":
 # 安装按钮事件
 def Button3Install():
     if ComboInstallPath.get() is "" or not os.path.exists(ComboInstallPath.get()):
-        messagebox.showerror(title="提示", message="信息没有填写完整或错误，无法继续安装 APK")
+        messagebox.showerror(title="提示", message=langFile[lang]["Main"]["MainWindow"]["Error"]["InstallError"])
         return
     DisabledAndEnbled(True)
     threading.Thread(target=InstallApk, args=(ComboInstallPath.get(),)).start()
@@ -137,7 +139,7 @@ def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
             if setting["SaveApk"]:
                 shutil.copy("/tmp/uengine-runner/bak.apk", path)
         except:
-            messagebox.showerror(title="错误", message="无法还原安装包\n提示：新版UEngine安装后会自动删除安装包，备份的Apk在/tmp/uengine-runner/bak.apk，电脑重启后就会丢失！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["BackApkError"])
         print("\nprint install complete")
         if quit:
             print(commandReturn)
@@ -333,6 +335,12 @@ def InstallRootUengineImage():
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
     threading.Thread(target=os.system, args=["deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
 
+def UengineUbuntuInstall():
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
+
+def UbuntuInstallUengine():
+    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
+
 def BuildRootUengineImage():
     threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/root-uengine.sh")]).start()
     
@@ -407,7 +415,7 @@ def KeyboardToMouse():
 def SaveIconToOtherPath():
     apkPath = ComboInstallPath.get()
     if apkPath == "":
-        messagebox.showerror(title="错误", message="你没有选择 apk 文件")
+        messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ChooseApkError"])
         return
     path = filedialog.asksaveasfilename(title="保存图标", filetypes=[("PNG 图片", "*.png"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApkIcon.json"))["path"])
     if not path == "":
@@ -415,7 +423,7 @@ def SaveIconToOtherPath():
             SaveApkIcon(apkPath, path)
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message="本程序不支持保存该 apk 的图标")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SaveApkIconError"])
             return
         write_txt(get_home() + "/.config/uengine-runner/SaveApkIcon.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
         findApkHistory.append(ComboInstallPath.get())
@@ -523,7 +531,7 @@ def SaveInstallUengineApp():
             return
         if os.path.exists("/data/uengine/data/data/app/{}-1".format(result)):
             break
-        messagebox.showerror(title="错误", message="路径不存在，请重试！")
+        messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["PathError"])
     path = filedialog.asksaveasfilename(title="保存apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApk.json"))["path"])
     if path == "" or path == ():
         return
@@ -659,6 +667,18 @@ def VersionCheck(version1, version2):
 def ShowHelp():
     webbrowser.open_new_tab(programPath + "/Help/index.html")
 
+def AllowOrDisallowUpdateAndroidApp():
+    if not os.path.exists("/data/uengine/data/data/misc/adb/adb_keys"):
+        if not messagebox.askyesno(title=langFile[lang]["Main"]["MainWindow"]["Answer"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["UseAdbPackageAnswer"]):
+            return
+        os.system("pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-useadb 0 '{}'".format(programPath,"{}/.android/adbkey.pub".format(get_home())))  # 写入配
+    adb = api.Adb("192.168.250.2:5555")
+    adb.Service.Close()
+    adb.connect()
+    if messagebox.askyesno(title=langFile[lang]["Main"]["MainWindow"]["Answer"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["AllowOrDisallowUpdateAndroidAppAnswer"][int(adb.boolAndroidInstallOtherAppSetting())]):
+        adb.setAndroidInstallOtherAppSetting(not adb.boolAndroidInstallOtherAppSetting())
+        messagebox.showinfo(title=langFile[lang]["Main"]["MainWindow"]["Information"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["CompleteInformation"])
+
 class SettingWindow():
     saveApkOption = tk.IntVar()
     def ShowWindow():
@@ -670,7 +690,7 @@ class SettingWindow():
         try:
             data = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
         except:
-            messagebox.showerror(title="错误", message="读取设置错误！无法打开设置窗口！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SettingReadError"])
             setting.destroy()
         SettingWindow.saveApkOption = tk.IntVar()
         SettingWindow.saveApkOption.set(int(data["SaveApk"]))
@@ -686,7 +706,7 @@ class SettingWindow():
             write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": bool(SettingWindow.saveApkOption.get())}))
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message="保存设置错误！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SettingSaveError"])
             return
         messagebox.showinfo(title="提示", message="设置保存完毕！")
 
@@ -712,8 +732,7 @@ class UpdateWindow():
                 updateText.insert("0.0", UpdateWindow.data["New"].replace("\\n", "\n"))
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message="无法连接服务器！")
-
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerError"])
         updateText.configure(state=tk.DISABLED)
         versionLabel.pack(anchor=tk.W)
         updateText.pack()
@@ -753,7 +772,7 @@ class ApkInformation():
         path = ComboInstallPath.get()
         package = GetApkPackageName(path)
         if package == None or package == "":
-            messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         message = tk.Toplevel()
         message.title("“{}“的Apk信息".format(GetApkChineseLabel(path)))
@@ -818,12 +837,13 @@ Activity：{}
         try:
             messagebox.showinfo(title="提示", message=requests.post("http://120.25.153.144/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
         except:
-            messagebox.showerror(title="错误", message="无法连接服务器！无法进行评分！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerStarError"])
+
 
     def ShowMap():
         package = GetApkPackageName(path)
         if package == None or package == "":
-            messagebox.showerror(title="错误", message="该应用安装包异常，无法查询相关数据！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
             data = json.loads(requests.get("http://120.25.153.144/uengine-runner/app/check/" + package +"/data.json").text)
@@ -843,7 +863,6 @@ Activity：{}
         matplotlib.pylab.ylabel("等级", fontproperties=fonts)
         matplotlib.pylab.title("“" + chinese + "”的用户评分（数据只供参考）", fontproperties=fonts)
         matplotlib.pylab.show()
-
 
 class AdbChangeUengineDisplaySize():
     def ShowWindows():
@@ -901,7 +920,7 @@ class AdbChangeUengineDisplaySize():
             int(displayX.get())
             int(displayY.get())
         except:
-            messagebox.showerror(title="错误", message="你输入的数值不正确！")
+            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["InputDataError"])
             return
         os.system("adb -s '192.168.250.2:5555' shell wm size {}x{}".format(displayX.get(), displayY.get()))
         AdbChangeUengineDisplaySize.GetUengineDisplaySize()
@@ -1315,6 +1334,26 @@ def showhelp():
         #helpwindow.mainloop()
         helpwindow.protocol("WM_DELETE_WINDOW", on_closing)
 
+###########################
+# 检查 UEngine 是否安装
+###########################
+if not os.path.exists("/usr/bin/uengine"):
+    # 不渲染窗口
+    style = ttkthemes.ThemedStyle(win)
+    style.set_theme("breeze")
+    win.withdraw()
+    # Deepin/UOS 用户
+    if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
+        if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可"):
+            os.system("deepin-terminal -C \"pkexec apt install uengine\"")
+            sys.exit(0)
+    # 非 Deepin/UOS 用户
+    else:
+        if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可"):
+            os.system(f"deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            sys.exit(0)
+    # 重新显示窗口
+    win.wm_deiconify()
 
 ###########################
 # 窗口创建
@@ -1396,9 +1435,11 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][1], command=AdbStopServer)
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2], command=AdbKillAdbProgress)
 
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13], command=AllowOrDisallowUpdateAndroidApp)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12], command=UengineUbuntuInstall)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"], menu=uengineService)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"], menu=uengineInternet)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"], menu=uengineIcon)
@@ -1407,6 +1448,7 @@ uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9], command=DelUengineCheck)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10], command=ReinstallUengine)
 uengine.add_cascade(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"], menu=uengineRoot)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14], command=UbuntuInstallUengine)
 
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0], command=OpenProgramURL)  # 设置“程序官网”项
 help.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2], command=UengineRunnerBugUpload)  # 设置“传bug”项

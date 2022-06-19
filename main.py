@@ -18,6 +18,7 @@ import time
 import json
 import shutil
 import zipfile
+import ctypes
 import traceback
 import threading
 import easygui
@@ -40,6 +41,7 @@ import tkinter.simpledialog as simpledialog
 from getxmlimg import getsavexml
 
 win = tk.Tk()  # 创建窗口
+win.tk.call('tk', 'scaling', 1.25)
 
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":

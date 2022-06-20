@@ -41,7 +41,6 @@ import tkinter.simpledialog as simpledialog
 from getxmlimg import getsavexml
 
 win = tk.Tk()  # 创建窗口
-win.tk.call('tk', 'scaling', 1.25)
 
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":
@@ -1266,7 +1265,7 @@ def showhelp():
         HelpStr.set(tips)
         LabText = ttk.Label(LabFrmText, textvariable=HelpStr,width=55)
         LabText.config(wraplength=350)
-        
+
         def on_closing():
             global windowflag
             windowflag = "close"

@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.6.2 Alpha
-# 更新时间：2022年6月19日（要期末考试了）
+# 版本：1.6.2
+# 更新时间：2022年6月20日（要期末考试了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
@@ -18,7 +18,6 @@ import time
 import json
 import shutil
 import zipfile
-import ctypes
 import traceback
 import threading
 import easygui
@@ -1244,12 +1243,14 @@ def showhelp():
         screen_width = helpwindow.winfo_screenwidth()
         screen_height = helpwindow.winfo_screenheight()
         # calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。
+
+
         winwith=550
         winhigh=700
         x = (screen_width/2) - (winwith/2)
         y = (screen_height/2) - (winhigh/2)
-        
-        helpwindow.geometry("550x700"+"+{:.0f}+{:.0f}".format(x, y))
+        if not helpwindow.winfo_screenheight() > 1080:
+            helpwindow.geometry(f"{winwith}x{winhigh}"+"+{:.0f}+{:.0f}".format(x, y))
 
         style = ttkthemes.ThemedStyle(helpwindow)
         style.set_theme("breeze")

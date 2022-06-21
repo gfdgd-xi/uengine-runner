@@ -1,0 +1,36 @@
+#/bin/bash
+is_tar_checked="0"
+rm -rf /tmp/uengine
+until [ "$is_tar_checked" = "1" ];do
+echo "请拖入uengine.tar.xz并回车确认,可在 https://cowtransfer.com/s/44656ada129e42 下载获取。"
+read tar_path
+tar_path=`echo "$tar_path" | sed $'s/\'//g'`
+echo "路径为 $tar_path"
+tar_md5sum=`md5sum $tar_path`
+tar_md5sum=`echo ${tar_md5sum%%/*}`
+
+if [ "$tar_md5sum" = "b8429c4d8bfd507b9dc4547e0b71c962" ];then
+is_tar_checked="1"
+else
+echo $tar_md5sum
+echo "md5完整性检查失败，请检查是否是这个文件"
+sleep 3
+reset
+fi
+done
+
+echo "完整性检查通过，开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
+cd /tmp
+tar -xf "$tar_path" 
+mkdir -p $HOME/uengine
+mkdir -p $HOME/uengine-launch
+cp /tmp/uengine/run_daemon.sh $HOME/uengine-launch
+cp /tmp/uengine/launch_uengine.sh $HOME/uengine-launch
+cd /tmp/uengine
+/tmp/uengine/install.sh
+sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev
+echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
+echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭"
+echo "按回车重启"
+read
+reboot

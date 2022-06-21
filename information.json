@@ -28,6 +28,7 @@
         "※3、新增加了 UEngine 的 Ubuntu 安装程序",
         "※4、双包合一，只保留了UOS打包标准，可以从旧标准无缝升级（推荐使用本程序的升级程序进行升级）",
         "5、修复了本程序在 Ubuntu 上安装和卸载报错而无法继续的问题",
+        "6、优化帮助/关于窗口在高分辨率电脑上显示不全的问题",
         "V1.6.1：",
         "※1、修复了打包 deb 包在 APK 的包名有大写时无法启动的问题",
         "※2、提供新版本的 UEngine Root 镜像",
@@ -164,6 +165,6 @@
         "柚子<https://gitee.com/Limexb>",
         "为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>",
         "星空露光<https://gitee.com/Cynorkyle>",
-        "shenmo"
+        "shenmo<jifengshenmo@outlook.com>"
     ]
 }

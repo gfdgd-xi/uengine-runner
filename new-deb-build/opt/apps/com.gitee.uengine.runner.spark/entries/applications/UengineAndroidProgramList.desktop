@@ -2,7 +2,7 @@
 Categories=System;
 Comment=UEngine 程序菜单
 Encoding=UTF-8
-Exec=/usr/bin/uengine-runner-launch.sh
+Exec=/usr/bin/uengine-runner-applist-launch.sh
 Icon=/opt/apps/com.gitee.uengine.runner.spark/files/menu.svg
 MimeType=
 Name=UEngine App List

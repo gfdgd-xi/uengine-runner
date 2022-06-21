@@ -298,7 +298,7 @@ class UEngine:
         if not os.path.exists:
             os.mkdir("/tmp/uengine-runner")
         File("/tmp/uengine-runner/install.sh").write("sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-        os.system("wget -P '/tmp/uengine-runner' 'https://hub.fastgit.org/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'")
+        os.system("wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'")
     class Services:
         def Open():
             os.system("pkexec systemctl enable uengine-container uengine-session && systemctl start uengine-container uengine-session")
@@ -319,6 +319,12 @@ class UEngine:
             os.system("pkexec uengine-bridge.sh force-reload")
 
 class Adb:
+    def __init__(self, ip=""):
+        self.ip = ip
+
+    def connect(self):
+        os.system(f"adb connect {self.ip}")
+
     class Service:
         def Open():
             os.system("adb start-server")
@@ -326,6 +332,12 @@ class Adb:
             os.system("adb kill-server")
         def Kill():
             os.system("killall adb")
+
+    def boolAndroidInstallOtherAppSetting(self):
+        return subprocess.getoutput(f"adb -s {self.ip} shell settings get secure install_non_market_apps").replace(" ", "") == "1"
+
+    def setAndroidInstallOtherAppSetting(self, op: bool):
+        os.system(f"adb -s {self.ip} shell settings put secure install_non_market_apps {int(op)}")
 
 class File:
     def __init__(self, filePath):
@@ -350,7 +362,11 @@ class UengineRunner:
 
 if __name__ == "__main__":
     print("本 API 不支持直接运行，请通过引入的方式使用此 API")
-    quit()
+    #adb = Adb("192.168.250.2:5555")
+    #print(adb.boolAndroidInstallOtherAppSetting())
+
+    #quit()
 
 if not ROOT.GetRoot():
-    print("请获取 ROOT 权限以便更好的使用该 API")
+    pass
+    #print("请获取 ROOT 权限以便更好的使用该 API")

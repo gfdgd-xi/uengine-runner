@@ -1351,7 +1351,7 @@ if not os.path.exists("/usr/bin/uengine"):
             sys.exit(0)
     # 非 Deepin/UOS 用户
     else:
-        if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可"):
+        if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用"):
             os.system(f"deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
             sys.exit(0)
     # 重新显示窗口

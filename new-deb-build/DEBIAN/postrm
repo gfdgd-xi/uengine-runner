@@ -11,6 +11,7 @@ rm -fv /usr/bin/uengine-useadb
 rm -fv /usr/bin/uengine-runner-launch.sh
 rm -fv /usr/bin/uengine-runner-update-bug
 rm -fv /usr/bin/uengine-root
+rm -fv /opt/apps/com.gitee.uengine.runner.spark/files/
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略
-# gtk-update-icon-cache /usr/share/icons/bloom
+gtk-update-icon-cache /usr/share/icons/bloom | true

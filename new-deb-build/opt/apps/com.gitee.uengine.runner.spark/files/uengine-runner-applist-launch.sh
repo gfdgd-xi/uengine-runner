@@ -16,8 +16,8 @@ else
 			deepin-terminal -C "pkexec apt install uengine"
 		fi
 	else
-		echo "非 Deepin/UOS 系统，使用 shenmo 提供的脚本安装"
-		zenity --question --text="您还未安装 UEngine，是否现在安装？\n将会使用 shenmo 提供的脚本进行安装" --no-wrap
+		echo "非 Deepin/UOS 系统，使用 shenmo 提供的脚本安装\n暂未保证此安装脚本一定安装成功"
+		zenity --question --text="您还未安装 UEngine，是否现在安装？\n将会使用 shenmo 提供的脚本进行安装\n暂未保证此安装脚本一定安装成功" --no-wrap
 		if [[ $? = 0 ]]; then
 			deepin-terminal -C "bash /opt/apps/com.gitee.uengine.runner.spark/files/uengine-installer"
 		fi

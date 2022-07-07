@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.6.1
-# 更新时间：2022年04月30日（五一了）
+# 版本：1.7.0
+# 更新时间：2022年07月08日（暑假了）
 # 感谢：anbox、deepin 和 统信
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -46,8 +46,18 @@ def BuildDeb():
     threading.Thread(target=GetBuildApkDebError, args=(combobox1.get(),)).start()
 
 def RunCommandShow(command):
-    TextboxAddText1("$> {}".format(command))
-    TextboxAddText1(GetCommandReturn(command))
+    TextboxAddText1("$> {}".format(command) + "\n")
+    res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    # 实时读取程序返回
+    while res.poll() is None:
+        try:
+            texts = res.stdout.readline().decode("utf8")
+        except:
+            texts = ""
+        print(texts, end="")
+        TextboxAddText1(texts)
+    # 已废弃
+    # TextboxAddText1(GetCommandReturn(command))
 
 def GetBuildApkDebError(apkPath):
     try:
@@ -58,6 +68,7 @@ def GetBuildApkDebError(apkPath):
         DisabledAndEnbled(False)
 
 def BuildApkDeb(apkPath):
+    textbox1.delete("1.0","end")
     tempPath = "/tmp/uengine-apk-builder-{}".format(int(random.randint(0, 1024)))
     RunCommandShow("echo '======================================New===================================='")
     RunCommandShow("echo '创建目录'")
@@ -344,7 +355,7 @@ def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
 def TextboxAddText1(message):
     global textbox1
     textbox1.configure(state=tk.NORMAL)
-    textbox1.insert(tk.END,message + "\n")
+    textbox1.insert(tk.END,message)
     textbox1.configure(state=tk.DISABLED)    
 
 # 获取用户桌面目录

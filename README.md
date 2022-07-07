@@ -1,8 +1,9 @@
-# UEngine 运行器 1.6.2
+# UEngine 运行器 1.7.0
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![image.png](https://storage.deepin.org/thread/202206211816301171_image.png)    
+![image.png](https://storage.deepin.org/thread/202207081157256904_image.png)
+
 （测试平台：UOS 家庭版 21.1，deepin 20.6,UOS 专业版 1040）
 
 ## 安装前必读
@@ -34,6 +35,14 @@ sudo apt upgrade
 
 
 ### 更新内容
+#### V1.7.0（2022年07月08日，暑假开始）
+**※1、新增暗黑主题**  
+**※2、优化 deepin-terminal 在其它发行版显示奇奇怪怪的问题**  
+**※3、修复 UEngine 安装脚本在安装时不让用户选择，直接默认 N 无法安装的问题**  
+4、新增设置 UEngine 代理的功能  
+5、将执行命令和打包器的返回输出从命令结束后显示输出内容改为实时显示内容  
+![image.png](https://storage.deepin.org/thread/202207081157256904_image.png)
+
 #### V1.6.2（2022年06月21日，中考假期+即将期末考试）
 **※1、优化了 UEngine 运行器的英语翻译**   
 **※2、新增加了可以打开或关闭第三方应用安装的功能（使用此功能后在UEngine里可以使用默认的APK安装程序安装应用，此操作需要使用程序的Adb补丁）**  

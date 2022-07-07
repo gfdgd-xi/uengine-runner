@@ -37,7 +37,8 @@
                         "你确定要启用 UEngine 可以安装以及使用默认的更新程序升级应用？（即允许未知来源）",
                         "你确定要禁用 UEngine 可以安装以及使用默认的更新程序升级应用？（即禁止未知来源）"
                     ],
-                    "UseAdbPackageAnswer": "你没有安装 adb 补丁，必须安装才能继续。是否安装？"
+                    "UseAdbPackageAnswer": "你没有安装 adb 补丁，必须安装才能继续。是否安装？",
+                    "CompleteInformation": "设置完毕"
                 },
                 "Menu": [
                     {
@@ -133,8 +134,9 @@
                                 ]
                             },
                             "在 Ubuntu 上安装 UEngine",
-                            "启动/禁用UEngine安装的安卓程序程序更新",
-                            "在 Ubuntu 上安装 UEngine"
+                            "启动/禁用UEngine安装的安卓程序程序更新（需要安装 adb 补丁）",
+                            "在 Ubuntu 上安装 UEngine",
+                            "设置 UEngine 代理（需要安装 adb 补丁）"
                         ]
                     },
                     {
@@ -203,7 +205,8 @@
                         "Are you sure to allow UEngine to install or update other android program? (Allow )（即允许未知来源）",
                         "Are you sure to disallow UEngine to install or update other android program? (Allow )（即允许未知来源）"
                     ],
-                    "UseAdbPackageAnswer": "You don't install adb package with UEngine, you must install, and after install you can connect to set.\nDo you want to install?"
+                    "UseAdbPackageAnswer": "You don't install adb package with UEngine, you must install, and after install you can connect to set.\nDo you want to install?",
+                    "CompleteInformation": "Set Completed"
                 },
                 "Menu": [
                     {
@@ -299,8 +302,9 @@
                                 ]
                             },
                             "Install UEngine On Ubuntu",
-                            "Allow/Disallow UEngine To Install Or Update Other Android Program",
-                            "Install UEngine On Ubuntu"
+                            "Allow/Disallow UEngine To Install Or Update Other Android Program (Need Install Adb Patch)",
+                            "Install UEngine On Ubuntu",
+                            "Set UEngine Http Proxy (Need Install Adb Patch)"
                         ]
                     },
                     {

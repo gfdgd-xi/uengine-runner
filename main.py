@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.6.3
-# 更新时间：2022年07月07日（暑假了）
+# 版本：1.7.0
+# 更新时间：2022年07月08日（暑假了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
@@ -678,6 +678,26 @@ def AllowOrDisallowUpdateAndroidApp():
         adb.setAndroidInstallOtherAppSetting(not adb.boolAndroidInstallOtherAppSetting())
         messagebox.showinfo(title=langFile[lang]["Main"]["MainWindow"]["Information"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["CompleteInformation"])
 
+def SetHttpProxy():
+    adb = api.Adb("192.168.250.2:5555")
+    adb.Service.Close()
+    adb.connect()
+    if not messagebox.askokcancel(title="提示", message="此功能需要安装 adb 补丁，请保证已经安装然后按下“OK”"):
+        return
+    proxy = easygui.enterbox(title="输入代理", msg="请输入要设置的代理（为空代表不设置代理）")
+    if proxy == None:
+        return
+    if proxy == "":
+        os.system("adb -s 192.168.250.2:5555 shell settings delete global http_proxy")
+        os.system("adb -s 192.168.250.2:5555 shell settings delete global global_http_proxy_host")
+        os.system("adb -s 192.168.250.2:5555 shell settings delete global global_http_proxy_port")
+        messagebox.showinfo(title="提示", message="设置成功！")
+    else:
+        os.system(f"adb -s 192.168.250.2:5555 shell settings put global http_proxy \"{proxy}\"")
+        messagebox.showinfo(title="提示", message="设置成功！")
+    
+    
+
 class SettingWindow():
     saveApkOption = None
     def ShowWindow():
@@ -935,6 +955,7 @@ class InstallWindow():
         global progressbar
         global runCommand
         message = tk.Toplevel()
+        message.title("执行命令")
         message.iconphoto(False, tk.PhotoImage(file=iconPath))
         messageFrame = ttk.Frame(message)
         installTipsText = tk.StringVar()
@@ -960,8 +981,15 @@ class InstallWindow():
         global installTipsText
         InstallWindow.AddText("$>" + command + "\n")
         progressbar.start()
-        result = subprocess.getoutput(command)
-        InstallWindow.AddText(result)
+        res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # 实时读取程序返回
+        while res.poll() is None:
+            try:
+                texts = res.stdout.readline().decode("utf8")
+            except:
+                texts = ""
+            print(texts, end="")
+            InstallWindow.AddText(texts)
         messagebox.showinfo(title="提示", message="操作完毕！")
         installTipsText.set("操作完毕！")
         message.title("操作完毕！")
@@ -1446,6 +1474,7 @@ adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Men
 adbServer.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2], command=AdbKillAdbProgress)
 
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13], command=AllowOrDisallowUpdateAndroidApp)
+uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][15], command=SetHttpProxy)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1], command=OpenUengineDebBuilder)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7], command=KeyboardToMouse)
 uengine.add_command(label=langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8], command=UengineCheckCpu)

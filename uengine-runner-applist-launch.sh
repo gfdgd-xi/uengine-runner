@@ -1,4 +1,6 @@
 #!/bin/bash
+cd `dirname $0`
+dir=`pwd`
 FILE=/usr/bin/uengine
 if [ -f "$FILE" ]; then
 	echo "$FILE 存在，正常打开菜单"
@@ -13,7 +15,7 @@ else
 		echo "此系统为 Deepin/UOS，使用 apt 安装"
 		zenity --question --text="您还未安装 UEngine，是否现在安装？" --no-wrap
 		if [[ $? = 0 ]]; then
-			deepin-terminal -C "pkexec apt install uengine"
+			"$dir/uengine-runner-applist-launch.sh" deepin-terminal -C "pkexec apt install uengine -y"
 		fi
 	else
 		echo "非 Deepin/UOS 系统，使用 shenmo 提供的脚本安装\n暂未保证此安装脚本一定安装成功"

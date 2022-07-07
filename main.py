@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.6.2
-# 更新时间：2022年6月20日（要期末考试了）
+# 版本：1.6.3
+# 更新时间：2022年07月07日（暑假了）
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
@@ -39,7 +39,6 @@ import tkinter.filedialog as filedialog
 import tkinter.simpledialog as simpledialog
 from getxmlimg import getsavexml
 
-win = tk.Tk()  # 创建窗口
 
 # 卸载程序
 def UninstallProgram(package: "apk 包名")->"卸载程序":
@@ -333,19 +332,19 @@ def InstallRootUengineImage():
     if not os.path.exists:
         os.mkdir("/tmp/uengine-runner")
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-    threading.Thread(target=os.system, args=["deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
 
 def UengineUbuntuInstall():
-    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath + '/uengine-installer'}'\""]).start()
 
 def UbuntuInstallUengine():
-    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/uengine-installer")]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath + '/uengine-installer'}'\""]).start()
 
 def BuildRootUengineImage():
-    threading.Thread(target=os.system, args=["deepin-terminal -C \"bash '{}'\"".format(programPath + "/root-uengine.sh")]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath + '/root-uengine.sh'}'\""]).start()
     
 def ReinstallUengineImage():
-    threading.Thread(target=os.system, args=["deepin-terminal -e ''pkexec apt reinstall uengine-android-image"]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e ''pkexec apt reinstall uengine-android-image -y"]).start()
 
 # 生成 uengine 启动文件到桌面
 def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", showName: "显示名称", iconPath: "程序图标所在目录", savePath:".desktop 文件保存路径")->"生成 uengine 启动文件到桌面":
@@ -577,12 +576,12 @@ def OpenUengineUserData():
 # 终端显示 adb 命令行
 def AdbShellShowInTer():
     os.system("adb connect 192.168.250.2:5555")
-    threading.Thread(target=os.system, args=["deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell'"]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell'"]).start()
 
 # 终端显示 adb top
 def AdbCPUAndRAWShowInTer():
     os.system("adb connect 192.168.250.2:5555")
-    threading.Thread(target=os.system, args=["deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell top'"]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell top'"]).start()
 
 def UengineSettingShow():
     threading.Thread(target=os.system, args=["/usr/bin/uengine launch --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings"]).start()
@@ -603,7 +602,7 @@ def AdbStartServer():
     messagebox.showinfo(title="提示", message="完成！")
 
 def ReinstallUengine():
-    threading.Thread(target=os.system, args=["deepin-terminal -C 'pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\"'"]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\"'"]).start()
 
 def DelUengineCheck():
     if not os.path.exists("/usr/share/uengine/uengine-check-runnable.sh"):
@@ -680,7 +679,7 @@ def AllowOrDisallowUpdateAndroidApp():
         messagebox.showinfo(title=langFile[lang]["Main"]["MainWindow"]["Information"]["Title"], message=langFile[lang]["Main"]["MainWindow"]["Answer"]["CompleteInformation"])
 
 class SettingWindow():
-    saveApkOption = tk.IntVar()
+    saveApkOption = None
     def ShowWindow():
         setting = tk.Toplevel()
         setting.resizable(0, 0)
@@ -761,7 +760,7 @@ zenity --info --text=\"更新完毕！\" --ellipsize
         except:
             traceback.print_exc()
             easygui.textbox(title="错误", msg="更新出现错误，无法继续更新！", text=traceback.format_exc())
-        os.system("deepin-terminal -e pkexec bash /tmp/uengine-runner/update.sh")
+        os.system(f"'{programPath}/launch.sh' deepin-terminal -e pkexec bash /tmp/uengine-runner/update.sh")
         
 image = None
 class ApkInformation():
@@ -1251,11 +1250,7 @@ def showhelp():
         y = (screen_height/2) - (winhigh/2)
         if not helpwindow.winfo_screenheight() > 1080:
             helpwindow.geometry(f"{winwith}x{winhigh}"+"+{:.0f}+{:.0f}".format(x, y))
-
-        style = ttkthemes.ThemedStyle(helpwindow)
-        style.set_theme("breeze")
-        
-        
+     
 
         Frmroot=ttk.Frame(helpwindow)
         FrmMenu = ttk.Frame(Frmroot)
@@ -1335,7 +1330,20 @@ def showhelp():
         print(windowflag)
         #helpwindow.mainloop()
         helpwindow.protocol("WM_DELETE_WINDOW", on_closing)
-
+# 读取主题
+try:
+    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
+except:
+    print("主题读取错误，默认使用浅色主题")
+    theme = True
+if theme:
+    win = tk.Tk()
+    themes = ttkthemes.ThemedStyle(win)
+    themes.set_theme("breeze")
+else:
+    import ttkbootstrap
+    style = ttkbootstrap.Style(theme="darkly")
+    win = style.master  # 创建窗口
 ###########################
 # 检查 UEngine 是否安装
 ###########################
@@ -1347,12 +1355,12 @@ if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
         if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可"):
-            os.system("deepin-terminal -C \"pkexec apt install uengine\"")
+            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"pkexec apt install uengine -y\"")
             sys.exit(0)
     # 非 Deepin/UOS 用户
     else:
         if messagebox.askyesno(title="提示", message="您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用"):
-            os.system(f"deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
             sys.exit(0)
     # 重新显示窗口
     win.wm_deiconify()
@@ -1363,8 +1371,8 @@ if not os.path.exists("/usr/bin/uengine"):
 
 
 # 设置窗口
-style = ttkthemes.ThemedStyle(win)
-style.set_theme("breeze")
+#style = ttkthemes.ThemedStyle(win)
+#style.set_theme("breeze")
 window = ttk.Frame(win)
 win.title(title)
 win.resizable(0, 0)

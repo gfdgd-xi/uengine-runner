@@ -397,7 +397,20 @@ findApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/F
 ###########################
 # 窗口创建
 ###########################
-win = tk.Tk()
+# 读取主题
+try:
+    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
+except:
+    print("主题读取错误，默认使用浅色主题")
+    theme = True
+if theme:
+    win = tk.Tk()
+    themes = ttkthemes.ThemedStyle(win)
+    themes.set_theme("breeze")
+else:
+    import ttkbootstrap
+    style = ttkbootstrap.Style(theme="darkly")
+    win = style.master  # 创建窗口
 
 qianZhui = tk.BooleanVar()
 
@@ -422,9 +435,6 @@ textbox1.config(foreground='white', background='black')
 if len(sys.argv) > 1:
     combobox1.set(sys.argv[1])
 # 设置窗口
-style = ttkthemes.ThemedStyle(win)
-style.set_theme("breeze")
-#win.attributes('-alpha', 0.5)
 win.title(title)
 win.resizable(0, 0)
 win.iconphoto(False, tk.PhotoImage(file=iconPath))

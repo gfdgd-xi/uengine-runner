@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.7.0
-# 更新时间：2022年07月08日（暑假了）
+# 版本：1.8.0
+# 更新时间：2022年07月23日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 tkinter 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
@@ -32,6 +32,9 @@ import matplotlib.pylab
 import matplotlib.font_manager
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
+import PyQt5.QtGui as QtGui
+import PyQt5.QtCore as QtCore
+import PyQt5.QtWidgets as QtWidgets
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as messagebox
@@ -1396,7 +1399,154 @@ if not os.path.exists("/usr/bin/uengine"):
 ###########################
 # 窗口创建
 ###########################
+app = QtWidgets.QApplication(sys.argv)
+window = QtWidgets.QMainWindow()
+widget = QtWidgets.QWidget()
+widgetLayout = QtWidgets.QGridLayout()
+# 权重
+size = QtWidgets.QSizePolicy()
+size.setHorizontalPolicy(0)
+widgetSize = QtWidgets.QSizePolicy()
+widgetSize.setVerticalPolicy(0)
+# 创建控件
+LabApkPath = QtWidgets.QLabel(langFile[lang]["Main"]["MainWindow"]["LabApkPath"])
+ComboInstallPath = QtWidgets.QComboBox()
+FrmInstallWidget = QtWidgets.QWidget()
+FrmInstall = QtWidgets.QGridLayout()
+BtnFindApk = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["BtnFindApk"])
+BtnInstall = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["BtnInstall"])
+BtnShowUengineApp = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["BtnShowUengineApp"])
+BtnUninstall = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["BtnUninstall"])
+Btngeticon = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["Btngeticon"])
+BtnSaveApk = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["BtnSaveApk"])
+BtnApkInformation = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["BtnApkInformation"])
+# 设置控件
+FrmInstallWidget.setLayout(FrmInstall)
+FrmInstallWidget.setSizePolicy(size)
+BtnShowUengineApp.setSizePolicy(size)
+# 布局控件
+widgetLayout.addWidget(LabApkPath, 0, 0, 1, 2)
+widgetLayout.addWidget(ComboInstallPath, 1, 0, 1, 2)
+widgetLayout.addWidget(BtnShowUengineApp, 2, 0, 1, 1)
+widgetLayout.addWidget(FrmInstallWidget, 0, 2, 3, 1)
+FrmInstall.addWidget(BtnFindApk, 0, 0, 1, 1)
+FrmInstall.addWidget(BtnInstall, 0, 1, 1, 1)
+FrmInstall.addWidget(BtnUninstall, 1, 0, 1, 1)
+FrmInstall.addWidget(Btngeticon, 1, 1, 1, 1)
+FrmInstall.addWidget(BtnSaveApk, 2, 0, 1, 1)
+FrmInstall.addWidget(BtnApkInformation, 2, 1, 1, 1)
+# 设置菜单栏
+menu = window.menuBar()
+programmenu = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Name"])
+adb = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Name"])
+uengine = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Name"])
+help = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Name"])
 
+cleanProgramHistory = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][0])
+settingWindow = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][2])
+exitProgram = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][1])
+programmenu.addAction(cleanProgramHistory)
+programmenu.addAction(settingWindow)
+programmenu.addSeparator()
+programmenu.addAction(exitProgram)
+
+adbUengineConnect = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][0])
+adbConnectDevice = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][2])
+adbChangeUengineDisplaySize = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][3])
+adbAndroidInstallAppList = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][4])
+adbTop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][5])
+adbShell = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][6])
+adbScrcpyConnectUengine = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][7])
+adb.addAction(adbUengineConnect)
+adb.addSeparator()
+adbServer = adb.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Name"])
+adb.addAction(adbConnectDevice)
+adb.addSeparator()
+adb.addAction(adbChangeUengineDisplaySize)
+adb.addAction(adbAndroidInstallAppList)
+adb.addAction(adbTop)
+adb.addAction(adbShell)
+adb.addAction(adbScrcpyConnectUengine)
+adb.addSeparator()
+uengineUseAdbm = adb.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Name"])
+adbStartServer = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][0])
+adbStopServer = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][1])
+adbKillAdbProgress = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][1]["Menu"][2])
+uengineConnectAdb = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][0])
+uengineUseAdb = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][1])
+uengineDoNotUseAdb = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][2])
+
+adbServer.addAction(adbStartServer)
+adbServer.addAction(adbStopServer)
+adbServer.addAction(adbKillAdbProgress)
+
+uengineUseAdbm.addAction(uengineConnectAdb)
+uengineUseAdbm.addAction(uengineUseAdb)
+uengineUseAdbm.addSeparator()
+uengineUseAdbm.addAction(uengineDoNotUseAdb)
+
+uengineAllowOrDisallowUpdateAndroidApp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13])
+uengineSetHttpProxy = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][15])
+uengineOpenDebBuilder = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1])
+uengineKeyboardToMouse = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7])
+uengineCheckCpu = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8])
+uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12])
+uengineDeleteUengineCheck = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9])
+uengineReinstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10])
+uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
+uengine.addAction(uengineAllowOrDisallowUpdateAndroidApp)
+uengine.addAction(uengineSetHttpProxy)
+uengine.addAction(uengineOpenDebBuilder)
+uengine.addAction(uengineKeyboardToMouse)
+uengine.addAction(uengineCheckCpu)
+uengine.addAction(uengineUbuntuInstall)
+uengineService = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"])
+uengineInternet = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"])
+uengineIcon = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"])
+uengine.addMenu(uengineUseAdbm)
+uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"])
+uengine.addAction(uengineDeleteUengineCheck)
+uengine.addAction(uengineReinstall)
+uengine.addAction(uengineUbuntuInstall)
+
+uengineStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
+uengineStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
+uengineRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][2])
+uengineService.addAction(uengineStart)
+uengineService.addAction(uengineStop)
+uengineService.addAction(uengineRestart)
+
+uengineBridgeStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0])
+uengineBridgeStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1])
+uengineBridgeRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][2])
+uengineBridgeReload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][3])
+uengineBridgeForceReload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][4])
+uengineInternet.addAction(uengineBridgeStart)
+uengineInternet.addAction(uengineBridgeStop)
+uengineInternet.addAction(uengineReinstall)
+uengineInternet.addAction(uengineBridgeReload)
+uengineInternet.addAction(uengineBridgeForceReload)
+
+uengineSendUengineAndroidListForDesktop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][0])
+uengineSendUengineAndroidListForLauncher = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][1])
+uengineAddNewUengineDesktopLink = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][2])
+uengineCleanAllUengineDesktopLink = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][3])
+uengineIcon.addAction(uengineSendUengineAndroidListForDesktop)
+uengineIcon.addAction(uengineSendUengineAndroidListForLauncher)
+uengineIcon.addSeparator()
+uengineIcon.addAction(uengineAddNewUengineDesktopLink)
+uengineIcon.addSeparator()
+uengineIcon.addAction(uengineCleanAllUengineDesktopLink)
+
+#uengineData
+#uengineRoot
+# 设置窗口
+widget.setLayout(widgetLayout)
+window.setCentralWidget(widget)
+window.setWindowTitle(title)
+window.show()
+window.setFixedSize(window.frameSize().width() * 1.5, window.frameSize().height())
+sys.exit(app.exec_())
 
 # 设置窗口
 #style = ttkthemes.ThemedStyle(win)

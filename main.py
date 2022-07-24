@@ -470,19 +470,19 @@ def SaveIconToOtherPath():
     if apkPath == "":
         QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ChooseApkError"])
         return
-    path = filedialog.asksaveasfilename(title="保存图标", filetypes=[("PNG 图片", "*.png"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApkIcon.json"))["path"])[0]
+    path = QtWidgets.QFileDialog.getSaveFileName(widget, "保存图标", "icon.png", "PNG 图片(*.png);;所有文件(*.*)", json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApkIcon.json"))["path"])[0]
     if not path == "":
         try:
             SaveApkIcon(apkPath, path)
         except:
             traceback.print_exc()
-            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["SaveApkIconError"])
+            QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["SaveApkIconError"])
             return
         write_txt(get_home() + "/.config/uengine-runner/SaveApkIcon.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
-        findApkHistory.append(ComboInstallPath.get())
-        ComboInstallPath['value'] = findApkHistory
+        findApkHistory.append(ComboInstallPath.currentText())
+        UpdateCombobox(0)
         write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
-        messagebox.showinfo(title="提示", message="保存成功！")
+        QtWidgets.QMessageBox.information(widget, "提示", "保存成功！")
 
 # 清空 uengine 数据
 def BackUengineClean()->"清空 uengine 数据":

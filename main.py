@@ -42,134 +42,185 @@ import tkinter.filedialog as filedialog
 import tkinter.simpledialog as simpledialog
 from getxmlimg import getsavexml
 
+class UninstallProgram(QtCore.QThread):
+    info = QtCore.pyqtSignal(str)
+    error = QtCore.pyqtSignal(str)
+    combo = QtCore.pyqtSignal(int)
 
+    def __init__(self, package) -> None:
+        self.package = package
+        super().__init__()
+
+    def run(self):
+        package = self.package
+        try:
+            global fineUninstallApkHistory 
+            Return = os.system("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(package))
+            print(Return)
+            if Return != 0:
+                self.error.emit("疑似卸载失败，请检查 UEngine 是否正常安装、运行以及 APK 文件或包名是否正确、完整")
+                DisabledAndEnbled(False)
+                return
+            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package)):
+                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package))
+            if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
+                os.remove("{}/{}.desktop".format(get_desktop_path(), package))
+            findApkHistory.append(ComboInstallPath.currentText())
+            self.combo.emit(0)
+            write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
+            self.info.emit("操作执行完毕！")
+            DisabledAndEnbled(False)
+        except:
+            traceback.print_exc()
+            self.error.emit(title="错误", message=traceback.format_exc())
+            DisabledAndEnbled(False)
 # 卸载程序
-def UninstallProgram(package: "apk 包名")->"卸载程序":
-    try:
-        global fineUninstallApkHistory 
-        Return = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(package))
-        print(Return)
-        if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package)):
-            os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package))
-        if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
-            os.remove("{}/{}.desktop".format(get_desktop_path(), package))
-        findApkHistory.append(ComboInstallPath.get())
-        ComboInstallPath['value'] = findApkHistory
-        write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
-        messagebox.showinfo(message="操作执行完毕！", title="提示")
-        DisabledAndEnbled(False)
-        return Return
-    except:
-        traceback.print_exc()
-        messagebox.showerror(title="错误", message=traceback.format_exc())
-        DisabledAndEnbled(False)
+#def UninstallProgram(package: "apk 包名")->"卸载程序":
+#    pass
 
 # 卸载按钮事件
 def ButtonClick8():
-    if ComboInstallPath.get() is "":
-        messagebox.showerror(title="提示", message=langFile[lang]["Main"]["MainWindow"]["Error"]["UninstallError"])
-
+    if ComboInstallPath.currentText() is "":
+        QtWidgets.QMessageBox.information(widget, "提示", langFile[lang]["Main"]["MainWindow"]["Error"]["UninstallError"])
         return
     DisabledAndEnbled(True)
-    if os.path.exists(ComboInstallPath.get()):
-        path = GetApkPackageName(ComboInstallPath.get())
+    if os.path.exists(ComboInstallPath.currentText()):
+        path = GetApkPackageName(ComboInstallPath.currentText())
     else:
-        path = ComboInstallPath.get()
+        path = ComboInstallPath.currentText()
     print(path)
-    threading.Thread(target=UninstallProgram, args=[path]).start()
+    QT.installRun = UninstallProgram(path)
+    QT.installRun.error.connect(ErrorBox)
+    QT.installRun.info.connect(InformationBox)
+    QT.installRun.combo.connect(UpdateCombobox)
+    QT.installRun.start()
+    #threading.Thread(target=UninstallProgram, args=[path]).start()
 
 # 浏览窗口
 temppath=""
 def FindApk()->"浏览窗口":
-    path = filedialog.askopenfilename(title="选择 Apk", filetypes=[("APK 文件", "*.apk"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApk.json"))["path"])
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 Apk", json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApk.json"))["path"], "APK 文件(*.apk);;所有文件(*.*)")[0]
     global temppath    
     temppath = path
     print("apk path is find:" + path)
     if path != "" and path != "()":
         try:
-            ComboInstallPath.set(path)
+            ComboInstallPath.setEditText(path)
             write_txt(get_home() + "/.config/uengine-runner/FindApk.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
         except:
             pass
 
+class QT:
+    installRun = None
+
 # 安装按钮事件
 def Button3Install():
-    if ComboInstallPath.get() is "" or not os.path.exists(ComboInstallPath.get()):
-        messagebox.showerror(title="提示", message=langFile[lang]["Main"]["MainWindow"]["Error"]["InstallError"])
+    if ComboInstallPath.currentText() is "" or not os.path.exists(ComboInstallPath.currentText()):
+        QtWidgets.QMessageBox.information(widget, "提示", langFile[lang]["Main"]["MainWindow"]["Error"]["InstallError"])
         return
     DisabledAndEnbled(True)
-    threading.Thread(target=InstallApk, args=(ComboInstallPath.get(),)).start()
+    #threading.Thread(target=InstallApk, args=(ComboInstallPath.get(),)).start()
+    QT.installRun = InstallApk(ComboInstallPath.currentText())
+    QT.installRun.infor.connect(InformationBox)
+    QT.installRun.error.connect(ErrorBox)
+    QT.installRun.combo.connect(UpdateCombobox)
+    QT.installRun.start()
 
 # 安装应用
-def InstallApk(path: "apk 路径", quit: "是否静默安装" = False):
-    try:
-        if not os.path.exists("/tmp/uengine-runner"):
-            os.makedirs("/tmp/uengine-runner")
-        if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
-            print("Mkdir")
-            os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
-        # 读取设置
-        setting = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
-        # 安装应用
-        print("start install apk")
-        global findApkHistory
-        print("start install apk12")
-        iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(path))
-        tempstr1 = iconSavePath
-        print("start install apk1")
-        iconSaveDir = os.path.dirname(iconSavePath)
-        if not os.path.exists(iconSaveDir):
-            os.makedirs(iconSaveDir,exist_ok=True)
-        SaveApkIcon(path, iconSavePath)
+class InstallApk(QtCore.QThread):
+    infor = QtCore.pyqtSignal(str)
+    error = QtCore.pyqtSignal(str)
+    combo = QtCore.pyqtSignal(int)
+
+    def __init__(self, path, quit = False) -> None:
+        self.path = path
+        self.quit = quit
+        super().__init__()
+
+    def run(self):
+        path = self.path
+        quit = self.quit
         try:
-            if setting["SaveApk"]:
-                shutil.copy(path, "/tmp/uengine-runner/bak.apk")
-        except:
-            if not messagebox.askyesno(title="错误", message="无法备份安装包，是否不备份安装包继续安装？\n提示：新版UEngine安装后会自动删除安装包"):
+            if not os.path.exists("/tmp/uengine-runner"):
+                os.makedirs("/tmp/uengine-runner")
+            if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
+                print("Mkdir")
+                os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
+            # 读取设置
+            setting = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
+            # 安装应用
+            print("start install apk")
+            global findApkHistory
+            print("start install apk12")
+            iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), GetApkPackageName(path))
+            tempstr1 = iconSavePath
+            print("start install apk1")
+            iconSaveDir = os.path.dirname(iconSavePath)
+            if not os.path.exists(iconSaveDir):
+                os.makedirs(iconSaveDir,exist_ok=True)
+            SaveApkIcon(path, iconSavePath)
+            try:
+                if setting["SaveApk"]:
+                    shutil.copy(path, "/tmp/uengine-runner/bak.apk")
+            except:
+                if QtWidgets.QMessageBox.critical(widget, "错误", "无法备份安装包，是否不备份安装包继续安装？\n提示：新版UEngine安装后会自动删除安装包") == QtWidgets.QMessageBox.No:
+                    DisabledAndEnbled(False)
+                    return
+                setting["SaveApk"] = False
+            print("start install apk2")
+            BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                            "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
+            print("start install apk3")
+            BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                            "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
+            commandReturn = os.system("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
+            try:
+                if setting["SaveApk"]:
+                    shutil.copy("/tmp/uengine-runner/bak.apk", path)
+            except:
+                self.error.emit(langFile[lang]["Main"]["MainWindow"]["Error"]["BackApkError"])
+            if commandReturn != 0:
+                self.error.emit("疑似 APK 安装失败，请检查 UEngine 是否正常安装、运行以及 APK 文件是否正确、完整")
                 DisabledAndEnbled(False)
                 return
-            setting["SaveApk"] = False
-        print("start install apk2")
-        BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                            "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
-        print("start install apk3")
-        BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                            "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
-        commandReturn = GetCommandReturn("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
-        print(commandReturn)
-        try:
-            if setting["SaveApk"]:
-                shutil.copy("/tmp/uengine-runner/bak.apk", path)
+            print("\nprint install complete")
+            if quit:
+                return
+            self.infor.emit("操作完成！")
+            findApkHistory.append(ComboInstallPath.currentText())
+            self.combo.emit(0)
+            write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
         except:
-            messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["BackApkError"])
-        print("\nprint install complete")
-        if quit:
-            print(commandReturn)
-            return
-        messagebox.showinfo(title="提示", message="操作完成！")
-        findApkHistory.append(ComboInstallPath.get())
-        ComboInstallPath['value'] = findApkHistory
-        write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
-    except:
-        traceback.print_exc()
-        messagebox.showerror(title="错误", message=traceback.format_exc())
-    DisabledAndEnbled(False)
+            traceback.print_exc()
+            self.error.emit(traceback.format_exc())
+        DisabledAndEnbled(False)
+
+def UpdateCombobox(tmp):
+    ComboInstallPath.clear()
+    ComboInstallPath.addItems(findApkHistory)
+    ComboInstallPath.setEditText(findApkHistory[-1])
+
+def ErrorBox(error):
+    QtWidgets.QMessageBox.critical(widget, "错误", error)
+
+def InformationBox(info):
+    QtWidgets.QMessageBox.information(widget, "提示", info)
 
 # 禁用或启动所有控件
 def DisabledAndEnbled(choose: "启动或者禁用")->"禁用或启动所有控件":
     userChoose = {True: tk.DISABLED, False: tk.NORMAL}
     a = userChoose[choose]
-    ComboInstallPath.configure(state=a)
+    ComboInstallPath.setDisabled(choose)
     #ComboUninstallPath.configure(state=a)
-    BtnFindApk.configure(state=a)
-    BtnInstall.configure(state=a)
-    BtnShowUengineApp.configure(state=a)
+    BtnFindApk.setDisabled(choose)
+    BtnInstall.setDisabled(choose)
+    BtnShowUengineApp.setDisabled(choose)
     #BtnUninstallApkBrowser.configure(state=a)
-    BtnUninstall.configure(state=a)
-    Btngeticon.configure(state=a)
-    BtnSaveApk.configure(state=a)
-    BtnApkInformation.configure(state=a)
-    LabApkPath.configure(state=a)
+    BtnUninstall.setDisabled(choose)
+    Btngeticon.setDisabled(choose)
+    BtnSaveApk.setDisabled(choose)
+    BtnApkInformation.setDisabled(choose)
+    LabApkPath.setDisabled(choose)
 
 # 需引入 subprocess
 # 运行系统命令并获取返回值
@@ -415,11 +466,11 @@ def KeyboardToMouse():
 
 # 用户自行保存APK
 def SaveIconToOtherPath():
-    apkPath = ComboInstallPath.get()
+    apkPath = ComboInstallPath.currentText()
     if apkPath == "":
-        messagebox.showerror(title="错误", message=langFile[lang]["Main"]["MainWindow"]["Error"]["ChooseApkError"])
+        QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ChooseApkError"])
         return
-    path = filedialog.asksaveasfilename(title="保存图标", filetypes=[("PNG 图片", "*.png"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApkIcon.json"))["path"])
+    path = filedialog.asksaveasfilename(title="保存图标", filetypes=[("PNG 图片", "*.png"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/uengine-runner/SaveApkIcon.json"))["path"])[0]
     if not path == "":
         try:
             SaveApkIcon(apkPath, path)
@@ -1424,6 +1475,17 @@ BtnApkInformation = QtWidgets.QPushButton(langFile[lang]["Main"]["MainWindow"]["
 FrmInstallWidget.setLayout(FrmInstall)
 FrmInstallWidget.setSizePolicy(size)
 BtnShowUengineApp.setSizePolicy(size)
+ComboInstallPath.setEditable(True)
+ComboInstallPath.addItems(findApkHistory)
+ComboInstallPath.setFixedSize(ComboInstallPath.frameSize().width() * 5, ComboInstallPath.frameSize().height())
+# 绑定信号
+BtnFindApk.clicked.connect(FindApk)
+BtnInstall.clicked.connect(Button3Install)
+BtnShowUengineApp.clicked.connect(Button5Click)
+BtnUninstall.clicked.connect(ButtonClick8)
+Btngeticon.clicked.connect(SaveIconToOtherPath)
+BtnSaveApk.clicked.connect(SaveInstallUengineApp)
+BtnApkInformation.clicked.connect(ApkInformation.ShowWindows)
 # 布局控件
 widgetLayout.addWidget(LabApkPath, 0, 0, 1, 2)
 widgetLayout.addWidget(ComboInstallPath, 1, 0, 1, 2)
@@ -1449,6 +1511,10 @@ programmenu.addAction(cleanProgramHistory)
 programmenu.addAction(settingWindow)
 programmenu.addSeparator()
 programmenu.addAction(exitProgram)
+# 绑定事件
+exitProgram.triggered.connect(CleanProgramHistory)
+exitProgram.triggered.connect(SettingWindow.ShowWindow)
+exitProgram.triggered.connect(window.close)
 
 adbUengineConnect = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][0])
 adbConnectDevice = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][2])
@@ -1475,15 +1541,31 @@ adbKillAdbProgress = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Men
 uengineConnectAdb = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][0])
 uengineUseAdb = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][1])
 uengineDoNotUseAdb = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Menu"][8]["Menu"][2])
+# 绑定信号
+uengineConnectAdb.triggered.connect(UengineConnectAdb)
+adbConnectDevice.triggered.connect(AdbConnectDeviceShow)
+adbChangeUengineDisplaySize.triggered.connect(AdbChangeUengineDisplaySize.ShowWindows)
+adbAndroidInstallAppList.triggered.connect(AdbAndroidInstallAppList)
+adbTop.triggered.connect(AdbCPUAndRAWShowInTer)
+adbShell.triggered.connect(AdbShellShowInTer)
+adbScrcpyConnectUengine.triggered.connect(ScrcpyConnectUengine)
 
 adbServer.addAction(adbStartServer)
 adbServer.addAction(adbStopServer)
 adbServer.addAction(adbKillAdbProgress)
+# 绑定信号
+adbStartServer.triggered.connect(AdbStartServer)
+adbStopServer.triggered.connect(AdbStopServer)
+adbKillAdbProgress.triggered.connect(AdbKillAdbProgress)
 
 uengineUseAdbm.addAction(uengineConnectAdb)
 uengineUseAdbm.addAction(uengineUseAdb)
 uengineUseAdbm.addSeparator()
 uengineUseAdbm.addAction(uengineDoNotUseAdb)
+# 绑定信号
+uengineConnectAdb.triggered.connect(UengineConnectAdb)
+uengineUseAdb.triggered.connect(UengineUseAdb)
+uengineDoNotUseAdb.triggered.connect(UengineDoNotUseAdb)
 
 uengineAllowOrDisallowUpdateAndroidApp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13])
 uengineSetHttpProxy = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][15])
@@ -1507,7 +1589,18 @@ uengine.addMenu(uengineUseAdbm)
 uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"])
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
+uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
 uengine.addAction(uengineUbuntuInstall)
+# 绑定信号
+uengineAllowOrDisallowUpdateAndroidApp.triggered.connect(AllowOrDisallowUpdateAndroidApp)
+uengineSetHttpProxy.triggered.connect(SetHttpProxy)
+uengineOpenDebBuilder.triggered.connect(OpenUengineDebBuilder)
+uengineKeyboardToMouse.triggered.connect(KeyboardToMouse)
+uengineCheckCpu.triggered.connect(UengineCheckCpu)
+uengineUbuntuInstall.triggered.connect(UengineUbuntuInstall)
+uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
+uengineReinstall.triggered.connect(ReinstallUengine)
+uengineUbuntuInstall.triggered.connect(UbuntuInstallUengine)
 
 uengineStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
 uengineStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
@@ -1515,6 +1608,10 @@ uengineRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][
 uengineService.addAction(uengineStart)
 uengineService.addAction(uengineStop)
 uengineService.addAction(uengineRestart)
+# 绑定信号
+uengineStart.triggered.connect(StartUengine)
+uengineStop.triggered.connect(StopUengine)
+uengineRestart.triggered.connect(UengineRestart)
 
 uengineBridgeStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0])
 uengineBridgeStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1])
@@ -1526,6 +1623,12 @@ uengineInternet.addAction(uengineBridgeStop)
 uengineInternet.addAction(uengineReinstall)
 uengineInternet.addAction(uengineBridgeReload)
 uengineInternet.addAction(uengineBridgeForceReload)
+# 绑定信号
+uengineBridgeStart.triggered.connect(UengineBridgeStart)
+uengineBridgeStop.triggered.connect(UengineBridgeStop)
+uengineBridgeRestart.triggered.connect(UengineBridgeRestart)
+uengineBridgeReload.triggered.connect(UengineBridgeReload)
+uengineBridgeForceReload.triggered.connect(UengineBridgeForceReload)
 
 uengineSendUengineAndroidListForDesktop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][0])
 uengineSendUengineAndroidListForLauncher = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Menu"][1])
@@ -1537,15 +1640,61 @@ uengineIcon.addSeparator()
 uengineIcon.addAction(uengineAddNewUengineDesktopLink)
 uengineIcon.addSeparator()
 uengineIcon.addAction(uengineCleanAllUengineDesktopLink)
+# 绑定信号
+uengineSendUengineAndroidListForDesktop.triggered.connect(SendUengineAndroidListForDesktop)
+uengineSendUengineAndroidListForLauncher.triggered.connect(SendUengineAndroidListForLauncher)
+uengineAddNewUengineDesktopLink.triggered.connect(AddNewUengineDesktopLink.ShowWindow)
+uengineCleanAllUengineDesktopLink.triggered.connect(CleanAllUengineDesktopLink)
 
 #uengineData
+uengineOpenRootData = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][0])
+uengineOpenUserData = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1])
+uengineBackClean = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2])
+uengineData.addAction(uengineOpenRootData)
+uengineData.addAction(uengineOpenUserData)
+uengineData.addSeparator()
+uengineData.addAction(uengineBackClean)
+# 绑定信号
+uengineOpenRootData.triggered.connect(OpenUengineRootData)
+uengineOpenUserData.triggered.connect(OpenUengineUserData)
+uengineBackClean.triggered.connect(BackUengineClean)
+
 #uengineRoot
+uengineInstallRootUengineImage = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Menu"][0])
+uengineBuildRootUengineImage = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Menu"][1])
+uengineReinstallUengineImage = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Menu"][2])
+uengineRoot.addAction(uengineInstallRootUengineImage)
+uengineRoot.addAction(uengineBuildRootUengineImage)
+uengineRoot.addSeparator()
+uengineRoot.addAction(uengineReinstallUengineImage)
+# 绑定信号
+uengineInstallRootUengineImage.triggered.connect(InstallRootUengineImage)
+uengineBuildRootUengineImage.triggered.connect(BuildRootUengineImage)
+uengineReinstallUengineImage.triggered.connect(ReinstallUengineImage)
+
+helpOpenProgramUrl = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0])
+helpUengineRunnerBugUpload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2])
+helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4])
+helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
+helpAbout = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
+help.addAction(helpOpenProgramUrl)
+help.addAction(helpUengineRunnerBugUpload)
+help.addAction(helpShowHelp)
+help.addAction(helpRunnerUpdate)
+help.addAction(helpAbout)
+# 绑定信号
+helpOpenProgramUrl.triggered.connect(OpenProgramURL)
+helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
+helpShowHelp.triggered.connect(ShowHelp)
+helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)
+helpAbout.triggered.connect(showhelp)
+
 # 设置窗口
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(title)
 window.show()
-window.setFixedSize(window.frameSize().width() * 1.5, window.frameSize().height())
+window.setFixedSize(window.frameSize().width(), window.frameSize().height())
 sys.exit(app.exec_())
 
 # 设置窗口

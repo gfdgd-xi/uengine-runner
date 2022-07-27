@@ -5,7 +5,7 @@
 # 版本：1.8.0
 # 更新时间：2022年07月25日
 # 感谢：anbox、deepin 和 UOS
-# 基于 Python3 的 tkinter 构建
+# 基于 Python3 的 PyQt5 构建
 # 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
 ###########################################################################################
 #################
@@ -16,15 +16,15 @@ import api
 import sys
 import time
 import json
+import numpy
 import shutil
 import zipfile
+import requests
 import traceback
 import threading
 import webbrowser
 import subprocess
 import matplotlib
-import requests
-import numpy
 import matplotlib.figure
 import matplotlib.pylab
 import matplotlib.font_manager
@@ -46,7 +46,7 @@ class UninstallProgram(QtCore.QThread):
         package = self.package
         try:
             global fineUninstallApkHistory 
-            Return = os.system("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(package))
+            Return = os.system("uengine uninstall --pkg='{}'".format(package))
             print(Return)
             if Return != 0:
                 self.error.emit("疑似卸载失败，请检查 UEngine 是否正常安装、运行以及 APK 文件或包名是否正确、完整")
@@ -63,7 +63,7 @@ class UninstallProgram(QtCore.QThread):
             DisabledAndEnbled(False)
         except:
             traceback.print_exc()
-            self.error.emit(title="错误", message=traceback.format_exc())
+            self.error.emit(traceback.format_exc())
             DisabledAndEnbled(False)
 # 卸载程序
 #def UninstallProgram(package: "apk 包名")->"卸载程序":
@@ -115,6 +115,7 @@ def Button3Install():
     QT.installRun.infor.connect(InformationBox)
     QT.installRun.error.connect(ErrorBox)
     QT.installRun.combo.connect(UpdateCombobox)
+    QT.installRun.make.connect(InstallBuildDesktop)
     QT.installRun.start()
 
 # 安装应用
@@ -122,6 +123,7 @@ class InstallApk(QtCore.QThread):
     infor = QtCore.pyqtSignal(str)
     error = QtCore.pyqtSignal(str)
     combo = QtCore.pyqtSignal(int)
+    make = QtCore.pyqtSignal(str)
 
     def __init__(self, path, quit = False) -> None:
         self.path = path
@@ -159,12 +161,7 @@ class InstallApk(QtCore.QThread):
                     return
                 setting["SaveApk"] = False
             print("start install apk2")
-            BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                            "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
-            print("start install apk3")
-            BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                            "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
-            commandReturn = os.system("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(path))
+            commandReturn = os.system("uengine install --apk='{}'".format(path))
             try:
                 if setting["SaveApk"]:
                     shutil.copy("/tmp/uengine-runner/bak.apk", path)
@@ -174,17 +171,66 @@ class InstallApk(QtCore.QThread):
                 self.error.emit("疑似 APK 安装失败，请检查 UEngine 是否正常安装、运行以及 APK 文件是否正确、完整")
                 DisabledAndEnbled(False)
                 return
-            print("\nprint install complete")
+            if settingConf["AutoScreenConfig"]:
+                # 计算最合适的大小
+                # 竖屏
+                screen = QtGui.QGuiApplication.primaryScreen()
+                mm = screen.availableGeometry()
+                verticalHeighe = int(mm.height() * 0.9)                 # 竖屏高
+                verticalWidth = int(verticalHeighe / 16 * 9)            # 竖屏宽
+                horizontaltWidth = int(mm.width() * 0.8)                # 横屏宽
+                horizontaltHeighe = int(horizontaltWidth / 16 * 9)      # 横屏高
+                
+                #verticalHeighe =
+                write_txt(f"/tmp/{GetApkPackageName(path)}.txt", f"""verticalWidth {verticalWidth}  //竖屏宽
+verticalHeighe {verticalHeighe} //竖屏高
+horizontaltWidth {horizontaltWidth} //横屏宽，备选为1280
+horizontaltHeighe {horizontaltHeighe} //横屏高 ，备选为720
+verticalScreen  1 //设置默认横屏还是竖屏，1为竖屏，0为横屏   
+allowFullScreen 1 //设置是否允许全屏，1为允许，0为不允许   
+allowScreenSwitching 1 //设置是否允许横竖屏切换，1为允许，0为不允许  
+defaultFullScreen 0 //设置是否默认显示最大化，1为默认最大化，0为不是 
+
+logicalDensityDpi 160
+physicalDpi 72
+appWidth {verticalWidth}
+appHeight {verticalHeighe}
+logicalWidth {verticalWidth}
+logicalHeight {verticalHeighe}
+""")
+                if os.system(f"pkexec '{programPath}/uengine-window-size-setting.py' -a {GetApkPackageName(path)}"):
+                    self.error.emit("屏幕配置设置失败")
+                    DisabledAndEnbled(False)
+                    return
+            if settingConf["ChooseProgramType"]:
+                self.make.emit(iconSavePath)
+            else:
+                BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                            "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
+                print("start install apk3")
+                BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                           "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
+                print("\nprint install complete")
             if quit:
                 return
-            self.infor.emit("操作完成！")
             findApkHistory.append(ComboInstallPath.currentText())
             self.combo.emit(0)
             write_txt(get_home() + "/.config/uengine-runner/FindApkHistory.json", str(json.dumps(ListToDictionary(findApkHistory))))  # 将历史记录的数组转换为字典并写入
+            self.infor.emit("操作完成！")
         except:
             traceback.print_exc()
             self.error.emit(traceback.format_exc())
         DisabledAndEnbled(False)
+
+def InstallBuildDesktop(iconSavePath):
+    choose = QtWidgets.QInputDialog.getItem(widget, "提示", "请选择分类，如果点击取消，将会设置为默认的分类", ["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])[0]
+    path = ComboInstallPath.currentText()
+    BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                            "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)), choose)
+    print("start install apk3")
+    BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
+                           "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)), choose)
+    print("\nprint install complete")
 
 def UpdateCombobox(tmp):
     ComboInstallPath.clear()
@@ -199,8 +245,6 @@ def InformationBox(info):
 
 # 禁用或启动所有控件
 def DisabledAndEnbled(choose: "启动或者禁用")->"禁用或启动所有控件":
-    userChoose = {True: tk.DISABLED, False: tk.NORMAL}
-    a = userChoose[choose]
     ComboInstallPath.setDisabled(choose)
     #ComboUninstallPath.configure(state=a)
     BtnFindApk.setDisabled(choose)
@@ -232,15 +276,6 @@ def Button5Click():
 # 打开“uengine 所有程序列表”
 def OpenUengineProgramList()->"打开“uengine 所有程序列表”":
     os.system("uengine launch --package=org.anbox.appmgr --component=org.anbox.appmgr.AppViewActivity")
-
-# 显示“提示”窗口
-def helps()->"显示“提示”窗口":
-    global tips
-    messagebox.showinfo(title="提示", message=tips)
-
-# 显示更新内容窗口
-def UpdateThings()->"显示更新内容窗口":
-    messagebox.showinfo(title="更新内容", message=updateThings)
 
 # 打开程序官网
 def OpenProgramURL()->"打开程序官网":
@@ -392,21 +427,35 @@ def ReinstallUengineImage():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e ''pkexec apt reinstall uengine-android-image -y"]).start()
 
 # 生成 uengine 启动文件到桌面
-def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", showName: "显示名称", iconPath: "程序图标所在目录", savePath:".desktop 文件保存路径")->"生成 uengine 启动文件到桌面":
+def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", showName: "显示名称", iconPath: "程序图标所在目录", savePath:".desktop 文件保存路径", choose="")->"生成 uengine 启动文件到桌面":
     if showName == "" or showName == None:
         showName = "未知应用"
-    things = '''[Desktop Entry]
-Categories=app;
+    if choose != "":
+        things = f'''[Desktop Entry]
 Encoding=UTF-8
-Exec=uengine launch --action=android.intent.action.MAIN --package={} --component={}
-GenericName={}
-Icon={}
+Exec=uengine launch --action=android.intent.action.MAIN --package={packageName} --component={activityName}
+GenericName={showName}
+Icon={iconPath}
 MimeType=
-Name={}
-StartupWMClass={}
+Name={showName}
+StartupWMClass={showName}
+Categories={choose};
 Terminal=false
 Type=Application
-'''.format(packageName, activityName, showName, iconPath, showName, showName)
+'''
+    else:
+        things = f'''[Desktop Entry]
+Categories=app;
+Encoding=UTF-8
+Exec=uengine launch --action=android.intent.action.MAIN --package={packageName} --component={activityName}
+GenericName={showName}
+Icon={iconPath}
+MimeType=
+Name={showName}
+StartupWMClass={showName}
+Terminal=false
+Type=Application
+'''
     write_txt(savePath, things)
 
 # 获取软件的中文名称
@@ -542,7 +591,7 @@ def ScrcpyConnectUengine():
     if os.path.exists("/snap/bin/scrcpy"):
         threading.Thread(target=os.system, args=["/snap/bin/scrcpy -s '192.168.250.2:5555'"]).start()
         return
-    if QtWidgets.QMessageBox.question(title="提示", message="你没有安装Scrcpy（指使用Snap安装），\n如果你使用了其他方法安装了Scrcpy，可以输入命令“scrcpy -s '192.168.250.2:5555'”，\n是否现在要使用Snap安装Scrcpy？") == QtWidgets.QMessageBox.Yes:
+    if QtWidgets.QMessageBox.question(widget, "提示", "你没有安装Scrcpy（指使用Snap安装），\n如果你使用了其他方法安装了Scrcpy，可以输入命令“scrcpy -s '192.168.250.2:5555'”，\n是否现在要使用Snap安装Scrcpy？") == QtWidgets.QMessageBox.Yes:
         if not os.path.exists("/tmp/uengine-runner"):
             os.makedirs("/tmp/uengine-runner")
         write_txt("/tmp/uengine-runner/InstallScrcpy.sh", '''#!/bin/bash
@@ -571,7 +620,6 @@ def get_desktop_path()->"获取用户桌面目录":
 def SaveInstallUengineApp():
     while True:
         result = QtWidgets.QInputDialog.getText(widget, "输入 APK 包名", "请输入要获取的apk包名以便进行下一步操作")
-        #result = simpledialog.askstring(title="输入apk包名", prompt="请输入要获取的apk包名以便进行下一步操作")
         if result[1] == False:
             return
         result = result[0]
@@ -667,7 +715,7 @@ def UengineUseAdb():
     # 因为需要 root，所以需要开二号程序
     os.system("adb start-server")  # 保证有生成文件
     os.system("pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY {}/uengine-useadb 0 '{}'".format(programPath, "{}/.android/adbkey.pub".format(get_home())))  # 写入配置
-    if QtWidgets.QMessageBox.question(title="提示", message="是否要连接到 UEngine？") == QtWidgets.QMessageBox.Yes:
+    if QtWidgets.QMessageBox.question(widget, "提示", "是否要连接到 UEngine？") == QtWidgets.QMessageBox.Yes:
         UengineConnectAdb()
 
 def UengineDoNotUseAdb():
@@ -729,9 +777,9 @@ def SetHttpProxy():
     adb = api.Adb("192.168.250.2:5555")
     adb.Service.Close()
     adb.connect()
-    if QtWidgets.QMessageBox.question(title="提示", message="此功能需要安装 adb 补丁，请保证已经安装然后按下“Yes”") == QtWidgets.QMessageBox.No:
+    if QtWidgets.QMessageBox.question(widget, "提示", "此功能需要安装 adb 补丁，请保证已经安装然后按下“Yes”") == QtWidgets.QMessageBox.No:
         return
-    proxy = QtWidgets.QInputDialog(title="输入代理", msg="请输入要设置的代理（为空代表不设置代理）")
+    proxy = QtWidgets.QInputDialog.getText(widget, "输入代理", "请输入要设置的代理（为空代表不设置代理）")
     if proxy[1] == False:
         return
     if proxy[0] == "":
@@ -743,28 +791,229 @@ def SetHttpProxy():
         os.system(f"adb -s 192.168.250.2:5555 shell settings put global http_proxy \"{proxy[0]}\"")
         QtWidgets.QMessageBox.information(widget, "提示", "设置成功！")
     
-    
+class UengineWindowSizeSetting:
+    setting = None
+    package = "com.nuts.extremspeedup"
+    verticalWidth = None
+    verticalHeighe = None
+    horizontaltWidth = None
+    horizontaltHeighe = None
+    verticalScreen = None
+    allowFullScreen = None
+    allowScreenSwitching = None
+    defaultFullScreen = None
+    logicalDensityDpi = None
+    physicalDpi = None
+    appWidth = None
+    appHeight = None
+    logicalWidth = None
+    logicalHeight = None
+    lineEdit = {
+        "verticalWidth": verticalWidth,
+        "verticalHeighe": verticalHeighe,
+        "horizontaltWidth": horizontaltWidth,
+        "horizontaltHeighe": horizontaltHeighe,
+        "logicalDensityDpi": logicalDensityDpi,
+        "physicalDpi": physicalDpi,
+        "appWidth": appWidth,
+        "appHeight": appHeight,
+        "logicalWidth": logicalWidth,
+        "logicalHeight": logicalHeight
+    }
+    checkbox = {
+        "verticalScreen": verticalScreen,
+        "allowFullScreen": allowFullScreen,
+        "allowScreenSwitching": allowScreenSwitching,
+        "defaultFullScreen": defaultFullScreen
+    }
+    def ShowWindow():
+        unfound = False
+        while True:
+            if ComboInstallPath.currentText() == "":
+                choose = QtWidgets.QInputDialog.getText(widget, "输入", "请输入需要设置的 Android 应用的包名")
+            else:
+                if GetApkPackageName(ComboInstallPath.currentText()) == None:
+                    choose = QtWidgets.QInputDialog.getText(widget, "输入", "请输入需要设置的 Android 应用的包名", text=ComboInstallPath.currentText())
+                else:
+                    choose = QtWidgets.QInputDialog.getText(widget, "输入", "请输入需要设置的 Android 应用的包名", text=GetApkPackageName(ComboInstallPath.currentText()))
+            if not choose[1]:
+                return
+            if choose[0] == "":
+                QtWidgets.QMessageBox.information(widget, "提示", "包名不能为空")
+                continue
+            if not os.path.exists(f"/usr/share/uengine/appetc/{choose[0]}.txt"):
+                if QtWidgets.QMessageBox.question(widget, "提示", "未找到这个包名对应的配置文件，是否要创建一个？") == QtWidgets.QMessageBox.No:
+                    continue
+                unfound = True
+            UengineWindowSizeSetting.package = choose[0]
+            break
+        UengineWindowSizeSetting.setting = QtWidgets.QMainWindow()
+        settingWidget = QtWidgets.QWidget()
+        settingLayout = QtWidgets.QGridLayout()
+
+        UengineWindowSizeSetting.verticalWidth = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.verticalHeighe = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.horizontaltWidth = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.horizontaltHeighe = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.verticalScreen = QtWidgets.QCheckBox("默认为竖屏")
+        UengineWindowSizeSetting.allowFullScreen = QtWidgets.QCheckBox("允许全屏")
+        UengineWindowSizeSetting.allowScreenSwitching = QtWidgets.QCheckBox("允许横竖屏切换")
+        UengineWindowSizeSetting.defaultFullScreen = QtWidgets.QCheckBox("默认显示最大化")
+        UengineWindowSizeSetting.logicalDensityDpi = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.physicalDpi = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.appWidth = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.appHeight = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.logicalWidth = QtWidgets.QLineEdit()
+        UengineWindowSizeSetting.logicalHeight = QtWidgets.QLineEdit()
+        saveButton = QtWidgets.QPushButton("保存设置")
+        deleButton = QtWidgets.QPushButton("删除设置")
+        saveButton.clicked.connect(UengineWindowSizeSetting.SaveSetting)
+        deleButton.clicked.connect(UengineWindowSizeSetting.DeleteSetting)
+        settingLayout.addWidget(QtWidgets.QLabel("竖屏宽："), 0, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.verticalWidth, 0, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("竖屏高："), 1, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.verticalHeighe, 1, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("横屏宽，备选为1280："), 2, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.horizontaltWidth, 2, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("横屏高，备选为720："), 3, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.horizontaltHeighe, 3, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("设置默认横屏还是竖屏："), 4, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.verticalScreen, 4, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("设置是否允许全屏："), 5, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.allowFullScreen, 5, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("设置是否允许横竖屏切换："), 6, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.allowScreenSwitching, 6, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("设置是否默认显示最大化："), 7, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.defaultFullScreen, 7, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("<hr>"), 8, 0, 1, 3)
+        settingLayout.addWidget(QtWidgets.QLabel("屏幕缩放，数值大则大："), 9, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.logicalDensityDpi, 9, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("physicalDpi："), 10, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.physicalDpi, 10, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("appWidth："), 11, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.appWidth, 11, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("appHeight："), 12, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.appHeight, 12, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("logicalWidth："), 13, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.logicalWidth, 13, 1, 1, 2)
+        settingLayout.addWidget(QtWidgets.QLabel("logicalHeight："), 14, 0, 1, 1)
+        settingLayout.addWidget(UengineWindowSizeSetting.logicalHeight, 14, 1, 1, 2)
+        settingLayout.addWidget(saveButton, 15, 1, 1, 1)
+        settingLayout.addWidget(deleButton, 15, 2, 1, 1)
+        UengineWindowSizeSetting.lineEdit = {
+        "verticalWidth": UengineWindowSizeSetting.verticalWidth,
+        "verticalHeighe": UengineWindowSizeSetting.verticalHeighe,
+        "horizontaltWidth": UengineWindowSizeSetting.horizontaltWidth,
+        "horizontaltHeighe": UengineWindowSizeSetting.horizontaltHeighe,
+        "logicalDensityDpi": UengineWindowSizeSetting.logicalDensityDpi,
+        "physicalDpi": UengineWindowSizeSetting.physicalDpi,
+        "appWidth": UengineWindowSizeSetting.appWidth,
+        "appHeight": UengineWindowSizeSetting.appHeight,
+        "logicalWidth": UengineWindowSizeSetting.logicalWidth,
+        "logicalHeight": UengineWindowSizeSetting.logicalHeight
+    }
+        UengineWindowSizeSetting.checkbox = {
+        "verticalScreen": UengineWindowSizeSetting.verticalScreen,
+        "allowFullScreen": UengineWindowSizeSetting.allowFullScreen,
+        "allowScreenSwitching": UengineWindowSizeSetting.allowScreenSwitching,
+        "defaultFullScreen": UengineWindowSizeSetting.defaultFullScreen
+    }
+        settingWidget.setLayout(settingLayout)
+        UengineWindowSizeSetting.setting.setCentralWidget(settingWidget)
+        if not unfound:
+            UengineWindowSizeSetting.ReadSetting()
+        else:
+            for i in UengineWindowSizeSetting.checkbox.values():
+                i.setChecked(True)
+        UengineWindowSizeSetting.setting.setWindowTitle(f"设置 Android 应用的窗口大小缩放设置")
+        UengineWindowSizeSetting.setting.show()
+        UengineWindowSizeSetting.setting.resize(UengineWindowSizeSetting.setting.frameSize().width() * 1.3, UengineWindowSizeSetting.setting.frameSize().height())
+
+    def ReadSetting():
+        file = open(f"/usr/share/uengine/appetc/{UengineWindowSizeSetting.package}.txt")
+        while True:
+            line = file.readline()
+            if not line:
+                break
+            line = line.strip()
+            print(line)
+            if "//" in line:
+                line = line[:line.index("//")]
+            try:
+                if line[:line.index(" ")].strip() in UengineWindowSizeSetting.lineEdit.keys():
+                    UengineWindowSizeSetting.lineEdit[line[:line.index(" ")].strip()].setText(line[line.index(" "):].strip())
+                if line[:line.index(" ")].strip() in UengineWindowSizeSetting.checkbox.keys():
+                    UengineWindowSizeSetting.checkbox[line[:line.index(" ")].strip()].setChecked(bool(line[line.index(" "):].strip()))
+            except:  # 错误行，忽略
+                pass
+        file.close()
+
+    def SaveSetting():
+        file = open(f"/tmp/{UengineWindowSizeSetting.package}.txt", "w")
+        for i in UengineWindowSizeSetting.lineEdit.keys():
+            if UengineWindowSizeSetting.lineEdit[i].text() == "":  # 空选项，不写入
+                continue
+            try:            
+                file.write(f"{i} {int(UengineWindowSizeSetting.lineEdit[i].text())}\n")
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(widget, "错误", "格式输入错误")
+                return
+        for i in UengineWindowSizeSetting.checkbox.keys():
+            try:            
+                file.write(f"{i} {int(UengineWindowSizeSetting.checkbox[i].isChecked())}\n")
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
+                return
+        file.close()
+        if os.system(f"pkexec '{programPath}/uengine-window-size-setting.py' -a {UengineWindowSizeSetting.package}"):
+            QtWidgets.QMessageBox.critical(widget, "错误", "保存失败")
+            return
+        QtWidgets.QMessageBox.information(widget, "提示", "保存完成！")
+
+    def DeleteSetting():
+        if os.system(f"pkexec '{programPath}/uengine-window-size-setting.py' -d {UengineWindowSizeSetting.package}"):
+            QtWidgets.QMessageBox.critical(widget, "错误", "删除失败")
+            return
+        QtWidgets.QMessageBox.information(widget, "提示", "删除完成！")
+        
 
 class SettingWindow():
     saveApkOption = None
     settingWindow = None
+    autoScreenConfig = None
+    chooseProgramType = None
+    theme = None
     def ShowWindow():
         SettingWindow.settingWindow = QtWidgets.QMainWindow()
         setting = QtWidgets.QWidget()
         settingLayout = QtWidgets.QGridLayout()
 
         SettingWindow.saveApkOption = QtWidgets.QComboBox()
+        SettingWindow.autoScreenConfig = QtWidgets.QCheckBox("安装APK时自动根据系统分辨率设置，卸载时自动移除")
+        SettingWindow.chooseProgramType = QtWidgets.QCheckBox("安装APK时手动选择程序分类")
+        SettingWindow.theme = QtWidgets.QComboBox()
+        themeTry = QtWidgets.QPushButton("测试(重启后变回设置的主题)")
+        SettingWindow.theme.addItems(QtWidgets.QStyleFactory.keys())
         controlFrame = QtWidgets.QHBoxLayout()
         cancalButton = QtWidgets.QPushButton("取消")
         okButton = QtWidgets.QPushButton("保存")
 
         settingLayout.addWidget(QtWidgets.QLabel("APK 安装模式："), 0, 0, 1, 1)
         settingLayout.addWidget(SettingWindow.saveApkOption, 0, 1, 1, 1)
-        settingLayout.addLayout(controlFrame, 1, 1, 1, 1)
+        settingLayout.addWidget(QtWidgets.QLabel("窗口大小策略："), 1, 0, 1, 1)
+        settingLayout.addWidget(SettingWindow.autoScreenConfig, 1, 1, 1, 1)
+        settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
+        settingLayout.addWidget(SettingWindow.chooseProgramType, 2, 1, 1, 1)
+        settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
+        settingLayout.addWidget(SettingWindow.theme, 2, 1, 1, 1)
+        settingLayout.addWidget(themeTry, 2, 2, 1, 1)
+        settingLayout.addLayout(controlFrame, 4, 1, 1, 2)
         controlFrame.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         controlFrame.addWidget(cancalButton)
         controlFrame.addWidget(okButton)
-
+        
         SettingWindow.saveApkOption.addItems(["不备份Apk包直接安装", "备份Apk包然后在安装后自动拷贝原先目录"])
         try:
             data = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
@@ -772,7 +1021,11 @@ class SettingWindow():
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["SettingReadError"])
             SettingWindow.settingWindow.close()
             return
+        SettingWindow.autoScreenConfig.setChecked(settingConf["AutoScreenConfig"])
         SettingWindow.saveApkOption.setCurrentIndex(int(data["SaveApk"]))
+        SettingWindow.chooseProgramType.setChecked(settingConf["ChooseProgramType"])
+        SettingWindow.theme.setCurrentText(settingConf["Theme"])
+        themeTry.clicked.connect(SettingWindow.Try)
         cancalButton.clicked.connect(SettingWindow.settingWindow.close)
         okButton.clicked.connect(SettingWindow.SaveSetting)
 
@@ -782,11 +1035,26 @@ class SettingWindow():
         SettingWindow.settingWindow.setCentralWidget(setting)
         SettingWindow.settingWindow.show()
         SettingWindow.settingWindow.setFixedSize(SettingWindow.settingWindow.frameSize().width(), SettingWindow.settingWindow.frameSize().height())
-        return
         
+    def Try():
+        app.setStyle(QtWidgets.QStyleFactory.create(SettingWindow.theme.currentText()))
+
     def SaveSetting():
+        global settingConf
         try:
-            write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": bool(SettingWindow.saveApkOption.currentIndex())}))
+            write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({
+                "SaveApk": bool(SettingWindow.saveApkOption.currentIndex()),
+                "AutoScreenConfig": SettingWindow.autoScreenConfig.isChecked(),
+                "ChooseProgramType": SettingWindow.chooseProgramType.isChecked(),
+                "Theme": SettingWindow.theme.currentText()
+                }))
+            settingConf = {
+                "SaveApk": bool(SettingWindow.saveApkOption.currentIndex()),
+                "AutoScreenConfig": SettingWindow.autoScreenConfig.isChecked(),
+                "ChooseProgramType": SettingWindow.chooseProgramType.isChecked(),
+                "Theme": SettingWindow.theme.currentText()
+                }
+            app.setStyle(QtWidgets.QStyleFactory.create(SettingWindow.theme.currentText()))
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["SettingSaveError"])
@@ -824,7 +1092,7 @@ class UpdateWindow():
         updateWidget.setLayout(updateWidgetLayout)
         UpdateWindow.update.setCentralWidget(updateWidget)
         UpdateWindow.update.setWindowTitle("检查更新")
-        UpdateWindow.setWindowIcon(QtGui.QIcon(iconPath))
+        UpdateWindow.update.setWindowIcon(QtGui.QIcon(iconPath))
         UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
         UpdateWindow.update.show()
 
@@ -869,9 +1137,7 @@ class ApkInformation():
         messageWidget = QtWidgets.QWidget()
         messageLayout = QtWidgets.QVBoxLayout()
         ApkInformation.message.setWindowTitle("“{}“的Apk信息".format(GetApkChineseLabel(path)))
-        #message.iconphoto(False, tk.PhotoImage(file=iconPath))
         tab = QtWidgets.QTabWidget()
-        #tab = ttk.Notebook(message)
 
         tab1 = QtWidgets.QWidget()
         tab2 = QtWidgets.QWidget()
@@ -1006,48 +1272,10 @@ class AdbChangeUengineDisplaySize():
         AdbChangeUengineDisplaySize.messageWindow.setWindowIcon(QtGui.QIcon(iconPath))
         AdbChangeUengineDisplaySize.messageWindow.show()
         return
-        message.iconphoto(False, tk.PhotoImage(file=iconPath))
-        messageFrame = ttk.Frame(message)
-
-        displaySize = tk.StringVar()
-        displaySize.set("当前 UEngine 屏幕分辨率：正在获取")
-
-        displaySizeLabel = ttk.Label(messageFrame, textvariable=displaySize)
-
-        input = ttk.Frame(messageFrame)
-        displayX = ttk.Entry(input)
-        displayY = ttk.Entry(input)
-
-        settingBUtton = ttk.Button(messageFrame, text="设置分辨率", command=AdbChangeUengineDisplaySize.SettingDisplaySize)
-
-        message.title("修改 UEngine 分辨率")
-        message.resizable(0, 0)
-        message.iconphoto(False, tk.PhotoImage(file=iconPath))
-        # get screen width and height
-        screen_width = message.winfo_screenwidth()
-        screen_height = message.winfo_screenheight()
-        # calculate position x and y coordinates  假设主窗口大小固定 570x236像素 ，设置窗口位置为屏幕中心。 
-        winwith=570
-        winhigh=236
-        x = (screen_width/2) - (winwith/2)
-        y = (screen_height/2) - (winhigh/2)
-        message.geometry("+{}+{}".format(int(x), int(y)))
-
-        displayX.grid(row=0, column=0)
-        displayY.grid(row=0, column=1)
-
-        displaySizeLabel.grid(row=0, column=0)
-        input.grid(row=1, column=0)
-        settingBUtton.grid(row=2, column=0)
-
-        messageFrame.pack()
-        threading.Thread(target=AdbChangeUengineDisplaySize.GetUengineDisplaySize).start()
-        message.mainloop()
 
     def GetUengineDisplaySize():
         global displaySize
         displaySize.setText("当前 UEngine 屏幕分辨率：\n" + subprocess.getoutput("adb -s '192.168.250.2:5555' shell wm size"))
-        #displaySize.set(subprocess.getoutput("adb -s '192.168.250.2:5555' shell wm size"))
 
     def SettingDisplaySize():
         global displayX
@@ -1178,8 +1406,6 @@ class AddNewUengineDesktopLink():
     def SaveHistory():
         findApkNameHistory.append(packageName.text())
         findApkActivityHistory.append(activityName.text())
-        #packageName['value'] = findApkNameHistory
-        #activityName['value'] = findApkActivityHistory
         write_txt(get_home() + "/.config/uengine-runner/FindApkNameHistory.json", str(json.dumps(ListToDictionary(findApkNameHistory))))  # 将历史记录的数组转换为字典并写入 
         write_txt(get_home() + "/.config/uengine-runner/FindApkActivityHistory.json", str(json.dumps(ListToDictionary(findApkActivityHistory))))  # 将历史记录的数组转换为字典并写入
 
@@ -1199,16 +1425,16 @@ class AddNewUengineDesktopLink():
 
 def UseProgram():
     global useProgram
-    useProgram = '''1、UEngine：{}
-2、python3：{}
-3、PyQt：{}
-4、aapt：{}
-5、dpkg：{}
-6、mkdir：{}
-7、echo
-8、chmod：{}
-9、adb：{}
-10、deepin 终端：{}'''.format(subprocess.getoutput("uengine version"),
+    useProgram = '''<p>1、UEngine：{}</p>
+<p>2、python3：{}</p>
+<p>3、PyQt：{}</p>
+<p>4、aapt：{}</p>
+<p>5、dpkg：{}</p>
+<p>6、mkdir：{}</p>
+<p>7、echo</p>
+<p>8、chmod：{}</p>
+<p>9、adb：{}</p>
+<p>10、deepin 终端：{}</p>'''.format(subprocess.getoutput("uengine version"),
     subprocess.getoutput("python3 --version"),
     QtCore.qVersion,
     subprocess.getoutput("aapt version"),
@@ -1247,14 +1473,13 @@ about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <h3>©2021-{time.strftime("%Y")}</h3>'''
 updateThingsString = ""
 tips = ""
-contribute = "<ul>"
+contribute = ""
 for i in information["Tips"]:
     tips += f"<p>{i}</p>"
 for i in information["Update"]:
     updateThingsString += f"<p>{i}</p>"
 for i in information["Contribute"]:
-    contribute += f"<li>{i}</li>"
-contribute += "</ul>"
+    contribute += f"<p>{i}</p>"
 title = "{} {}".format(langFile[lang]["Main"]["MainWindow"]["Title"], version)
 updateTime = information["Time"]
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
@@ -1266,6 +1491,7 @@ threading.Thread(target=UseProgram).start()
 ###########################
 # 加载配置
 ###########################
+app = QtWidgets.QApplication(sys.argv)
 if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
     os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
 if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
@@ -1288,7 +1514,6 @@ if not os.path.exists(get_home() + "/.config/uengine-runner/SaveApkIcon.json"): 
     write_txt(get_home() + "/.config/uengine-runner/SaveApkIcon.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/SaveApk.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/SaveApk.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
-app = QtWidgets.QApplication(sys.argv)
 if not os.path.exists(get_home() + "/.config/uengine-runner/setting.json"):
     choosemsg = QtWidgets.QMessageBox()
     choosemsg.setText("""在使用本程序前，请选择安装Apk包的设置以便更好的运行，下列选项的详细介绍：
@@ -1304,13 +1529,31 @@ if not os.path.exists(get_home() + "/.config/uengine-runner/setting.json"):
     choose = None
     choosemsg.addButton("不备份Apk包直接安装", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: BackAPK(0))
     choosemsg.addButton("备份Apk包然后在安装后自动拷贝原先目录", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: BackAPK(1))
-    #choose = easygui.indexbox(title="设置", choices=["不备份Apk包直接安装", "备份Apk包然后在安装后自动拷贝原先目录"])
     choosemsg.exec_()
     if choose == None:
         QtWidgets.QMessageBox.information(None, "提示", "必须选择一个选项！否则无法进入程序！")
         sys.exit()            
     write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": int(choose)}))
-
+defultProgramList = {
+    "SaveApk": 1,
+    "AutoScreenConfig": False,
+    "ChooseProgramType": False,
+    "Theme": ""
+}
+try:
+    settingConf = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
+    change = False
+    for i in defultProgramList.keys():
+        if not i in settingConf:
+            change = True
+            settingConf[i] = defultProgramList[i]
+    if change:
+        write_txt(get_home() + "/.config/uengine-setting.json", json.dumps(settingConf))
+except:
+    traceback.print_exc()
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
+    sys.exit(1)
 
 ###########################
 # 设置变量
@@ -1367,15 +1610,17 @@ def showhelp():
     BtnReadme = QtWidgets.QPushButton("使用说明")
     BtnLog = QtWidgets.QPushButton("更新内容")
     BtnZujian = QtWidgets.QPushButton("程序依赖的组件")
-    BtnGongxian = QtWidgets.QPushButton("有贡献的开发者")
+    BtnGongxian = QtWidgets.QPushButton("谢明列表")
     BtnAbout = QtWidgets.QPushButton("关于")
+    BtnDownN = QtWidgets.QPushButton("程序下载量")
     HelpStr = QtWidgets.QTextBrowser()
-
+    BtnDownN.setEnabled("--彩蛋" in sys.argv)
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)
     BtnGongxian.clicked.connect(ChgCon)
     BtnAbout.clicked.connect(ChgAbout)
+    BtnDownN.clicked.connect(Egg)
 
     ChgTips()
 
@@ -1383,8 +1628,9 @@ def showhelp():
     helpLayout.addWidget(BtnLog, 1, 0, 1, 1)
     helpLayout.addWidget(BtnZujian, 2, 0, 1, 1)
     helpLayout.addWidget(BtnGongxian, 3, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 4, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 6, 1)
+    helpLayout.addWidget(BtnAbout, 5, 0, 1, 1)
+    helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 7, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)
@@ -1549,12 +1795,14 @@ uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["M
 uengineDeleteUengineCheck = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9])
 uengineReinstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10])
 uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
+uengineWindowSizeSetting = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][16])
 uengine.addAction(uengineAllowOrDisallowUpdateAndroidApp)
 uengine.addAction(uengineSetHttpProxy)
 uengine.addAction(uengineOpenDebBuilder)
 uengine.addAction(uengineKeyboardToMouse)
 uengine.addAction(uengineCheckCpu)
 uengine.addAction(uengineUbuntuInstall)
+uengine.addAction(uengineWindowSizeSetting)
 uengineService = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"])
 uengineInternet = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"])
 uengineIcon = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"])
@@ -1563,7 +1811,6 @@ uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["M
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
-uengine.addAction(uengineUbuntuInstall)
 # 绑定信号
 uengineAllowOrDisallowUpdateAndroidApp.triggered.connect(AllowOrDisallowUpdateAndroidApp)
 uengineSetHttpProxy.triggered.connect(SetHttpProxy)
@@ -1573,6 +1820,7 @@ uengineCheckCpu.triggered.connect(UengineCheckCpu)
 uengineUbuntuInstall.triggered.connect(UengineUbuntuInstall)
 uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
 uengineReinstall.triggered.connect(ReinstallUengine)
+uengineWindowSizeSetting.triggered.connect(UengineWindowSizeSetting.ShowWindow)
 
 uengineStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
 uengineStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
@@ -1649,19 +1897,26 @@ helpUengineRunnerBugUpload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindo
 helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4])
 helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
 helpAbout = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
+helpAboutQt = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
 help.addAction(helpOpenProgramUrl)
 help.addAction(helpUengineRunnerBugUpload)
 help.addAction(helpShowHelp)
 help.addAction(helpRunnerUpdate)
 help.addAction(helpAbout)
+help.addAction(helpAboutQt)
+hm1 = help.addMenu("更多生态适配应用")
+hm1_1 = QtWidgets.QAction("运行 Windows 应用：Wine 运行器")
+hm1.addAction(hm1_1)
+hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner"))
 # 绑定信号
 helpOpenProgramUrl.triggered.connect(OpenProgramURL)
 helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
 helpShowHelp.triggered.connect(ShowHelp)
 helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)
 helpAbout.triggered.connect(showhelp)
-
+helpAboutQt.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 # 设置窗口
+app.setStyle(QtWidgets.QStyleFactory.create(settingConf["Theme"]))
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(title)

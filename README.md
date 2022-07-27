@@ -1,14 +1,14 @@
-# UEngine 运行器 1.7.0
+# UEngine 运行器 1.8.0
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![image.png](https://storage.deepin.org/thread/202207081157256904_image.png)
+![image.png](https://storage.deepin.org/thread/202207271700065629_image.png)
 
-（测试平台：UOS 家庭版 21.1，deepin 20.6,UOS 专业版 1040）
+（测试平台：UOS 家庭版 21.3，deepin 20.6,UOS 专业版 1040）
 
 ## 安装前必读
 + **UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版或者在程序设置里面选择“备份APK包然后在安装后自动拷贝原先目录”选项**  
-![image.png](https://storage.deepin.org/thread/202205211808393526_image.png)
+![image.png](https://storage.deepin.org/thread/202207271700517092_image.png)
 
 ## 如何升级至最新版本
 ### 一、使用星火应用商店更新到最新版本
@@ -35,6 +35,17 @@ sudo apt upgrade
 
 
 ### 更新内容
+#### V1.8.0（2022年07月27日）
+**※1、程序界面大部分由 Tkinter 转 PyQt5**  
+**※2、添加了自动/手动配置 UEngine 窗口大小文件（自动需要在设置里手动开启，配置窗口的配置文件需要 Root）**  
+**※3、增加了安装/卸载失败后的提示**  
+**※4、补回谢明名单**  
+**※5、支持免密安装/卸载 APK**  
+6、pip 更换华为源，提升下载速度  
+7、新增主题功能   
+8、支持在安装 APK 后手动指定分类（手动指定需要在设置里手动开启）   
+![image.png](https://storage.deepin.org/thread/202207271700065629_image.png)
+
 #### V1.7.0（2022年07月08日，暑假开始）
 **※1、新增暗黑主题**  
 **※2、优化 deepin-terminal 在其它发行版显示奇奇怪怪的问题**  
@@ -220,16 +231,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/home/gfdgd_xi/.local/s
 1.  安装所需依赖
 
 ```bash
-sudo apt install python3 python3-tk python3-pip aapt uengine
-sudo apt install python3-setuptools deepin-terminal curl python3-pil
-sudo apt install python3-pil.imagetk python3-requests adb 
-sudo apt install translate-shell python3-xlib fonts-noto-cjk
-sudo apt install python3-numpy python3-matplotlib wget inotify-tools aria2
-python3 -m pip install --upgrade pip        -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-python3 -m pip install --upgrade ttkthemes  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-python3 -m pip install --upgrade pyautogui  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-python3 -m pip install --upgrade keyboard   -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-python3 -m pip install --upgrade easygui    -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+sudo apt install make
 ```
 
 2.  下载本程序
@@ -241,9 +243,15 @@ git clone https://gitee.com/gfdgd-xi/uengine-runner.git
 3.  运行本程序
 
 ```bash
-chmod 777 uengine-runner/main.py
-./uengine-runner/main.py
+cd uengine-runner
+make run
 ```
+
+如果你想要安装到系统，只需要输入：  
+```bash
+make install
+```
+即可  
 
 ### 使用说明
 1、需要你有使用 root 权限的能力；  

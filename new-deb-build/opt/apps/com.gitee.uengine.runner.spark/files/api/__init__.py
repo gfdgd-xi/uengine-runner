@@ -362,11 +362,10 @@ class UengineRunner:
 
 if __name__ == "__main__":
     print("本 API 不支持直接运行，请通过引入的方式使用此 API")
-    #adb = Adb("192.168.250.2:5555")
-    #print(adb.boolAndroidInstallOtherAppSetting())
+    adb = Adb("192.168.250.2:5555")
+    print(adb.boolAndroidInstallOtherAppSetting())
 
-    #quit()
+    quit()
 
 if not ROOT.GetRoot():
-    pass
-    #print("请获取 ROOT 权限以便更好的使用该 API")
+    print("请获取 ROOT 权限以便更好的使用该 API")

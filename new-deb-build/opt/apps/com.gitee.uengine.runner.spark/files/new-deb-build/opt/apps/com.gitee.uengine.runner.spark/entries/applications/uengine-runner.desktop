@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Categories=System;
+Terminal=false
+Exec=/usr/bin/uengine-runner
+Icon=/opt/apps/com.gitee.uengine.runner.spark/files/runner.svg
+Name=uengine Runner
+Comment=UEngine Runner
+Comment[zh]=UEngine 运行器
+Name[zh]=UEngine 运行器
+StartupNotify=true
+MimeType=

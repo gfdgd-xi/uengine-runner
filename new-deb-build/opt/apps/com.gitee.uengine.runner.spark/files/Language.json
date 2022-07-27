@@ -136,7 +136,8 @@
                             "在 Ubuntu 上安装 UEngine",
                             "启动/禁用UEngine安装的安卓程序程序更新（需要安装 adb 补丁）",
                             "在 Ubuntu 上安装 UEngine",
-                            "设置 UEngine 代理（需要安装 adb 补丁）"
+                            "设置 UEngine 代理（需要安装 adb 补丁）",
+                            "设置 UEngine 指定应用窗口大小"
                         ]
                     },
                     {
@@ -146,7 +147,8 @@
                             "关于",
                             "反馈程序问题和建议",
                             "检查更新",
-                            "更多帮助"
+                            "更多帮助",
+                            "关于 Qt"
                         ]
                     }
                 ]
@@ -304,7 +306,8 @@
                             "Install UEngine On Ubuntu",
                             "Allow/Disallow UEngine To Install Or Update Other Android Program (Need Install Adb Patch)",
                             "Install UEngine On Ubuntu",
-                            "Set UEngine Http Proxy (Need Install Adb Patch)"
+                            "Set UEngine Http Proxy (Need Install Adb Patch)",
+                            "Set UEngine Some Android Windows Size"
                         ]
                     },
                     {
@@ -314,7 +317,8 @@
                             "About This Program",
                             "Upload Problem And Advice",
                             "Update This Program",
-                            "More Help"
+                            "More Help",
+                            "About Qt"
                         ]
                     }
                 ]

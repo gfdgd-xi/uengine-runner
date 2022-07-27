@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-#########################################
-# 版本：1.6.1
-# 更新时间：2022年10月06日
+###############################################################
+# 版本：1.8.0
+# 更新时间：2022年07月26日
 # Need: unix, python3-tk, python3-pip, pymouse, keyboard
-#########################################
+###############################################################
 import os
 import sys
 import time
@@ -18,8 +18,6 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
-import Xlib.threaded as threaded
-#import pymouse.unix as pymouse
 ########################
 #
 ########################
@@ -30,7 +28,6 @@ def Inputt(key):
             Setting(key)
         else:
             Mouse(key)
-            #Mouse(key)
 
 def Open():
     path = filedialog.askopenfilename(title="打开", filetypes=[["json 文件", "*.json"], ["全部文件", ["*.*"]]])
@@ -56,13 +53,12 @@ def Mouse(key):
     if keybo.__contains__(key.name):
         print(keybo[key.name]["MousePlace"])
         pyautogui.FAILSAFE = False
-        #os.system(programPath + "/mouse.py {} {}".format(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1]))
         try:
+            print((keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1]))
             pyautogui.click(keybo[key.name]["MousePlace"][0], keybo[key.name]["MousePlace"][1])
+            
         except:
-            pass
-        #pyautogui.click(1500, 800)
-        #m.click(keybo[key.name]["MousePlace"][0],keybo[key.name]["MousePlace"][1])
+            traceback.print_exc()
 
 def Setting(key):
     if key.event_type == 'up':
@@ -105,11 +101,8 @@ def ShowTips():
 def Closing():
     global close
     close = True
-    window.destroy()
-    #key.close()
-    #stop_thread(keys)
-    keyboard.unhook(Inputt)
-    sys.exit(0)
+    # 偷懒了，直接强制关闭进程
+    os.system(f"kill {os.getpid()}")
 
 
 def Key():
@@ -144,6 +137,20 @@ def Clean():
 
 def About():
     threading.Thread(target=os.system, args=["{}/uengine-runner-about".format(programPath)]).start()
+
+lock = False
+def ThreadCheck():
+    global lock
+    lock = True
+    pyautogui.position()
+    lock = False
+
+def RestartProgramTimer():
+    threading.Thread(target=ThreadCheck).start()
+    time.sleep(0.1)
+    if lock:
+        ReStartProgram()
+    RestartProgramTimer()
 
 ###################
 #
@@ -226,16 +233,9 @@ settingMouseToKeyboard.grid(row=0, column=0)
 settingButton.grid(row=0, column=1)
 
 win.pack(fill="both", expand="yes")
-#threaded.lock.allocate_lock()
 keys = threading.Thread(target=Key)
 keys.start()
 threading.Thread(target=ShowTips).start()
 pyautogui.FAILSAFE = False
-'''def B(key):
-    if key.event_type == "up":
-        print(pyautogui.position())
-        print(key.name)
-        pyautogui.click(1500, 800)
-keyboard.hook(B)
-keyboard.wait()'''
+threading.Thread(target=RestartProgramTimer).start()
 window.mainloop()

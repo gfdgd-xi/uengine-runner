@@ -1,0 +1,17 @@
+{
+    "appid": "com.gitee.uengine.runner.spark",
+    "name": "com.gitee.uengine.runner.spark",
+    "version": "1.3.2",
+    "arch": ["all"],
+    "permissions": {
+        "autostart": false,
+        "notification": false,
+        "trayicon": false,
+        "clipboard": false,
+        "account": false,
+        "bluetooth": false,
+        "camera": false,
+        "audio_record": false,
+        "installed_apps": false
+    }
+}

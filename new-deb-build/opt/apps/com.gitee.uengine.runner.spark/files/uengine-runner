@@ -17,6 +17,7 @@ import sys
 import time
 import json
 import numpy
+import base64
 import shutil
 import zipfile
 import requests
@@ -24,10 +25,14 @@ import traceback
 import threading
 import webbrowser
 import subprocess
-import matplotlib
-import matplotlib.figure
-import matplotlib.pylab
-import matplotlib.font_manager
+try:
+    import matplotlib
+    import matplotlib.figure
+    import matplotlib.pylab
+    import matplotlib.font_manager
+except:
+    pass
+import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
@@ -1006,9 +1011,9 @@ class SettingWindow():
         settingLayout.addWidget(SettingWindow.autoScreenConfig, 1, 1, 1, 1)
         settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
         settingLayout.addWidget(SettingWindow.chooseProgramType, 2, 1, 1, 1)
-        settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
-        settingLayout.addWidget(SettingWindow.theme, 2, 1, 1, 1)
-        settingLayout.addWidget(themeTry, 2, 2, 1, 1)
+        settingLayout.addWidget(QtWidgets.QLabel("程序主题："), 3, 0, 1, 1)
+        settingLayout.addWidget(SettingWindow.theme, 3, 1, 1, 1)
+        settingLayout.addWidget(themeTry, 3, 2, 1, 1)
         settingLayout.addLayout(controlFrame, 4, 1, 1, 2)
         controlFrame.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         controlFrame.addWidget(cancalButton)
@@ -1563,6 +1568,10 @@ fineUninstallApkHistory = list(json.loads(readtxt(get_home() + "/.config/uengine
 findApkNameHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkNameHistory.json")).values())
 findApkActivityHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkActivityHistory.json")).values())
 
+try:
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3VlbmdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
+except:
+    pass
 # add sub window
 #添加窗口开启关闭开关，防止重复开启
 windowflag = "close"

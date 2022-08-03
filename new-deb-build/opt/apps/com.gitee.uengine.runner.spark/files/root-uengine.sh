@@ -2,15 +2,15 @@
 
 sudo apt install squashfs-tools
 
-mkdir -p ~/temp
-cd ~/temp
+mkdir -p /tmp/root-uengine
+cd /tmp/root-uengine
 echo "正在下载supersu"
-aria2c -x 16 -s 16 -d ~/temp http://supersuroot.org/downloads/SuperSU-v2.82-201705271822.zip
+aria2c -x 16 -s 16 -d /tmp/root-uengine http://supersuroot.org/downloads/SuperSU-v2.82-201705271822.zip
 cd ..
-mkdir -p ~/temp/work/dabao/extract/DEBIAN
+mkdir -p /tmp/root-uengine/work/dabao/extract/DEBIAN
 echo "正在解压supersu" 
-unzip ~/temp/SuperSU-v2.82-201705271822.zip -d ~/temp/work/su
-WORKDIR=~/temp/work
+unzip /tmp/root-uengine/SuperSU-v2.82-201705271822.zip -d /tmp/root-uengine/work/su
+WORKDIR=/tmp/root-uengine/work
 cd "$WORKDIR" 
 echo "正在下载uengine-android-image"
 apt download uengine-android-image
@@ -71,6 +71,6 @@ dpkg-deb -b extract/ build/
 cp build/*.deb ~/
 
 echo "正在清理垃圾" 
-sudo rm -rf ~/temp
+sudo rm -rf /tmp/root-uengine
 
 echo "已在用户主目录生成新的安装包，安装后重启即可生效" 

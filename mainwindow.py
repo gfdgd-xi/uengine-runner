@@ -25,10 +25,14 @@ import traceback
 import threading
 import webbrowser
 import subprocess
-import matplotlib
-import matplotlib.figure
-import matplotlib.pylab
-import matplotlib.font_manager
+map = True
+try:
+    import matplotlib
+    import matplotlib.figure
+    import matplotlib.pylab
+    import matplotlib.font_manager
+except:
+    map = False
 import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
@@ -162,8 +166,20 @@ class InstallApk(QtCore.QThread):
                     DisabledAndEnbled(False)
                     return
                 setting["SaveApk"] = False
-            print("start install apk2")
-            commandReturn = os.system("uengine install --apk='{}'".format(path))
+            if " " in path:
+                i = 0
+                while True:
+                    if os.path.exists(f"{os.path.dirname(path)}/install{i}.apk"):
+                        i += 1
+                        continue
+                    shutil.move(path, f"{os.path.dirname(path)}/install{i}.apk")
+                    print(f"uengine install --apk='{os.path.dirname(path)}/install{i}.apk'")
+                    commandReturn = os.system(f"uengine install --apk='{os.path.dirname(path)}/install{i}.apk'")
+                    shutil.move(f"{os.path.dirname(path)}/install{i}.apk", path)
+                    break
+            else:
+                print("uengine install --apk='{}'".format(path))
+                commandReturn = os.system("uengine install --apk='{}'".format(path))
             try:
                 if setting["SaveApk"]:
                     shutil.copy("/tmp/uengine-runner/bak.apk", path)
@@ -1008,9 +1024,9 @@ class SettingWindow():
         settingLayout.addWidget(SettingWindow.autoScreenConfig, 1, 1, 1, 1)
         settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
         settingLayout.addWidget(SettingWindow.chooseProgramType, 2, 1, 1, 1)
-        settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
-        settingLayout.addWidget(SettingWindow.theme, 2, 1, 1, 1)
-        settingLayout.addWidget(themeTry, 2, 2, 1, 1)
+        settingLayout.addWidget(QtWidgets.QLabel("程序主题："), 3, 0, 1, 1)
+        settingLayout.addWidget(SettingWindow.theme, 3, 1, 1, 1)
+        settingLayout.addWidget(themeTry, 3, 2, 1, 1)
         settingLayout.addLayout(controlFrame, 4, 1, 1, 2)
         controlFrame.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         controlFrame.addWidget(cancalButton)
@@ -1148,7 +1164,7 @@ class ApkInformation():
         tab1Layout = QtWidgets.QGridLayout()
         SaveApkIcon(path, "/tmp/uengine-runner-android-app-icon.png")
         simpleInformation = QtWidgets.QLabel(f"""
-<p align='center'><img src='/tmp/uengine-runner-android-app-icon.png'></p>
+<p align='center'><img width='256' src='/tmp/uengine-runner-android-app-icon.png'></p>
 <p>包名：{GetApkPackageName(path)}</p>
 <p>中文名：{GetApkChineseLabel(path)}</p>
 <p>Activity：{GetApkActivityName(path)}</p>
@@ -1156,6 +1172,7 @@ class ApkInformation():
 
         seeFen = QtWidgets.QPushButton("查看程序评分情况")
         updFen = QtWidgets.QPushButton("上传程序评分情况")
+        seeFen.setEnabled(map)
         seeFen.clicked.connect(ApkInformation.ShowMap)
         updFen.clicked.connect(ApkInformation.UpdateMark)
         tab1Layout.addWidget(simpleInformation, 0, 0, 1, 3)

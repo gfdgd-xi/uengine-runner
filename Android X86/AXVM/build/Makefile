@@ -54,10 +54,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../main.cpp \
 		../mainwindow.cpp \
-		../downloadthread.cpp moc_mainwindow.cpp
+		../downloadthread.cpp \
+		../getipserver.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		downloadthread.o \
+		getipserver.o \
 		moc_mainwindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -165,9 +167,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../../AXVM.pro ../mainwindow.h \
-		../downloadthread.h ../main.cpp \
+		../downloadthread.h \
+		../getipserver.h ../main.cpp \
 		../mainwindow.cpp \
-		../downloadthread.cpp
+		../downloadthread.cpp \
+		../getipserver.cpp
 QMAKE_TARGET  = AXVM
 DESTDIR       = 
 TARGET        = AXVM
@@ -407,8 +411,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mainwindow.h ../downloadthread.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../main.cpp ../mainwindow.cpp ../downloadthread.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../mainwindow.h ../downloadthread.h ../getipserver.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../main.cpp ../mainwindow.cpp ../downloadthread.cpp ../getipserver.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mainwindow.ui $(DISTDIR)/
 
 
@@ -477,11 +481,17 @@ main.o: ../main.cpp ../mainwindow.h \
 
 mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
 		../downloadthread.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../getipserver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 downloadthread.o: ../downloadthread.cpp ../downloadthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o downloadthread.o ../downloadthread.cpp
+
+getipserver.o: ../getipserver.cpp ../getipserver.h \
+		../mainwindow.h \
+		../downloadthread.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o getipserver.o ../getipserver.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

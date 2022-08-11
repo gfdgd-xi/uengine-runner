@@ -28,11 +28,13 @@ CONFIG += console
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    downloadthread.cpp
+    downloadthread.cpp \
+    getipserver.cpp
 
 HEADERS += \
         mainwindow.h \
-    downloadthread.h
+    downloadthread.h \
+    getipserver.h
 
 FORMS += \
         mainwindow.ui

@@ -22,7 +22,11 @@ public:
 
 private slots:
     void on_pushButton_2_clicked();
-    void ChangeValue();
+    //void OpenVM(QString vmName);
+    //void MessageBoxInfo(QString info);
+    //void MessageBoxError(QString info);
+
+    void on_centralWidget_destroyed();
 
 private:
     Ui::MainWindow *ui;

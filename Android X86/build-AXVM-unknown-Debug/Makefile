@@ -54,10 +54,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../AXVM/main.cpp \
 		../AXVM/mainwindow.cpp \
-		../AXVM/downloadthread.cpp moc_mainwindow.cpp
+		../AXVM/downloadthread.cpp \
+		../AXVM/getipserver.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		downloadthread.o \
+		getipserver.o \
 		moc_mainwindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -166,9 +168,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../AXVM/AXVM.pro ../AXVM/mainwindow.h \
-		../AXVM/downloadthread.h ../AXVM/main.cpp \
+		../AXVM/downloadthread.h \
+		../AXVM/getipserver.h ../AXVM/main.cpp \
 		../AXVM/mainwindow.cpp \
-		../AXVM/downloadthread.cpp
+		../AXVM/downloadthread.cpp \
+		../AXVM/getipserver.cpp
 QMAKE_TARGET  = AXVM
 DESTDIR       = 
 TARGET        = AXVM
@@ -410,8 +414,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../AXVM/mainwindow.h ../AXVM/downloadthread.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../AXVM/main.cpp ../AXVM/mainwindow.cpp ../AXVM/downloadthread.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../AXVM/mainwindow.h ../AXVM/downloadthread.h ../AXVM/getipserver.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../AXVM/main.cpp ../AXVM/mainwindow.cpp ../AXVM/downloadthread.cpp ../AXVM/getipserver.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../AXVM/mainwindow.ui $(DISTDIR)/
 
 
@@ -485,6 +489,11 @@ mainwindow.o: ../AXVM/mainwindow.cpp ../AXVM/mainwindow.h \
 
 downloadthread.o: ../AXVM/downloadthread.cpp ../AXVM/downloadthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o downloadthread.o ../AXVM/downloadthread.cpp
+
+getipserver.o: ../AXVM/getipserver.cpp ../AXVM/getipserver.h \
+		../AXVM/mainwindow.h \
+		../AXVM/downloadthread.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o getipserver.o ../AXVM/getipserver.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

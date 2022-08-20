@@ -64,11 +64,11 @@ void DownloadThread::run(){
     QNetworkAccessManager m;
     QNetworkRequest req;
     // 响应 https（就是不行）
-    QSslConfiguration conf = req.sslConfiguration();
-    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-    conf.setProtocol(QSsl::TlsV1_0);
-    req.setSslConfiguration(conf);
-    req.setUrl(QUrl(fileUrl));
+    //QSslConfiguration conf = req.sslConfiguration();
+    //conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+    //conf.setProtocol(QSsl::TlsV1_1);
+    //req.setSslConfiguration(conf);
+    req.setUrl(QUrl("https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/spark-wine7-devel-7.14.7z"));
     // 下载文件
     QNetworkReply *reply = m.get(req);
     QEventLoop loop;

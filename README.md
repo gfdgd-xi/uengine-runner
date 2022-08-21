@@ -301,6 +301,9 @@ make install
 | UEngine APK 打包器 | https://gitee.com/gfdgd-xi/uengine-apk-builder |
 | Root UEngine | https://gitee.com/Limexb/root-uengine |
 
+### UEngine 运行器的部分技术介绍
+可见：https://www.52pojie.cn/thread-1672077-1-1.html  
+
 ### 附测试生成图标无问题列表：
 **至于能不能用就不测试了，这暂时不是重点**  
 **现在新加了评分功能，就看大家的评分了！**  

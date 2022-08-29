@@ -26,13 +26,10 @@ import threading
 import webbrowser
 import subprocess
 map = True
-try:
-    import matplotlib
-    import matplotlib.figure
-    import matplotlib.pylab
-    import matplotlib.font_manager
-except:
-    map = False
+import matplotlib
+import matplotlib.figure
+import matplotlib.pylab
+import matplotlib.font_manager
 import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
@@ -139,6 +136,7 @@ class InstallApk(QtCore.QThread):
     def run(self):
         path = self.path
         quit = self.quit
+        # 将会强制改为拷贝安装，安装拷贝后的APK
         try:
             if not os.path.exists("/tmp/uengine-runner"):
                 os.makedirs("/tmp/uengine-runner")
@@ -159,32 +157,19 @@ class InstallApk(QtCore.QThread):
                 os.makedirs(iconSaveDir,exist_ok=True)
             SaveApkIcon(path, iconSavePath)
             try:
-                if setting["SaveApk"]:
-                    shutil.copy(path, "/tmp/uengine-runner/bak.apk")
+                shutil.copy(path, "/tmp/uengine-runner/bak.apk")
             except:
-                if QtWidgets.QMessageBox.critical(widget, "错误", "无法备份安装包，是否不备份安装包继续安装？\n提示：新版UEngine安装后会自动删除安装包") == QtWidgets.QMessageBox.No:
-                    DisabledAndEnbled(False)
-                    return
-                setting["SaveApk"] = False
-            if " " in path:
-                i = 0
-                while True:
-                    if os.path.exists(f"{os.path.dirname(path)}/install{i}.apk"):
-                        i += 1
-                        continue
-                    shutil.move(path, f"{os.path.dirname(path)}/install{i}.apk")
-                    print(f"uengine install --apk='{os.path.dirname(path)}/install{i}.apk'")
-                    commandReturn = os.system(f"uengine install --apk='{os.path.dirname(path)}/install{i}.apk'")
-                    shutil.move(f"{os.path.dirname(path)}/install{i}.apk", path)
-                    break
-            else:
-                print("uengine install --apk='{}'".format(path))
-                commandReturn = os.system("uengine install --apk='{}'".format(path))
-            try:
-                if setting["SaveApk"]:
-                    shutil.copy("/tmp/uengine-runner/bak.apk", path)
-            except:
-                self.error.emit(langFile[lang]["Main"]["MainWindow"]["Error"]["BackApkError"])
+                QtWidgets.QMessageBox.critical(widget, "错误", "无法备份安装包，无法继续安装！")
+                DisabledAndEnbled(False)
+                return
+            print(f"uengine install --apk='/tmp/uengine-runner/bak.apk'")
+            commandReturn = os.system(f"uengine install --apk='/tmp/uengine-runner/bak.apk'")
+            # 因为安装的是备份包，所以不需要再拷贝回去了（应该也没了）
+            #try:
+            #    if setting["SaveApk"]:
+            #        shutil.copy("/tmp/uengine-runner/bak.apk", path)
+            #except:
+            #    self.error.emit(langFile[lang]["Main"]["MainWindow"]["Error"]["BackApkError"])
             if commandReturn != 0:
                 self.error.emit("疑似 APK 安装失败，请检查 UEngine 是否正常安装、运行以及 APK 文件是否正确、完整")
                 DisabledAndEnbled(False)
@@ -1018,8 +1003,8 @@ class SettingWindow():
         cancalButton = QtWidgets.QPushButton("取消")
         okButton = QtWidgets.QPushButton("保存")
 
-        settingLayout.addWidget(QtWidgets.QLabel("APK 安装模式："), 0, 0, 1, 1)
-        settingLayout.addWidget(SettingWindow.saveApkOption, 0, 1, 1, 1)
+        #settingLayout.addWidget(QtWidgets.QLabel("APK 安装模式："), 0, 0, 1, 1)
+        #settingLayout.addWidget(SettingWindow.saveApkOption, 0, 1, 1, 1)
         settingLayout.addWidget(QtWidgets.QLabel("窗口大小策略："), 1, 0, 1, 1)
         settingLayout.addWidget(SettingWindow.autoScreenConfig, 1, 1, 1, 1)
         settingLayout.addWidget(QtWidgets.QLabel("程序分类策略："), 2, 0, 1, 1)
@@ -1534,25 +1519,26 @@ if not os.path.exists(get_home() + "/.config/uengine-runner/SaveApkIcon.json"): 
 if not os.path.exists(get_home() + "/.config/uengine-runner/SaveApk.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/uengine-runner/SaveApk.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
 if not os.path.exists(get_home() + "/.config/uengine-runner/setting.json"):
-    choosemsg = QtWidgets.QMessageBox()
-    choosemsg.setText("""在使用本程序前，请选择安装Apk包的设置以便更好的运行，下列选项的详细介绍：
-
-不备份Apk包直接安装：适用于Deepin（旧版UEngine），安装较快，不受/tmp大小所限，但Deepin23和UOS（新版UEngine）不推荐此选项，因为安装后会自动删除Apk安装包；
-备份Apk包然后在安装后自动拷贝原先目录：适用于Deepin23和UOS（新版UEngine），安装较慢，受/tmp大小所限，安装后不会丢失Apk，Deepin（旧版UEngine）不推荐使用该选项；
-
-
-后期可以在程序主界面的菜单栏的“程序”=>“设置”里进行修改，
-如果不知道正在使用的系统是什么版本可以打开系统设置查看。
-""")
-    choosemsg.setWindowTitle("设置")
-    choose = None
-    choosemsg.addButton("不备份Apk包直接安装", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: BackAPK(0))
-    choosemsg.addButton("备份Apk包然后在安装后自动拷贝原先目录", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: BackAPK(1))
-    choosemsg.exec_()
-    if choose == None:
-        QtWidgets.QMessageBox.information(None, "提示", "必须选择一个选项！否则无法进入程序！")
-        sys.exit()            
-    write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": int(choose)}))
+    write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": int(1)}))
+#    choosemsg = QtWidgets.QMessageBox()
+#    choosemsg.setText("""在使用本程序前，请选择安装Apk包的设置以便更好的运行，下列选项的详细介绍：
+#
+#不备份Apk包直接安装：适用于Deepin（旧版UEngine），安装较快，不受/tmp大小所限，但Deepin23和UOS（新版UEngine）不推荐此选项，因为安装后会自动删除Apk安装包；
+#备份Apk包然后在安装后自动拷贝原先目录：适用于Deepin23和UOS（新版UEngine），安装较慢，受/tmp大小所限，安装后不会丢失Apk，Deepin（旧版UEngine）不推荐使用该选项；
+#
+#
+#后期可以在程序主界面的菜单栏的“程序”=>“设置”里进行修改，
+#如果不知道正在使用的系统是什么版本可以打开系统设置查看。
+#""")
+#    choosemsg.setWindowTitle("设置")
+#    choose = None
+#    choosemsg.addButton("不备份Apk包直接安装", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: BackAPK(0))
+#    choosemsg.addButton("备份Apk包然后在安装后自动拷贝原先目录", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: BackAPK(1))
+#    choosemsg.exec_()
+#    if choose == None:
+#        QtWidgets.QMessageBox.information(None, "提示", "必须选择一个选项！否则无法进入程序！")
+#        sys.exit()            
+#    write_txt(get_home() + "/.config/uengine-runner/setting.json", json.dumps({"SaveApk": int(choose)}))
 defultProgramList = {
     "SaveApk": 1,
     "AutoScreenConfig": False,

@@ -7,6 +7,6 @@ Icon=/opt/apps/com.gitee.uengine.runner.spark/files/menu.svg
 MimeType=
 Name=UEngine App List
 Name[zh]=UEngine 程序菜单
-StartupWMClass=UEngine 程序菜单
+StartupWMClass=uengine-runner-applist-launch.sh
 Terminal=false
 Type=Application

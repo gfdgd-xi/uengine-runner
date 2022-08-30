@@ -19,6 +19,8 @@ build:
 	cp -rv uengine-app-setting.py               new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv uengine-app-install                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv uengine_logo.svg                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv defult.svg                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	
 	cp -rv runner.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv root-uengine.sh                      new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv menu.svg                             new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
@@ -32,10 +34,10 @@ build:
 	dpkg -b new-deb-build com.gitee.uengine.runner.spark.deb
 
 install:
-	make build
+	make build	
 	echo "Install..."
 	sudo apt update
-	sudo dpkg -i com.gitee.uengine.runner.spark.deb
+	sudo dpkg -i com.gitee.uengine.runner.spark.deb ; true
 	sudo apt install -f
 
 depend:

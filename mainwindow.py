@@ -491,11 +491,11 @@ def SaveApkIcon(apkFilePath, iconSavePath)->"保存 apk 文件的图标":
                         saveIconFile.write(iconData)
                         return
         print("None Icon! Show defult icon")
-        shutil.copy(programPath + "/defult.png", iconSavePath)
+        shutil.copy(programPath + "/defult.svg", iconSavePath)
     except:
         traceback.print_exc()
         print("Error, show defult icon")
-        shutil.copy(programPath + "/defult.png", iconSavePath)
+        shutil.copy(programPath + "/defult.svg", iconSavePath)
 
 def saveicon():
     global temppath
@@ -1078,7 +1078,7 @@ class UpdateWindow():
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
         try:
-            UpdateWindow.data = json.loads(requests.get("http://120.25.153.144/uengine-runner/update.json").text)
+            UpdateWindow.data = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/update.json").text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText("此为最新版本，无需更新")
@@ -1217,7 +1217,7 @@ class ApkInformation():
         if choose == None or choose == 7:
             return
         try:
-            QtWidgets.QMessageBox.critical(widget, "提示", requests.post("http://120.25.153.144/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
+            QtWidgets.QMessageBox.information(widget, "提示", requests.post("https://304626p927.goho.co/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerStarError"])
@@ -1229,7 +1229,7 @@ class ApkInformation():
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
-            data = json.loads(requests.get("http://120.25.153.144/uengine-runner/app/check/" + package +"/data.json").text)
+            data = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/app/check/" + package +"/data.json").text)
             print(data)
         except:
             QtWidgets.QMessageBox.information(widget, "提示", "此程序暂时没有评分，欢迎您贡献第一个评分！")
@@ -1569,7 +1569,7 @@ findApkNameHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runn
 findApkActivityHistory = list(json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkActivityHistory.json")).values())
 
 try:
-    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3VlbmdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vdWVuZ2luZS1ydW5uZXIvb3Blbi9JbnN0YWxsLnBocA==").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
 # add sub window
@@ -1577,10 +1577,10 @@ except:
 windowflag = "close"
 def Egg():
     try:
-        lists = json.loads(requests.get("http://120.25.153.144/uengine-runner/VersionList.json").text)
+        lists = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/VersionList.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("http://120.25.153.144/uengine-runner/{}/data.txt".format(i)).text))
+            data.append(int(requests.get("https://304626p927.goho.co/uengine-runner/{}/data.txt".format(i)).text))
     except:
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return

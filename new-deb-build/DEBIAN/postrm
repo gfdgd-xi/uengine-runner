@@ -1,19 +1,19 @@
 #!/bin/sh 
 # 删除软链接
-rm -fv /usr/bin/uengine-runner
-rm -fv /usr/bin/uengine-apk-builder
-rm -fv /usr/bin/uengine-app-uninstall
-rm -fv /usr/bin/uengine-app-install
-rm -fv /usr/bin/uengine-clean
-rm -fv /usr/bin/uengine-runner-about
-rm -fv /usr/bin/uengine-keyboard
-rm -fv /usr/bin/uengine-useadb
-rm -fv /usr/bin/uengine-runner-launch.sh
-rm -fv /usr/bin/uengine-runner-update-bug
-rm -fv /usr/bin/uengine-root
-rm -frv /opt/apps/com.gitee.uengine.runner.spark/files/api/__pycache__
-rm -frv /opt/apps/com.gitee.uengine.runner.spark/files/__pycache__
-rm -fv /usr/bin/uengine-runner-applist-launch.sh
+rm -f /usr/bin/uengine-runner
+rm -f /usr/bin/uengine-apk-builder
+rm -f /usr/bin/uengine-app-uninstall
+rm -f /usr/bin/uengine-app-install
+rm -f /usr/bin/uengine-clean
+rm -f /usr/bin/uengine-runner-about
+rm -f /usr/bin/uengine-keyboard
+rm -f /usr/bin/uengine-useadb
+rm -f /usr/bin/uengine-runner-launch.sh
+rm -f /usr/bin/uengine-runner-update-bug
+rm -f /usr/bin/uengine-root
+rm -fr /opt/apps/com.gitee.uengine.runner.spark/files/api/__pycache__
+rm -fr /opt/apps/com.gitee.uengine.runner.spark/files/__pycache__
+rm -f /usr/bin/uengine-runner-applist-launch.sh
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true

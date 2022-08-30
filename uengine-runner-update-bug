@@ -27,7 +27,7 @@ def Update(name, stars, contact, things, version):
         "Version": version
     }
     try:
-        QtWidgets.QMessageBox.information(widget, "提示", requests.post(parse.unquote(base64.b64decode("aHR0cCUzQS8vMTIwLjI1LjE1My4xNDQvdWVuZ2luZS1ydW5uZXIvYnVnL3VwbG9hZC5waHA=").decode("utf-8")), data=data).text)
+        QtWidgets.QMessageBox.information(widget, "提示", requests.post(parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vdWVuZ2luZS1ydW5uZXIvYnVnL3VwbG9hZC5waHA=").decode("utf-8")), data=data).text)
         print(data)
     except:
         traceback.print_exc()

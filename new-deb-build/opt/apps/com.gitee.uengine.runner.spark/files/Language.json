@@ -160,6 +160,7 @@
             "button2": "浏览",
             "button3": " 打包",
             "check": "使用前缀“uengine-dc”",
+            "size": "从 UEngine 导入程序大小设置（如果有设置）",
             "Menu": [
                 {
                     "Name": "程序",
@@ -330,6 +331,7 @@
             "button2": "Find",
             "button3": " Build",
             "check": "Use Prefix With \"uengine-dc\"",
+            "size": "Add Android Program Size Setting From UEngine (If you're setting)",
             "Menu": [
                 {
                     "Name": "Program",

@@ -1,12 +1,12 @@
 <p width=100px align="center"><img src="runner.svg"></p>
-<h1 align="center">UEngine 运行器 1.8.0</h1>
+<h1 align="center">UEngine 运行器 1.8.1</h1>
 <hr>
 
 ### 介绍
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
-![image.png](https://storage.deepin.org/thread/202207271700065629_image.png)
+![image.png](https://storage.deepin.org/thread/202208302154473781_image.png)  
 
-（测试平台：UOS 家庭版 21.3，deepin 20.6,UOS 专业版 1040）
+（测试平台：UOS 家庭版 21.3.1，deepin 20.6,UOS 专业版 1050）
 
 ## 安装前必读
 + **UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版或者在程序设置里面选择“备份APK包然后在安装后自动拷贝原先目录”选项**  
@@ -37,6 +37,14 @@ sudo apt upgrade
 
 
 ### 更新内容
+#### V1.8.1（2022年08月30日）
+**※1、修复在 APK 详细信息中图标可能过大导致无法正常使用的问题**  
+**※2、修复 APK 路径带空格无法正常安装的问题**  
+3、修复打包器打包的 APK 带下划线“_”无法正常打包的问题  
+4、修复打包器下方命令返回过多空白行的问题  
+5、修复程序生成的默认图标任然是旧版图标的问题  
+![image.png](https://storage.deepin.org/thread/202208302154473781_image.png)  
+
 #### V1.8.0（2022年07月27日）
 **※1、程序界面大部分由 Tkinter 转 PyQt5**  
 **※2、添加了自动/手动配置 UEngine 窗口大小文件（自动需要在设置里手动开启，配置窗口的配置文件需要 Root）**  

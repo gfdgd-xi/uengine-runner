@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>
-<h1 align="center">UEngine 运行器 1.8.1</h1>
+<h1 align="center">UEngine 运行器 1.8.1-1</h1>
 <hr>
 
 ### 介绍
@@ -37,6 +37,11 @@ sudo apt upgrade
 
 
 ### 更新内容
+#### V1.8.1-1（2022年09月03日）
+**※1、修复缺失依赖 python3-matplotlib 导致程序无法开启的问题**  
+**※2、移除在 Ubuntu 上用于安装 UEngine 的安装工具**  
+**※3、解决了未输入密码自动回车的 bug**  
+
 #### V1.8.1（2022年08月30日）
 **※1、修复在 APK 详细信息中图标可能过大导致无法正常使用的问题**  
 **※2、修复 APK 路径带空格无法正常安装的问题**  

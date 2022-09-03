@@ -20,6 +20,7 @@ import numpy
 import base64
 import shutil
 import zipfile
+import platform
 import requests
 import traceback
 import threading
@@ -35,6 +36,18 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from getxmlimg import getsavexml
+
+def PythonLower():
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", "Python 至少需要 3.6 及以上版本，目前版本：" + platform.python_version() + "")
+    sys.exit(1)
+
+# Python 版本检测，因为 f-string 格式化要至少 Python 3.6 及以上的版本，所以需要检测
+# 判断主版本号
+if sys.version_info[0] > 3:
+    PythonLower()
+if sys.version_info[1] < 6:
+    PythonLower()
 
 class UninstallProgram(QtCore.QThread):
     info = QtCore.pyqtSignal(str)

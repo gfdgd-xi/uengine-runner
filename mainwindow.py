@@ -1659,10 +1659,13 @@ if not os.path.exists("/usr/bin/uengine"):
             os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"pkexec apt install uengine -y\"")
             sys.exit(0)
     # 非 Deepin/UOS 用户
+    # 因为安装器出现问题，所以废弃
     else:
-        if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
-            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
-            sys.exit(0)
+        QtWidgets.QMessageBox.critical(None, "错误", "请安装 UEngine 后继续")
+        sys.exit(0)
+        #if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
+        #    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+        #    sys.exit(0)
 
 ###########################
 # 窗口创建
@@ -1820,6 +1823,7 @@ uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["M
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
+uengineUbuntuInstall.setDisabled(True)
 # 绑定信号
 uengineAllowOrDisallowUpdateAndroidApp.triggered.connect(AllowOrDisallowUpdateAndroidApp)
 uengineSetHttpProxy.triggered.connect(SetHttpProxy)

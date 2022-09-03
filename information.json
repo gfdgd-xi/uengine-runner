@@ -5,7 +5,7 @@
 		"https://github.com/gfdgd-xi/uengine-runner",
         "https://gitlink.org.cn/gfdgd_xi/uengine-runner"
     ],
-    "Version": "1.8.1",
+    "Version": "1.8.1-1",
     "System": "Linux（deepin/UOS）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis 或程序的更多帮助",
@@ -23,6 +23,10 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "<b>V1.8.1-1：</b>",
+	    "※1、修复缺失依赖 python3-matplotlib 导致程序无法开启的问题",
+        "※2、移除在 Ubuntu 上用于安装 UEngine 的安装工具",
+	    "",
         "<b>V1.8.1：</b>",
         "※1、修复在 APK 详细信息中图标可能过大导致无法正常使用的问题",
         "※2、修复 APK 路径带空格无法正常安装的问题",

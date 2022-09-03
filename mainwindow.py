@@ -423,16 +423,16 @@ def InstallRootUengineImage():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
 
 def UengineUbuntuInstall():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"bash '{programPath + '/uengine-installer'}'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
 
 def UbuntuInstallUengine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"bash '{programPath + '/uengine-installer'}'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
 
 def BuildRootUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"bash '{programPath}/root-uengine.sh'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath}/root-uengine.sh'"]).start()
     
 def ReinstallUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e ''pkexec apt reinstall uengine-android-image -y"]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e pkexec apt reinstall uengine-android-image -y"]).start()
 
 
 # 生成 uengine 启动文件到桌面

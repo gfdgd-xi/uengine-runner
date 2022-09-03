@@ -411,23 +411,29 @@ def GetApkPackageName(apkFilePath: "apk 所在路径")->"获取 apk 包名":
             line = line.replace(" ", "")
             return line
 
+'''
+Bail修改：
+将以下5个函数的deepin-terminal的"-C"参数改为"-e"，
+解决了BuildRootUengineImage()函数未输入密码自动回车的bug
+'''
 def InstallRootUengineImage():
     if not os.path.exists:
         os.mkdir("/tmp/uengine-runner")
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
 
 def UengineUbuntuInstall():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath + '/uengine-installer'}'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"bash '{programPath + '/uengine-installer'}'\""]).start()
 
 def UbuntuInstallUengine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath + '/uengine-installer'}'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"bash '{programPath + '/uengine-installer'}'\""]).start()
 
 def BuildRootUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/root-uengine.sh'\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"bash '{programPath}/root-uengine.sh'\""]).start()
     
 def ReinstallUengineImage():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e ''pkexec apt reinstall uengine-android-image -y"]).start()
+
 
 # 生成 uengine 启动文件到桌面
 def BuildUengineDesktop(packageName: "软件包名", activityName: "activity", showName: "显示名称", iconPath: "程序图标所在目录", savePath:".desktop 文件保存路径", choose="")->"生成 uengine 启动文件到桌面":

@@ -14,6 +14,27 @@ rm -f /usr/bin/uengine-root
 rm -fr /opt/apps/com.gitee.uengine.runner.spark/files/api/__pycache__
 rm -fr /opt/apps/com.gitee.uengine.runner.spark/files/__pycache__
 rm -f /usr/bin/uengine-runner-applist-launch.sh
+# 删除软件配置文件（只限“purge”）
+# 配置目录：~/.config/uengine-runner
+if [ "$1" = "purge" ]; then
+
+	echo "清理程序配置文件"
+
+	for username in $(ls /home); do
+		echo /home/$username
+		if [ -d "/home/$username/.config/uengine-runner/" ]; then
+			rm -rf "/home/$username/.config/uengine-runner/"
+		fi
+	done
+	# 清理 root 用户的配置文件
+	echo /root
+	if [ -d "/root/.config/uengine-runner/" ]; then
+		rm -rf "/root/.config/uengine-runner/"
+	fi
+else
+	echo "非 purge，跳过清理"
+fi
+
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true

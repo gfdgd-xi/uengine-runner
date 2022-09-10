@@ -1386,18 +1386,18 @@ class AddNewUengineDesktopLink():
     # 添加快捷方式
     def SaveDesktopLink():
         try:
-            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
+            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
                 if QtWidgets.QMessageBox.question(widget, "提示", "文件已存在，是否要覆盖？") == QtWidgets.QMessageBox.No:
                     return
             if not os.path.exists("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home())):
                 os.makedirs("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home()))
             global activityName
-            iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.get())
+            iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.text())
             shutil.copy(programPath + "/defult.png", iconSavePath)
-            BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
-                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
-            BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
-                "{}/{}.desktop".format(get_desktop_path(), packageName.get()))
+            BuildUengineDesktop(packageName.text(), activityName, packageName.text(), iconSavePath,
+                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
+            BuildUengineDesktop(packageName.text(), activityName, packageName.text(), iconSavePath,
+                "{}/{}.desktop".format(get_desktop_path(), packageName.text()))
             AddNewUengineDesktopLink.SaveHistory()
             QtWidgets.QMessageBox.information(widget, "提示", "创建完毕！")
         except:
@@ -1409,13 +1409,13 @@ class AddNewUengineDesktopLink():
     def DelDesktopLink():
         try:
             global packageName
-            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
+            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
                 QtWidgets.QMessageBox.critical(widget, "错误", "此包名对应的 UEngine 桌面快捷方式不存在！")
                 return
             if QtWidgets.QMessageBox.warning(widget, "警告", "你确定要删除吗？删除后将无法恢复！", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel) == QtWidgets.QMessageBox.Cancel:
                 return
             try:
-                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
+                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
                 AddNewUengineDesktopLink.SaveHistory()
                 QtWidgets.QMessageBox.information(widget, "提示", "已删除")
             except:

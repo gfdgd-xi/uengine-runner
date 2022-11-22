@@ -44,7 +44,7 @@ def PythonLower():
 
 # Python 版本检测，因为 f-string 格式化要至少 Python 3.6 及以上的版本，所以需要检测
 # 判断主版本号
-if sys.version_info[0] > 3:
+if sys.version_info[0] < 3:
     PythonLower()
 if sys.version_info[1] < 6:
     PythonLower()

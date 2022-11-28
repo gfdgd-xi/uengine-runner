@@ -1,7 +1,7 @@
 Package: com.gitee.uengine.runner.spark
 Source: com.gitee.uengine.runner.spark
 Replaces: spark-uengine-runner, com.gitee.uengine.runner.spark.ubuntu
-Version: 1.8.2
+Version: 1.8.2-uos
 Architecture: all
 Section: utils
 Installed-Size: 1600
@@ -12,10 +12,11 @@ Priority: optional
 Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu
 Homepage: [https://gitee.com/gfdgd-xi/uengine-runner, https://github.com/gfdgd-xi/uengine-runner, https://www.gitlink.org.cn/gfdgd_xi/uengine-runner]
 Description: UEngine 运行器，1.8.2 更新内容：
- 1、修复依赖缺失导致程序无法开启的问题
- 1.8.1更新内容：
- ※1、修复在 APK 详细信息中图标可能过大导致无法正常使用的问题
- ※2、修复 APK 路径带空格无法正常安装的问题
- 3、修复打包器打包的 APK 带下划线“_”无法正常打包的问题
- 4、修复打包器下方命令返回过多空白行的问题
+ ※1、重新恢复 uengine-installer For Ubuntu
+ ※2、修复 postrm 的问题
+ ※3、修复“添加UEngine应用快捷方式出现问题”的问题
+ ※4、修复打包器无参数问题
+ ※5、打包器默认勾选“使用 uengine-dc 前缀”
+ 6、修复Python主版本号判断时潜在的问题（By Bail）
+ 7、新增部分资源入口
  开发/参与者：gfdgd xi <3025613752@qq.com>, actionchen<917981399@qq.com>, 柚子<https://gitee.com/Limexb>, 为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>, 星空露光<https://gitee.com/Cynorkyle>, shenmo<jifengshenmo@outlook.com>

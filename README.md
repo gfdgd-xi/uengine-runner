@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>
-<h1 align="center">UEngine 运行器 1.8.1-1</h1>
+<h1 align="center">UEngine 运行器 1.8.2</h1>
 <hr>
 
 ### 介绍
@@ -37,6 +37,16 @@ sudo apt upgrade
 
 
 ### 更新内容
+#### V1.8.2（2022年11月28日）
+**※1、重新恢复 uengine-installer For Ubuntu**  
+**※2、修复 postrm 的问题**  
+**※3、修复“添加UEngine应用快捷方式出现问题”的问题**  
+**※4、修复打包器无参数问题**  
+**※5、打包器默认勾选“使用 uengine-dc 前缀”**  
+6、修复Python主版本号判断时潜在的问题（By Bail）  
+7、新增部分资源入口  
+![image.png](https://storage.deepin.org/thread/202211282224306611_image.png)
+
 #### V1.8.1-1（2022年09月03日）
 **※1、修复缺失依赖 python3-matplotlib 导致程序无法开启的问题**  
 **※2、移除在 Ubuntu 上用于安装 UEngine 的安装工具**  

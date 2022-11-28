@@ -20,6 +20,7 @@ import numpy
 import base64
 import shutil
 import zipfile
+import platform
 import requests
 import traceback
 import threading
@@ -35,6 +36,18 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from getxmlimg import getsavexml
+
+def PythonLower():
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", "Python 至少需要 3.6 及以上版本，目前版本：" + platform.python_version() + "")
+    sys.exit(1)
+
+# Python 版本检测，因为 f-string 格式化要至少 Python 3.6 及以上的版本，所以需要检测
+# 判断主版本号
+if sys.version_info[0] < 3:
+    PythonLower()
+if sys.version_info[1] < 6:
+    PythonLower()
 
 class UninstallProgram(QtCore.QThread):
     info = QtCore.pyqtSignal(str)
@@ -1373,18 +1386,18 @@ class AddNewUengineDesktopLink():
     # 添加快捷方式
     def SaveDesktopLink():
         try:
-            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
+            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
                 if QtWidgets.QMessageBox.question(widget, "提示", "文件已存在，是否要覆盖？") == QtWidgets.QMessageBox.No:
                     return
             if not os.path.exists("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home())):
                 os.makedirs("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home()))
             global activityName
-            iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.get())
+            iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.text())
             shutil.copy(programPath + "/defult.png", iconSavePath)
-            BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
-                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
-            BuildUengineDesktop(packageName.get(), activityName, packageName.get(), iconSavePath,
-                "{}/{}.desktop".format(get_desktop_path(), packageName.get()))
+            BuildUengineDesktop(packageName.text(), activityName, packageName.text(), iconSavePath,
+                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
+            BuildUengineDesktop(packageName.text(), activityName, packageName.text(), iconSavePath,
+                "{}/{}.desktop".format(get_desktop_path(), packageName.text()))
             AddNewUengineDesktopLink.SaveHistory()
             QtWidgets.QMessageBox.information(widget, "提示", "创建完毕！")
         except:
@@ -1396,13 +1409,13 @@ class AddNewUengineDesktopLink():
     def DelDesktopLink():
         try:
             global packageName
-            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get())):
+            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
                 QtWidgets.QMessageBox.critical(widget, "错误", "此包名对应的 UEngine 桌面快捷方式不存在！")
                 return
             if QtWidgets.QMessageBox.warning(widget, "警告", "你确定要删除吗？删除后将无法恢复！", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel) == QtWidgets.QMessageBox.Cancel:
                 return
             try:
-                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.get()))
+                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
                 AddNewUengineDesktopLink.SaveHistory()
                 QtWidgets.QMessageBox.information(widget, "提示", "已删除")
             except:
@@ -1667,11 +1680,11 @@ if not os.path.exists("/usr/bin/uengine"):
     # 非 Deepin/UOS 用户
     # 因为安装器出现问题，所以废弃
     else:
-        QtWidgets.QMessageBox.critical(None, "错误", "请安装 UEngine 后继续")
-        sys.exit(0)
-        #if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
-        #    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
-        #    sys.exit(0)
+        #QtWidgets.QMessageBox.critical(None, "错误", "请安装 UEngine 后继续")
+        #sys.exit(0)
+        if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
+            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            sys.exit(0)
 
 ###########################
 # 窗口创建
@@ -1829,7 +1842,7 @@ uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["M
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
-uengineUbuntuInstall.setDisabled(True)
+#uengineUbuntuInstall.setDisabled(True)
 # 绑定信号
 uengineAllowOrDisallowUpdateAndroidApp.triggered.connect(AllowOrDisallowUpdateAndroidApp)
 uengineSetHttpProxy.triggered.connect(SetHttpProxy)
@@ -1912,12 +1925,18 @@ uengineBuildRootUengineImage.triggered.connect(BuildRootUengineImage)
 uengineReinstallUengineImage.triggered.connect(ReinstallUengineImage)
 
 helpOpenProgramUrl = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0])
+makerWebsize = QtWidgets.QAction("作者个人站")
+helpForum = QtWidgets.QAction("程序论坛")
+uengineRunnerSearch = QtWidgets.QAction("查询指定程序在 UEngine 的运行情况")
 helpUengineRunnerBugUpload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2])
 helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4])
 helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
 helpAbout = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
 helpAboutQt = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
 help.addAction(helpOpenProgramUrl)
+help.addAction(uengineRunnerSearch)
+help.addAction(makerWebsize)
+help.addAction(helpForum)
 help.addAction(helpUengineRunnerBugUpload)
 help.addAction(helpShowHelp)
 help.addAction(helpRunnerUpdate)
@@ -1929,6 +1948,9 @@ hm1.addAction(hm1_1)
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner"))
 # 绑定信号
 helpOpenProgramUrl.triggered.connect(OpenProgramURL)
+uengineRunnerSearch.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/uengine-runner-info/"))
+makerWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io"))
+helpForum.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
 helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
 helpShowHelp.triggered.connect(ShowHelp)
 helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)

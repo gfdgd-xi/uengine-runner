@@ -289,8 +289,9 @@ make install
 | 网易云音乐 For Android | https://music.163.com/#/download |
 | 抖音 | https://www.wandoujia.com/apps/7461948 |
 | 360 手机浏览器 | https://mse.360.cn/ |
-| E-Go | 忘了 |
+| E-Go | http://www.xiaojump.com/ |
 | 其他待测试…… | 其他待测试…… |
+Hyperbowl是电脑游戏，如果是手机版应该是HyperBowl Classic，但没官网
 **注意：提取不出图标不代表未安装成功！**
 
 
@@ -327,10 +328,10 @@ make install
 | 微信 | https://weixin.qq.com |
 | 百度翻译 | https://fanyi.baidu.com/appdownload/download.html |
 | 百度网盘 | https://pan.baidu.com |
-| 腾讯课堂 | 忘了 |
-| 抖音极速版 | 忘了 |
-| 豌豆荚 | 忘了 |
-| 小猿口算 | 忘了 |
+| 腾讯课堂 | https://ke.qq.com/download/app.html |
+| 抖音极速版 | https://www.douyin.com/downloadpage/app |
+| 豌豆荚 | https://www.wandoujia.com/ |
+| 小猿口算 | http://kousuan.yuanfudao.com/ |
 | Hyperbowl | 忘了 |
 | bilibili | https://d.bilibili.com/download_app.html?bsource=app_bili |
 | 蓝奏云 | https://up.woozooo.com/lanzouh5.apk |

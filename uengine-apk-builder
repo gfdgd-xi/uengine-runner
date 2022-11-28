@@ -468,6 +468,7 @@ exitProgram = QtWidgets.QAction(langFile[lang]["Uengine Apk Builder"]["Menu"][0]
 exitProgram.triggered.connect(window.close)
 programmenu.addAction(exitProgram)
 #
+check.setChecked(True)
 frame2.addWidget(check)
 frame2.addWidget(sizes)
 frame2.addWidget(button3)
@@ -476,5 +477,9 @@ window.setWindowTitle(title)
 window.setCentralWidget(widget)
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.resize(window.frameSize().width() * 1.3, window.frameSize().height() * 1.1)
+try:
+    combobox1.setCurrentText(sys.argv[1])
+except:
+    print("无参数")
 window.show()
 sys.exit(app.exec_())

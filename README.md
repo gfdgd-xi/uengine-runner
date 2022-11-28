@@ -323,9 +323,9 @@ make install
 | 程序 | 下载链接 |
 |:-:|:-:|
 | QQ 全家桶（完整版、极速版、Android Pad 版） | https://im.qq.com |
-| TIM | 忘了 |
+| TIM | https://office.qq.com/download.html |
 | 微信 | https://weixin.qq.com |
-| 百度翻译 | 忘了 |
+| 百度翻译 | https://fanyi.baidu.com/appdownload/download.html |
 | 百度网盘 | https://pan.baidu.com |
 | 腾讯课堂 | 忘了 |
 | 抖音极速版 | 忘了 |

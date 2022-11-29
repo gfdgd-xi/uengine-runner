@@ -302,7 +302,7 @@ make install
 | 360 手机浏览器 | https://mse.360.cn/ |
 | E-Go | http://www.xiaojump.com/ |
 | 其他待测试…… | 其他待测试…… |
-Hyperbowl是电脑游戏，如果是手机版应该是HyperBowl Classic，但没官网
+
 **注意：提取不出图标不代表未安装成功！**
 
 
@@ -343,7 +343,7 @@ Hyperbowl是电脑游戏，如果是手机版应该是HyperBowl Classic，但没
 | 抖音极速版 | https://www.douyin.com/downloadpage/app |
 | 豌豆荚 | https://www.wandoujia.com/ |
 | 小猿口算 | http://kousuan.yuanfudao.com/ |
-| Hyperbowl | 忘了 |
+| Hyperbowl | 忘了/无 |
 | bilibili | https://d.bilibili.com/download_app.html?bsource=app_bili |
 | 蓝奏云 | https://up.woozooo.com/lanzouh5.apk |
 | QQ 音乐（完整版、Android Pad 版、TV 版、车载版） | https://y.qq.com/download/index.html |

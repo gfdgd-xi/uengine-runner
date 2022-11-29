@@ -1,7 +1,7 @@
 Package: com.gitee.uengine.runner.spark
 Source: com.gitee.uengine.runner.spark
 Replaces: spark-uengine-runner, com.gitee.uengine.runner.spark.ubuntu
-Version: 1.8.2-uos
+Version: 1.8.2-spark
 Architecture: all
 Section: utils
 Installed-Size: 1600

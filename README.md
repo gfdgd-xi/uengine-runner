@@ -6,7 +6,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。  
 ![image.png](https://storage.deepin.org/thread/202208302154473781_image.png)  
 
-（测试平台：UOS 家庭版 21.3.1，deepin 20.6,UOS 专业版 1050）
+（测试平台：UOS 家庭版 21.3.1，deepin 20.6,UOS 专业版 1050）   
+[![star](https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/uengine-runner/stargazers)  
 
 ## 安装前必读
 + **UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版或者在程序设置里面选择“备份APK包然后在安装后自动拷贝原先目录”选项**  
@@ -351,5 +352,5 @@ Hyperbowl是电脑游戏，如果是手机版应该是HyperBowl Classic，但没
 | 360 手机助手 | http://sj.360.cn/index.html |
 | WPS Office For Android | https://www.wps.cn/ |
 | 钉钉 for android | https://page.dingtalk.com/wow/dingtalk/act/download?spm=a3140.8196062.0.0.6f4c5c3dWBhYUM |
-
-### ©2021-2022
+[![star](https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/uengine-runner/stargazers)    
+### ©2021-Now

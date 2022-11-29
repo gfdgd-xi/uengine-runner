@@ -10,7 +10,6 @@
 ![image.png](https://storage.deepin.org/thread/202208302154473781_image.png)
 
 （测试平台：UOS 家庭版 21.3.1，deepin 20.6,UOS 专业版 1050）
-[![star](https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/uengine-runner/stargazers)
 
 ## 安装前必读
 

@@ -405,6 +405,5 @@ make install
 |                                                          360 手机助手                                                          |                               http://sj.360.cn/index.html                               |
 |                                                     WPS Office For Android                                                     |                                   https://www.wps.cn/                                   |
 |                                                        钉钉 for android                                                        | https://page.dingtalk.com/wow/dingtalk/act/download?spm=a3140.8196062.0.0.6f4c5c3dWBhYUM |
-| [![star](https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/uengine-runner/stargazers) |                                                                                          |
 
 ### ©2021-Now

@@ -20,7 +20,7 @@ build:
 	cp -rv uengine-app-install                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv uengine_logo.svg                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv defult.svg                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
-	
+	cp -rv defult.png                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv runner.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv root-uengine.sh                      new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv menu.svg                             new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/

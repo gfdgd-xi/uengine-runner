@@ -293,6 +293,7 @@ def GetApkActivityName(apkFilePath):
             line = line.replace("label=", "")
             line = line.replace("icon=", "")
             return line
+    return f"{GetApkPackageName(apkFilePath)}.Main"
 
 def GetApkPackageName(apkFilePath, setting):
     # 提示：此函数有被为此程序适配而调整，如果需要最原始（无调整的）请使用主程序（此为附属组件）里的函数
@@ -341,13 +342,20 @@ Type=Application
 '''.format(packageName, activityName, showName, iconPath, showName, showName)
     write_txt(savePath, things)
 
-def GetApkChineseLabel(apkFilePath):
+# 获取软件的中文名称
+def GetApkChineseLabel(apkFilePath)->"获取软件的中文名称":
     info = GetApkInformation(apkFilePath)
+    name = None
     for line in info.split('\n'):
+        if "application-label-zh:" in line:
+            line = line.replace("application-label-zh:", "")
+            line = line.replace("'", "")
+            return line
         if "application-label:" in line:
             line = line.replace("application-label:", "")
             line = line.replace("'", "")
-            return line
+            name = line
+    return name
 
 #合并两个函数到一起
 def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
@@ -367,11 +375,11 @@ def SaveApkIcon(apkFilePath, iconSavePath)->"获取 apk 文件的图标":
                         saveIconFile.write(iconData)
                 return
         print("Show defult icon")
-        shutil.copy(programPath + "/defult.png", iconSavePath)
+        shutil.copy(programPath + "/defult.svg", iconSavePath)
     except:
         traceback.print_exc()
         print("Error, show defult icon")
-        shutil.copy(programPath + "/defult.png", iconSavePath)
+        shutil.copy(programPath + "/defult.svg", iconSavePath)
 
 def TextboxAddText1(message):
     global textbox1

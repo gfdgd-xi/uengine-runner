@@ -411,6 +411,7 @@ def GetApkActivityName(apkFilePath: "apk 所在路径")->"获取 apk Activity":
             line = line.replace("label=", "")
             line = line.replace("icon=", "")
             return line
+    return f"{GetApkPackageName(apkFilePath)}.Main"
 
 # 获取 apk 包名
 def GetApkPackageName(apkFilePath: "apk 所在路径")->"获取 apk 包名":
@@ -483,11 +484,17 @@ Type=Application
 # 获取软件的中文名称
 def GetApkChineseLabel(apkFilePath)->"获取软件的中文名称":
     info = GetApkInformation(apkFilePath)
+    name = None
     for line in info.split('\n'):
+        if "application-label-zh:" in line:
+            line = line.replace("application-label-zh:", "")
+            line = line.replace("'", "")
+            return line
         if "application-label:" in line:
             line = line.replace("application-label:", "")
             line = line.replace("'", "")
-            return line
+            name = line
+    return name
 
 # 保存apk图标
 def SaveApkIcon(apkFilePath, iconSavePath)->"保存 apk 文件的图标":

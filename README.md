@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>
-<h1 align="center">UEngine 运行器 1.8.2</h1>
+<h1 align="center">UEngine 运行器 1.8.3</h1>
 <hr>
 <p align='center'><a href='https://gitee.com/gfdgd-xi/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>
@@ -7,9 +7,9 @@
 ### 介绍
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。
-![image.png](https://storage.deepin.org/thread/202208302154473781_image.png)
+![图片.png](https://storage.deepin.org/thread/202212181918041904_图片.png)  
 
-（测试平台：UOS 家庭版 21.3.1，deepin 20.6,UOS 专业版 1050）
+（测试平台：UOS 家庭版 21.3.1，deepin 20.8,UOS 专业版 1050）
 
 ## 安装前必读
 
@@ -53,6 +53,7 @@ sudo apt upgrade
 **※2、修复部分无法正确获取程序中文名和 Activity 的问题；**  
 **※3、修复在运行器内打开打包器不会自动填充打包器 APK 路径；**  
 **※4、问题反馈新增论坛反馈入口。**  
+![图片.png](https://storage.deepin.org/thread/202212181918041904_图片.png)
 
 #### V1.8.2（2022年11月28日）
 

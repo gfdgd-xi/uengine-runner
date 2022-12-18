@@ -1,50 +1,10 @@
 import PIL.Image as Image
 import PIL.ImageDraw as ImageDraw
-import xml.etree.ElementTree as ET
 import zipfile
 import subprocess
 import re
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-'''import xml.etree.ElementTree as ET
-
-def xml2svg(xml_file):
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-    svg_str = '<svg>'
-    for child in root:
-        svg_str += '<' + child.tag
-        for attr in child.attrib:
-            svg_str += ' ' + attr + '="' + child.attrib[attr] + '"'
-        svg_str += '>'
-        for sub_child in child:
-            svg_str += '<' + sub_child.tag
-            for attr in sub_child.attrib:
-                svg_str += ' ' + attr + '="' + sub_child.attrib[attr] + '"'
-            svg_str += '/>'
-            svg_str += '</' + child.tag + '>'
-            svg_str += '</svg>'
-            return svg_str'''
 
 class getsavexml():
-    '''def xml2svg(xml_file):
-        tree = ET.parse(xml_file)
-        root = tree.getroot()
-        svg_str = '<svg>'
-        for child in root:
-            svg_str += '<' + child.tag
-            for attr in child.attrib:
-                svg_str += ' ' + attr + '="' + child.attrib[attr] + '"'
-            svg_str += '>'
-        for sub_child in child:
-            svg_str += '<' + sub_child.tag
-            for attr in sub_child.attrib:
-                svg_str += ' ' + attr + '="' + sub_child.attrib[attr] + '"'
-            svg_str += '/>'
-        svg_str += '</' + child.tag + '>'
-        svg_str += '</svg>'
-        return svg_str'''
 
     def savexml(self,apkFilePath,xmlpath,iconSavePath):
         cmddumpid = "aapt dump xmltree "+ apkFilePath + " " + xmlpath
@@ -110,37 +70,18 @@ class getsavexml():
             return imgpath
 
         # 获取到文件列表后，进行比较分辨率，选取分辨率最高的张图片
-        # /home/gfdgd_xi/Downloads/MT2.12.2.apk
-        try:
-            iconbackpath = getmaxsize(backimgs)
-            iconforepath = getmaxsize(foreimgs)
-        except:
-            if len(backimgs):
-                iconbackpath = backimgs[0]
-            else:
-                iconbackpath = ""
-            if len(foreimgs):
-                iconforepath = foreimgs[0]
-            else:
-                iconforepath = ""
-        print(iconbackpath, iconforepath)
+        iconbackpath = getmaxsize(backimgs)
+        iconforepath = getmaxsize(foreimgs)
+        print(iconbackpath + " " + iconforepath)
 
         #从APK文件获取最终图片
         zipapk = zipfile.ZipFile(apkFilePath)
-        try:
-            iconback = zipapk.open(iconbackpath)
-        except:
-            iconback = None
-        try:
-            iconfore = zipapk.open(iconforepath)
-        except:
-            iconfore = None
+        iconback = zipapk.open(iconbackpath)
+        iconfore = zipapk.open(iconforepath)
+
 
         # 叠加图片，mask 设置前景为蒙版
-        try:
-            iconbackimg =  Image.open(iconback).convert("RGBA")
-        except:
-            pass
+        iconbackimg =  Image.open(iconback).convert("RGBA")
         iconforeimg =  Image.open(iconfore).convert("RGBA")
         iconbackimg.paste(iconforeimg,mask=iconforeimg)
 

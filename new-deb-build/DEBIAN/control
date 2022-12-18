@@ -4,14 +4,15 @@ Replaces: spark-uengine-runner, com.gitee.uengine.runner.spark.ubuntu
 Version: 1.8.3
 Architecture: all
 Section: utils
-Installed-Size: 1636
-Maintainer: gfdgd xi <3025613752@qq.com>, actionchen<917981399@qq.com>, 柚子<https://gitee.com/Limexb>, 为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>, 星空露光<https://gitee.com/Cynorkyle>, shenmo<jifengshenmo@outlook.com>
+Installed-Size: 1544
+Maintainer: gfdgd xi <3025613752@qq.com>
 Depends: python3, python3-tk, python3-pip, aapt, python3-setuptools, deepin-terminal, curl, python3-pil, python3-requests, adb, fonts-noto-cjk, python3-numpy, wget, inotify-tools, aria2, python3-pyqt5, python3-matplotlib, python3-urllib3
 Recommends: uengine, deepin-elf-verify (>= 0.0.16.7-1)
 Priority: optional
 Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu
-Homepage: [https://gitee.com/gfdgd-xi/uengine-runner, https://github.com/gfdgd-xi/uengine-runner, https://www.gitlink.org.cn/gfdgd_xi/uengine-runner]
+Homepage: https://gitee.com/gfdgd-xi/uengine-runner
 Description: UEngine 运行器，1.8.3 更新内容：
  ※1、修复安装/打包程序时出现找不到图标的问题；
  ※2、修复部分无法正确获取程序中文名和 Activity 的问题
- 开发/参与者：gfdgd xi <3025613752@qq.com>, actionchen<917981399@qq.com>, 柚子<https://gitee.com/Limexb>, 为什么您不喜欢熊出没和阿布呢<https://weibo.com/u/7755040136>, 星空露光<https://gitee.com/Cynorkyle>, shenmo<jifengshenmo@outlook.com>
+ ※3、修复在运行器内打开打包器不会自动填充打包器 APK 路径
+ ※4、问题反馈新增论坛反馈入口

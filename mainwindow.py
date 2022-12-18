@@ -687,7 +687,7 @@ def CleanAllUengineDesktopLink():
 
 # 打开 uengine 应用打包器
 def OpenUengineDebBuilder():
-    threading.Thread(target=os.system, args=[programPath + "/uengine-apk-builder"]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/uengine-apk-builder' '{ComboInstallPath.currentText()}'"]).start()
 
 # 打开 uengine 根目录
 def OpenUengineRootData():

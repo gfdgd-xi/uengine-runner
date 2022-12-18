@@ -30,6 +30,7 @@ build:
 	cp -rv builer.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv api                                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv Help                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv Download.py                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv pkexec/*                             new-deb-build/usr/share/polkit-1/actions
 	python3 RemovePycacheFile.py
 	cp -rv new-deb-build /tmp/uengine-runner-builder

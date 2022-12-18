@@ -5,7 +5,7 @@
 		"https://github.com/gfdgd-xi/uengine-runner",
         "https://gitlink.org.cn/gfdgd_xi/uengine-runner"
     ],
-    "Version": "1.8.2",
+    "Version": "1.8.3",
     "System": "Linux（deepin/UOS）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis 或程序的更多帮助",
@@ -23,6 +23,10 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "<b>V1.8.3：</b>",
+        "※1、修复安装/打包程序时出现找不到图标的问题；",
+        "※2、修复部分无法正确获取程序中文名和 Activity 的问题",
+        "",
         "<b>V1.8.2：</b>",
         "※1、重新恢复 uengine-installer For Ubuntu",
         "※2、修复 postrm 的问题",

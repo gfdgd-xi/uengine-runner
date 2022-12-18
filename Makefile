@@ -31,6 +31,7 @@ build:
 	cp -rv api                                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv Help                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv pkexec/*                             new-deb-build/usr/share/polkit-1/actions
+	python3 RemovePycacheFile.py
 	dpkg -b new-deb-build com.gitee.uengine.runner.spark.deb
 
 install:

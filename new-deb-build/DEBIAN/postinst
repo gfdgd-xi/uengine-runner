@@ -1,9 +1,11 @@
 #!/bin/sh 
 # 使用 pip 安装所需库
+echo 安装组件
 python3 -m pip install --upgrade pip          --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
 python3 -m pip install --upgrade ttkthemes    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
 python3 -m pip install --upgrade pyautogui    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
 python3 -m pip install --upgrade keyboard     --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+echo 执行完成
 # 建立软链接
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner                   /usr/bin/uengine-runner
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-apk-builder              /usr/bin/uengine-apk-builder
@@ -21,4 +23,4 @@ ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-applist-laun
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl https://304626p927.goho.co/uengine-runner/Install.php?Version=1.8.2 -s > /dev/null | true
+python3 /opt/apps/com.gitee.uengine.runner.spark/files/Download.py 1.8.3 > /dev/null | true

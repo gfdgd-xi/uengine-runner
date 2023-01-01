@@ -2,6 +2,7 @@
 from modulefinder import packagePathMap
 import sys
 import ttkthemes
+import updatekiller
 import tkinter as tk
 import tkinter.ttk as ttk
 

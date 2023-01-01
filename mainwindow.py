@@ -26,6 +26,7 @@ import traceback
 import threading
 import webbrowser
 import subprocess
+import updatekiller
 map = True
 import matplotlib
 import matplotlib.figure
@@ -1099,7 +1100,7 @@ class UpdateWindow():
         updateWidgetLayout = QtWidgets.QGridLayout()
         versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知\n更新内容：")
         updateText = QtWidgets.QTextBrowser()
-        ok = QtWidgets.QPushButton("更新（更新过程中会关闭所有Python应用，包括这个应用）")
+        ok = QtWidgets.QPushButton("更新（更新过程中会关闭这个应用的所有进程）")
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
@@ -1134,8 +1135,8 @@ class UpdateWindow():
             write_txt("/tmp/uengine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
 rm -rfv /tmp/uengine-runner/update/*
-echo 关闭“UEngine 运行器”以及其它“Python 应用”
-killall python3
+echo 关闭“UEngine 运行器”
+python3 /opt/apps/com.gitee.uengine.runner.spark/files/updatekiller.py
 echo 下载安装包
 wget -P /tmp/uengine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包

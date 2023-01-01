@@ -1136,7 +1136,7 @@ class UpdateWindow():
 echo 删除多余的安装包
 rm -rfv /tmp/uengine-runner/update/*
 echo 关闭“UEngine 运行器”
-python3 /opt/apps/com.gitee.uengine.runner.spark/files/updatekiller.py
+python3 {programPath}/updatekiller.py
 echo 下载安装包
 wget -P /tmp/uengine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包

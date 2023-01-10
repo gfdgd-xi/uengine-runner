@@ -5,24 +5,25 @@ until [ "$is_tar_checked" = "1" ];do
 #echo "请拖入uengine.tar.xz并回车确认,可在 https://cowtransfer.com/s/44656ada129e42 下载获取。"
 #read tar_path
 mkdir -p /tmp/uengine
-aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uenginetar.xz
+aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007.tar.xz
 tar_path="/tmp/uengine/uenginetar.xz"
 tar_path=`echo "$tar_path" | sed $'s/\'//g'`
 #echo "路径为 $tar_path"
 tar_md5sum=`md5sum $tar_path`
 tar_md5sum=`echo ${tar_md5sum%%/*}`
 
-if [ "$tar_md5sum" = "5668b6bb54d28406e527989348126982" ];then
+#if [ "$tar_md5sum" = "5668b6bb54d28406e527989348126982" ];then
 is_tar_checked="1"
-else
-echo $tar_md5sum
-echo "md5完整性检查失败，请检查是否是这个文件"
-sleep 3
-reset
-fi
-done
+#else
+#echo $tar_md5sum
+#echo "md5完整性检查失败，请检查是否是这个文件"
+#sleep 3
+#reset
+#fi
+#done
 
-echo "完整性检查通过，开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
+#echo "完整性检查通过，开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
+echo "开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
 cd /tmp
 tar -xf "$tar_path" 
 mkdir -p $HOME/uengine

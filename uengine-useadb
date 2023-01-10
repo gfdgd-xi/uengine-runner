@@ -6,6 +6,7 @@
 import os
 import sys
 import traceback
+import updatekiller
 import PyQt5.QtWidgets as QtWidgets
 ########################
 #

@@ -3,6 +3,7 @@ import os
 import sys
 import shutil
 import traceback
+import updatekiller
 
 def Add():
     try:

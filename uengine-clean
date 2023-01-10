@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import updatekiller
 if len(sys.argv) > 1:
     if sys.argv[1] == "--help":
         print("帮助：")

@@ -1,7 +1,7 @@
 #/bin/bash
 is_tar_checked="0"
 rm -rf /tmp/uengine
-until [ "$is_tar_checked" = "1" ];do
+#until [ "$is_tar_checked" = "1" ];do
 #echo "请拖入uengine.tar.xz并回车确认,可在 https://cowtransfer.com/s/44656ada129e42 下载获取。"
 #read tar_path
 mkdir -p /tmp/uengine

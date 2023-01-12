@@ -51,12 +51,16 @@ cd /tmp/uengine
 /tmp/uengine/install.sh
 # 安装所需依赖
 sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev
+<<<<<<< HEAD
+#echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
+# 这里直接运行 run_daemon.sh，运行 launch_uengine.sh 好像不行
+echo "重启后在$HOME/uengine-launch执行run_daemon.sh或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用"
+=======
 # lnk Path To Install APK
 sudo mkdir -p /var/lib/uengine
 sudo ln -s /data/uengine/data/data/ /var/lib/uengine/data
-# echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
-# 这里直接运行 run_daemon.sh，运行 launch_uengine.sh 好像不行
-echo "重启后在$HOME/uengine-launch执行run_daemon.sh或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用"
+echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
+>>>>>>> 9e00e622b76d76a1c31c0250af5ccc42d0f28b26
 echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭"
 echo "不过一般情况下会自动开启，无需手动启动。"
 echo "按回车重启"

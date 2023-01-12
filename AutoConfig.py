@@ -16,7 +16,7 @@ import base64
 import json
 import traceback
 import urllib.request
-import req as requests
+import requests
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *

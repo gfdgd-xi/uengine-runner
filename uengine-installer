@@ -33,6 +33,9 @@ cp /tmp/uengine/launch_uengine.sh $HOME/uengine-launch
 cd /tmp/uengine
 /tmp/uengine/install.sh
 sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev
+# lnk Path To Install APK
+sudo mkdir -p /var/lib/uengine
+sudo ln -s /data/uengine/data/data/ /var/lib/uengine/data
 echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
 echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭"
 echo "按回车重启"

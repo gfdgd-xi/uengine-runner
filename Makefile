@@ -20,8 +20,8 @@ build:
 	cp -rv uengine-app-setting.py               new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv uengine-app-install                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv uengine_logo.svg                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
-	cp -rv defult.svg                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
-	cp -rv defult.png                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv defult.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv defult.png                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv runner.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv root-uengine.sh                      new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv menu.svg                             new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
@@ -34,7 +34,12 @@ build:
 	cp -rv Download.py                          new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv updatekiller.py                      new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv pkexec/*                             new-deb-build/usr/share/polkit-1/actions
-	python3 RemovePycacheFile.py
+	cp -rv AutoShell                            new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv UI                                   new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv ConfigLanguareRunner-help.json       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv ConfigLanguareRunner.py              new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv run-program-without-wayland.sh       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	python3 RemovePycacheFile.py                new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv new-deb-build /tmp/uengine-runner-builder
 	sudo chown -R root:root /tmp/uengine-runner-builder
 	dpkg -b /tmp/uengine-runner-builder com.gitee.uengine.runner.spark.deb

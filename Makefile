@@ -1,5 +1,6 @@
 build:
 	echo "Build DEB..."
+	cp -rv uengine-loading-ubuntu.desktop       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv information.json                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv mainwindow.py                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner
 	cp -rv Language.json                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/

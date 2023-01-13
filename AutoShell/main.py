@@ -15,7 +15,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(f"{programPath}/../information.json"))
 version = information["Version"]
 thankText = ""
-for i in information["Thank"]:
+for i in information["Contribute"]:
     thankText += f"{i}\n"
 programEnv = [
     ["WINEPREFIX", f"{os.path.expanduser('~')}/.wine"],

@@ -42,7 +42,7 @@ for username in $(ls /home)
     done
 # 单独拷贝一份到 /usr/bin 下以做到每次开机自动化调用
 sudo cp /tmp/uengine/run_daemon.sh /usr/bin/uengine-loading-ubuntu
-sudo chmod +x /usr/bin/uengine-loading-ubuntu
+sudo chmod 777 /usr/bin/uengine-loading-ubuntu
 #mkdir -p $HOME/uengine
 #mkdir -p $HOME/uengine-launch
 #cp /tmp/uengine/run_daemon.sh $HOME/uengine-launch

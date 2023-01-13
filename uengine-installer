@@ -33,16 +33,16 @@ tar -xf "$tar_path"
 for username in $(ls /home)  
     do
         echo /home/$username
-        sudo mkdir -p $username/uengine
-        sudo mkdir -p $username/uengine-launch
-        sudo cp /tmp/uengine/run_daemon.sh $username/uengine-launch
+        sudo mkdir -p /home/$username/uengine
+        sudo mkdir -p /home/$username/uengine-launch
+        sudo cp /tmp/uengine/run_daemon.sh /home/$username/uengine-launch
         # 赋予可执行权限
-        sudo chmod +x $username/uengine-launch/run_daemon.sh
+        sudo chmod +x /home/$username/uengine-launch/run_daemon.sh
         #cp /tmp/uengine/launch_uengine.sh $username/uengine-launch
     done
 # 单独拷贝一份到 /usr/bin 下以做到每次开机自动化调用
 sudo cp /tmp/uengine/run_daemon.sh /usr/bin/uengine-loading-ubuntu
-sudo chmod 777 /usr/bin/uengine-loading-ubuntu
+sudo chmod 755 /usr/bin/uengine-loading-ubuntu
 #mkdir -p $HOME/uengine
 #mkdir -p $HOME/uengine-launch
 #cp /tmp/uengine/run_daemon.sh $HOME/uengine-launch
@@ -58,6 +58,7 @@ sudo ln -s /data/uengine/data/data/ /var/lib/uengine/data
 cd `dirname $0`
 sudo cp uengine-loading-ubuntu.desktop /usr/share/applications
 sudo cp uengine-loading-ubuntu.desktop /etc/xdg/autostart
+sudo chmod 755 /etc/xdg/autostart/uengine-loading-ubuntu.desktop
 # echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
 # 这里直接运行 run_daemon.sh，运行 launch_uengine.sh 好像不行
 echo "重启后在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用"

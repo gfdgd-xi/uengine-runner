@@ -51,7 +51,7 @@ def OpenGitlinkIssues():
     webbrowser.open_new_tab("https://www.gitlink.org.cn/gfdgd_xi/uengine-runner/issues")
 
 def OpenProgramForum():
-    webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/t/bugs")
+    webbrowser.open_new_tab("https://bbs.racoongx.cn/t/bugs")
 
 # 获取用户主目录
 def get_home()->"获取用户主目录":

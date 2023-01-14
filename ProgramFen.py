@@ -3,7 +3,7 @@ import os
 import sys
 import base64
 import traceback
-import req as requests
+import requests
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
@@ -14,7 +14,7 @@ class ProgramRunStatusShow():
         try:
             fenlists = []
             for i in range(6):
-                fenlists.append(int(requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Zlbi9GZW4=").decode("utf-8") + f"{i}.txt").text))
+                fenlists.append(int(requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Zlbi1VRW5naW5lL0Zlbg==").decode("utf-8") + f"{i}-UEngine.txt").text))
             tipsInfo = ""
         except:
             traceback.print_exc()
@@ -26,7 +26,7 @@ class ProgramRunStatusShow():
         for i in fenlists:
             allNumber += i
         try:
-            tipsInfo = ""
+            #tipsInfo = ""
             for i in range(len(fenlists)):
                 tipsInfo += f"有 {fenlists[i] / allNumber * 100}% 的用户选择了 {i} 分（{fenlists[i]}/{allNumber}）\n"
             maxNumber = max(fenlists) / allNumber * 100
@@ -108,7 +108,7 @@ class ProgramRunStatusUpload():
 
     def Upload():
         try:
-            QtWidgets.QMessageBox.information(ProgramRunStatusUpload.msgWindow, QtCore.QCoreApplication.translate("U", "提示"), requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=Fen{ProgramRunStatusUpload.fen.currentIndex()}").json()["Error"])
+            QtWidgets.QMessageBox.information(ProgramRunStatusUpload.msgWindow, QtCore.QCoreApplication.translate("U", "提示"), requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=Fen{ProgramRunStatusUpload.fen.currentIndex()}-UEngine").json()["Error"])
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(ProgramRunStatusUpload.msgWindow, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))

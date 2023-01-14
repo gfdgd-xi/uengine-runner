@@ -1959,7 +1959,7 @@ hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd
 helpOpenProgramUrl.triggered.connect(OpenProgramURL)
 uengineRunnerSearch.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/uengine-runner-info/"))
 makerWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io"))
-helpForum.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
+helpForum.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.racoongx.cn/"))
 helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
 helpShowHelp.triggered.connect(ShowHelp)
 helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)

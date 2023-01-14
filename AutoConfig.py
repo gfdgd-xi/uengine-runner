@@ -551,7 +551,7 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     pinLunLayout = QtWidgets.QHBoxLayout()
     ui.setupUi(window)
-    window.setWindowTitle(f"UEngine 运行器 {version}——容器自动配置部署脚本")
+    window.setWindowTitle(f"UEngine 运行器 {version}——微型应用商店")
     window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
     iconPath = "{}/runner.svg".format(programPath)
     window.show()

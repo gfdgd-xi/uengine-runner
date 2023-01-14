@@ -108,7 +108,7 @@ class Ui_MainWindow(object):
         self.saerchBotton.setText(_translate("MainWindow", "搜索"))
         self.getInfoButton.setText(_translate("MainWindow", "获取选中项介绍"))
         self.getFen.setText(_translate("MainWindow", "获取/提交选中项的评分和评论"))
-        self.runBotton.setText(_translate("MainWindow", "部署此方案"))
+        self.runBotton.setText(_translate("MainWindow", "安装"))
         self.menu.setTitle(_translate("MainWindow", "程序"))
         self.menu_2.setTitle(_translate("MainWindow", "切换源"))
         self.about.setText(_translate("MainWindow", "关于"))

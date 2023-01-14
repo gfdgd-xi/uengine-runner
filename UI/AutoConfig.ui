@@ -71,7 +71,7 @@
       <item>
        <widget class="QPushButton" name="runBotton">
         <property name="text">
-         <string>部署此方案</string>
+         <string>安装</string>
         </property>
        </widget>
       </item>

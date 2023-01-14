@@ -14,7 +14,7 @@ class ProgramRunStatusShow():
         try:
             fenlists = []
             for i in range(6):
-                fenlists.append(int(requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Zlbi1VRW5naW5lL0Zlbg==").decode("utf-8") + f"{i}-UEngine.txt").text))
+                fenlists.append(int(requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Zlbi1VRW5naW5lL0Zlbg==").decode("utf-8") + f"{i}.txt").text))
             tipsInfo = ""
         except:
             traceback.print_exc()
@@ -28,8 +28,9 @@ class ProgramRunStatusShow():
         try:
             #tipsInfo = ""
             for i in range(len(fenlists)):
-                tipsInfo += f"有 {fenlists[i] / allNumber * 100}% 的用户选择了 {i} 分（{fenlists[i]}/{allNumber}）\n"
-            maxNumber = max(fenlists) / allNumber * 100
+                # 显示整数
+                tipsInfo += f"有 {int(fenlists[i] / allNumber * 100)}% 的用户选择了 {i} 分（{fenlists[i]}/{allNumber}）\n"
+            maxNumber = int(max(fenlists) / allNumber * 100)
             #if tipsInfo == "":
             #    tipsInfo = f"有{maxNumber}%的用户选择了这个评分"
         except:

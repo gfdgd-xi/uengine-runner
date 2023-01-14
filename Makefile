@@ -39,6 +39,7 @@ build:
 	cp -rv ConfigLanguareRunner-help.json       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv ConfigLanguareRunner.py              new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv run-program-without-wayland.sh       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv ProgramFen.py                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	python3 RemovePycacheFile.py                new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv new-deb-build /tmp/uengine-runner-builder
 	sudo chown -R root:root /tmp/uengine-runner-builder

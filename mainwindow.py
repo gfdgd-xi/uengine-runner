@@ -1495,13 +1495,14 @@ aaptVersion = GetCommandReturn("aapt version")
 SystemVersion = GetSystemVersion()
 iconPath = "{}/runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
 about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
-<p>介绍        ：一个基于 Python3 的 PyQt5 制作的 UEngine 运行器，在新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。</p>
-<p>版本        ：{version}</p>
-<p>适用平台    ：{goodRunSystem}</p>
-<p>Qt 版本     :{QtCore.qVersion()}</p>
-<p>程序官网    ：{programUrl}</p>
-<p>系统版本    : {SystemVersion}</p>
-<h3>©2021-{time.strftime("%Y")}</h3>'''
+<p>介绍：一个基于 Python3 的 PyQt5 制作的 UEngine 运行器，在新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。</p>
+<p>版本：{version}</p>
+<p>适用平台：{goodRunSystem}</p>
+<p>Qt 版本：{QtCore.qVersion()}</p>
+<p>程序官网：{programUrl}</p>
+<p>系统版本：{SystemVersion}</p>
+<p>主要开发者：gfdgd xi、为什么您不喜欢熊出没和阿布呢</p>
+<h1>©2021-{time.strftime("%Y")} RacoonGX 团队</h1>'''
 updateThingsString = ""
 tips = ""
 contribute = ""

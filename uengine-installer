@@ -35,6 +35,15 @@ tar_path=`echo "$tar_path" | sed $'s/\'//g'`
 echo "开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
 cd /tmp
 tar -xf "$tar_path" 
+# 移除包内旧版的run_daemon.sh（如果有的话）
+aria2c -x 16 -s 16 -d /tmp -o run_daemon.sh https://code.gitlink.org.cn/gfdgd_xi/uengine-installer-bak/raw/branch/master/run_daemon.sh
+if [[ $? == 0 ]]; then
+    # 如果下载成功，就使用下载好的 run_daemon.sh
+    if [[ -f /tmp/run_daemon.sh ]]; then
+        rm -rfv /tmp/uengine/run_daemon.sh
+        mv -v /tmp/run_daemon.sh /tmp/uengine/run_daemon.sh
+    fi
+fi
 # 拷贝到每个用户目录
 for username in $(ls /home)  
     do
@@ -57,7 +66,7 @@ cd /tmp/uengine
 /tmp/uengine/install.sh
 # 安装所需依赖
 sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev 
-# lnk Path To Install APK
+# 用于修复 UEngine 在 Ubuntu 无法安装 APK 的问题
 sudo mkdir -p /var/lib/uengine
 sudo ln -s /data/uengine/data/data/ /var/lib/uengine/data
 # 拷贝快捷方式

@@ -1,22 +1,28 @@
 #/bin/bash
 # 在 Shenmo 制作的脚本的基础上进行了修改，修复在 Wayland 下运行错误和无法安装程序的问题
 # 建议在 Ubuntu 22.04 及以上版本安装，最好在此之前先安装星火应用商店并将系统和星火应用商店更新到最新版本
-is_tar_checked="0"
+#is_tar_checked="0"
 rm -rf /tmp/uengine
 # 不再从网盘下载，直接从 Gitlink 拉取安装包
 #until [ "$is_tar_checked" = "1" ];do
 #echo "请拖入uengine.tar.xz并回车确认,可在 https://cowtransfer.com/s/44656ada129e42 下载获取。"
 #read tar_path
 mkdir -p /tmp/uengine
-aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007.tar.xz
+# 区分是下载 Root 镜像还是普通镜像
+if[[ $1 == "SuperSU" ]]; then
+    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007-supersu.tar.xz
+else
+    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007.tar.xz
+fi
 tar_path="/tmp/uengine/uenginetar.xz"
 tar_path=`echo "$tar_path" | sed $'s/\'//g'`
+# 忽略md5校验
 #echo "路径为 $tar_path"
-tar_md5sum=`md5sum $tar_path`
-tar_md5sum=`echo ${tar_md5sum%%/*}`
+#tar_md5sum=`md5sum $tar_path`
+#tar_md5sum=`echo ${tar_md5sum%%/*}`
 # 忽略 md5 校验
 #if [ "$tar_md5sum" = "5668b6bb54d28406e527989348126982" ];then
-is_tar_checked="1"
+#is_tar_checked="1"
 #else
 #echo $tar_md5sum
 #echo "md5完整性检查失败，请检查是否是这个文件"

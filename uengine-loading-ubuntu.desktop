@@ -2,8 +2,8 @@
 Categories=System;
 Comment=启动 UEngine 环境（默认会开机自启动）
 Encoding=UTF-8
-Exec=uengine-loading-ubuntu
-Icon=bash /opt/apps/com.gitee.uengine.runner.spark/files/defult.svg
+Exec=bash /usr/bin/uengine-loading-ubuntu
+Icon=/opt/apps/com.gitee.uengine.runner.spark/files/defult.svg
 MimeType=
 Name=手动启动 UEngine 环境（默认会开机自启动）
 StartupWMClass=手动启动 UEngine 环境（默认会开机自启动）

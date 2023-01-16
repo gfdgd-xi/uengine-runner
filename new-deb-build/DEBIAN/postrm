@@ -1,4 +1,11 @@
-#!/bin/sh 
+#!/bin/bash
+# 使用系统默认的 bash 运行
+#################################################################################################################
+# 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# 版本：2.0.0
+# 更新时间：2022年01月16日
+# 基于 bash
+#################################################################################################################
 # 删除软链接
 rm -f /usr/bin/uengine-runner
 rm -f /usr/bin/uengine-apk-builder
@@ -14,6 +21,12 @@ rm -f /usr/bin/uengine-root
 rm -fr /opt/apps/com.gitee.uengine.runner.spark/files/api/__pycache__
 rm -fr /opt/apps/com.gitee.uengine.runner.spark/files/__pycache__
 rm -f /usr/bin/uengine-runner-applist-launch.sh
+rm -f /usr/bin/uengine-runner-auto-install-bash
+# 删除软件残留，简单粗暴一点直接全部删掉，防止出现警告
+# 加判断是为了怕 reinstall 后程序就再也打不开了（除非卸载后重新安装）
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+    rm -rf /opt/apps/com.gitee.uengine.runner.spark
+fi
 # 删除软件配置文件（只限“purge”）
 # 配置目录：~/.config/uengine-runner
 if [ "$1" = "purge" ]; then

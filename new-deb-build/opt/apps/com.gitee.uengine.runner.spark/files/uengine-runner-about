@@ -16,6 +16,7 @@ import time
 import json
 import ttkthemes
 import subprocess
+import updatekiller
 import tkinter as tk
 import tkinter.ttk as ttk
 

@@ -1,0 +1,4 @@
+#!/bin/bash
+export XDG_SESSION_TYPE=x11
+export QT_QPA_PLATFORM=xcb
+unset WAYLAND_DISPLAYCOPY

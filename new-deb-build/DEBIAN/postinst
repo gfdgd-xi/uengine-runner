@@ -18,6 +18,7 @@ ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-useadb             
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-launch.sh         /usr/bin/uengine-runner-launch.sh
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-update-bug        /usr/bin/uengine-runner-update-bug
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/root-uengine                     /usr/bin/uengine-root
+ln -s /opt/apps/com.gitee.uengine.runner.spark/files/AutoShell/main.py                /usr/bin/uengine-runner-auto-install-bash
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-applist-launch.sh /usr/bin/uengine-runner-applist-launch.sh
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略

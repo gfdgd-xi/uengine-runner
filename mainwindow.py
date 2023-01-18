@@ -1276,7 +1276,7 @@ class ApkInformation():
         if choose == None or choose == 7:
             return
         try:
-            QtWidgets.QMessageBox.information(widget, "提示", requests.post("https://304626p927.goho.co/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
+            QtWidgets.QMessageBox.information(widget, "提示", requests.post("http://120.25.153.144/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerStarError"])
@@ -1288,7 +1288,7 @@ class ApkInformation():
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
-            data = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/app/check/" + package +"/data.json").text)
+            data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/uengineapp/" + package +"/data.json").text)
             print(data)
         except:
             QtWidgets.QMessageBox.information(widget, "提示", "此程序暂时没有评分，欢迎您贡献第一个评分！")
@@ -1550,6 +1550,7 @@ SystemVersion = GetSystemVersion()
 iconPath = "{}/runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
 about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <p>介绍：一个基于 Python3 的 PyQt5 制作的 UEngine 运行器，在新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。</p>
+<p>程序开源许可证：GPLV3</p>
 <p>版本：{version}</p>
 <p>适用平台：{goodRunSystem}</p>
 <p>Qt 版本：{QtCore.qVersion()}</p>

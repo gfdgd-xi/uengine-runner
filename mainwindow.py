@@ -443,14 +443,16 @@ def InstallRootUengineImage():
     if not os.path.exists:
         os.mkdir("/tmp/uengine-runner")
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    #threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    threading.Thread(target=OpenTerminal, args=[f"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'"]).start()
+
 
 def UengineUbuntuInstall():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}'"]).start()
 
 def UengineUbuntuInstallRoot():
     # 加 SuperSU 参数
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'} SuperSU'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}' SuperSU"]).start()
 
 def UbuntuInstallUengine():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
@@ -1136,14 +1138,36 @@ class UpdateWindow():
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
+        ok.setDisabled(True)
         try:
-            UpdateWindow.data = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/update.json").text)
+            UpdateWindow.data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-update-information/raw/branch/master/uengine-runner/update.json").text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText("此为最新版本，无需更新")
                 ok.setDisabled(True)
             else:
-                updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
+                # 版本号读取（防止出现高版本号提示要“升级”到低版本号的问题）
+                localVersionList = version.split(".")
+                webVersionList = UpdateWindow.data['Version'].split(".")
+                for i in range(len(localVersionList)):
+                    local = int(localVersionList[i])
+                    web = int(webVersionList[i])
+                    if web < local:
+                        updateText.setHtml(f"""<p>此为最新版本，无需更新，但似乎您当前使用的程序版本比云端版本还要高。</p>
+<p>出现这个问题可能会有如下几种情况：</p>
+<p>1、使用编译或者内测版本</p>
+<p>2、自己修改了程序版本</p>
+<p>3、作者忘记更新云端上的更新信息了</p>
+<p>如果是第三种情况，请反馈到此：https://gitee.com/gfdgd-xi-org/uengine-runner/issues/I6B091</p>
+<p>或者是这里：https://bbs.racoongx.cn/t/bugs</p>
+<p><img src='{programPath}/Icon/doge.png'></p>""")
+                        ok.setDisabled(True)
+                        break
+                    if web > local:
+                        updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
+                        ok.setEnabled(True)
+                        break
+                
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(updateWidget, "错误", "无法连接服务器！")
@@ -1153,7 +1177,7 @@ class UpdateWindow():
         updateWidgetLayout.addWidget(cancel, 2, 1, 1, 1)
         updateWidget.setLayout(updateWidgetLayout)
         UpdateWindow.update.setCentralWidget(updateWidget)
-        UpdateWindow.update.setWindowTitle("检查更新")
+        UpdateWindow.update.setWindowTitle("检查 UEngine 运行器更新")
         UpdateWindow.update.setWindowIcon(QtGui.QIcon(iconPath))
         UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
         UpdateWindow.update.show()
@@ -2035,8 +2059,8 @@ helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]
 helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
 helpFen = QtWidgets.QAction("程序评分")
 helpWebInformation = QtWidgets.QAction("程序公告")
-helpAbout = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
-helpAboutQt = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
+helpAbout = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
+helpAboutQt = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
 help.addAction(helpOpenProgramUrl)
 help.addAction(uengineRunnerSearch)
 help.addAction(makerWebsize)
@@ -2080,7 +2104,7 @@ window.setFixedSize(window.frameSize().width(), window.frameSize().height())
 # （2023年1月22日）
 if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
     os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
-    QtWidgets.QMessageBox.information(window, "祝福", "今天是癸卯年正月初一，这里代表 RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、美梦连连、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
+    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，这里代表 RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、美梦连连、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
 if version == "2.0.0":
     title += " 新春版"
     window.setWindowTitle(title)

@@ -8,7 +8,6 @@ def OpenTerminal(command):
     os.system(f"\"{terminal}\" \"{terminalEnd[terminal][0]}\" {command}")
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 对终端的获取
-# 为什么 openkylin 只有 mate-terminal
 # 优先为深度终端
 terminal = ""
 terminalList = [

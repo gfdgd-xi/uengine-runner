@@ -448,6 +448,10 @@ def InstallRootUengineImage():
 def UengineUbuntuInstall():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
 
+def UengineUbuntuInstallRoot():
+    # 加 SuperSU 参数
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'} SuperSU'"]).start()
+
 def UbuntuInstallUengine():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
 

@@ -107,7 +107,7 @@ class BuildApkDeb(QtCore.QThread):
 Version: {}
 Architecture: all
 Maintainer: {}
-Depends: deepin-elf-verify (>= 0.0.16.7-1), uengine (>= 1.0.1)
+Depends: deepin-elf-verify, uengine (>= 1.0.1)
 Section: utils
 Priority: optional
 Description: {}\n'''.format(apkPackageNameNew, apkPackageVersion, apkChineseLabel, apkChineseLabel)
@@ -227,6 +227,7 @@ def DisabledAndEnbled(choose):
     check.setDisabled(choose)
     button2.setDisabled(choose)
     button3.setDisabled(choose)
+    sizes.setDisabled(choose)
 
 # 重启本应用程序
 def ReStartProgram():

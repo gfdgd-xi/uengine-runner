@@ -26,7 +26,13 @@ try:
 except:
     print("未安装此依赖库")
     webeng = False
-
+print("""太常引·建康中秋夜为吕叔潜赋
+一轮秋影转金波，飞镜又重磨。把酒问姮娥：被白发、欺人奈何？
+乘风好去，长空万里，直下看山河。斫去桂婆娑，人道是、清光更多。""")
+print("")
+print("""译文：一轮缓缓移动的秋月洒下万里金波，就像那刚磨亮的铜镜又飞上了天廓。我举起酒杯问那月中的嫦娥：怎么办呢？白发日增，好像故意欺负我。
+我要乘风飞上万里长空，俯视祖国的大好山河。还要砍去月中摇曳的桂树枝柯，人们说，这将使月亮洒下人间的光辉更多。""")
+print("================================")
 urlSourcesList = [
     "https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/auto",  # Gitlink 源
     "https://gitee.com/gfdgd-xi/uengine-wine-runner-auto-configuration-script/raw/master/",  # Gitee 源

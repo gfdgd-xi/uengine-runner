@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.8.0
+# 版本：2.0.0
 # 更新时间：2022年07月25日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 PyQt5 构建
@@ -57,6 +57,24 @@ if sys.version_info[0] < 3:
     PythonLower()
 if sys.version_info[1] < 6:
     PythonLower()
+
+print("""观沧海 曹操
+东临碣石，以观沧海。
+水何澹澹，山岛竦峙。
+树木丛生，百草丰茂。
+秋风萧瑟，洪波涌起。
+日月之行，若出其中；
+星汉灿烂，若出其里。
+幸甚至哉，歌以咏志。""")
+print("")
+print("""译文：东行登上碣石山，来观赏那苍茫的海。
+海水多么宽阔浩荡，山岛高高地挺立在海边。
+树木和百草丛生，十分繁茂。
+秋风吹动树木发出悲凉的声音，海中涌着巨大的海浪。
+太阳和月亮的运行，好像是从这浩瀚的海洋中发出的。
+银河星光灿烂，好像是从这浩瀚的海洋中产生出来的。
+我很幸运，就用这首诗歌来表达自己内心的志向。""")
+print("================================")
 
 class UninstallProgram(QtCore.QThread):
     info = QtCore.pyqtSignal(str)
@@ -455,13 +473,13 @@ def UengineUbuntuInstallRoot():
     threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}' SuperSU"]).start()
 
 def UbuntuInstallUengine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}'"]).start()
 
 def BuildRootUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath}/root-uengine.sh'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/root-uengine.sh'"]).start()
     
 def ReinstallUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e pkexec apt reinstall uengine-android-image -y"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"pkexec apt reinstall uengine-android-image -y"]).start()
 
 
 # 生成 uengine 启动文件到桌面
@@ -579,7 +597,7 @@ def BackUengineClean()->"清空 uengine 数据":
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
-        os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"pkexec rm -rfv /data/uengine\"")
+        OpenTerminal(f"pkexec rm -rfv /data/uengine")
         return
     print("Choose False")
 
@@ -642,7 +660,7 @@ def ScrcpyConnectUengine():
 sudo apt install snapd -y
 sudo snap refresh
 sudo snap install scrcpy''')
-        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"chmod 777 /tmp/uengine-runner/InstallScrcpy.sh -Rv && pkexec /tmp/uengine-runner/InstallScrcpy.sh\""]).start()
+        threading.Thread(target=OpenTerminal, args=[f"chmod 777 /tmp/uengine-runner/InstallScrcpy.sh -Rv && pkexec /tmp/uengine-runner/InstallScrcpy.sh"]).start()
         return
 
 # 获取用户桌面目录
@@ -715,12 +733,12 @@ def OpenUengineUserData():
 # 终端显示 adb 命令行
 def AdbShellShowInTer():
     os.system("adb connect 192.168.250.2:5555")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"adb -s 192.168.250.2:5555 shell"]).start()
 
 # 终端显示 adb top
 def AdbCPUAndRAWShowInTer():
     os.system("adb connect 192.168.250.2:5555")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell top'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"adb -s 192.168.250.2:5555 shell top"]).start()
 
 def UengineSettingShow():
     threading.Thread(target=os.system, args=["/usr/bin/uengine launch --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings"]).start()
@@ -741,14 +759,14 @@ def AdbStartServer():
     QtWidgets.QMessageBox.information(widget, "提示", "完成！")
 
 def ReinstallUengine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\"'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\""]).start()
 
 def DelUengineCheck():
     if not os.path.exists("/usr/share/uengine/uengine-check-runnable.sh"):
         QtWidgets.QMessageBox.information(widget, "提示", "本功能已经被删除，无法重复删除！")
         return
     if QtWidgets.QMessageBox.warning(widget, "警告", "删除后将无法使用本软件恢复\n如果需要恢复本功能，请重新安装 UEngine！", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Ok) == QtWidgets.QMessageBox.Ok:
-        threading.Thread(target=os.system, args=["'{programPath}/launch.sh' deepin-terminal -C 'pkexec rm -v /usr/share/uengine/uengine-check-runnable.sh'"]).start()
+        threading.Thread(target=OpenTerminal, args=[f"pkexec rm -v /usr/share/uengine/uengine-check-runnable.sh"]).start()
 
 # 使用 adb 连接 uengine
 def UengineConnectAdb():
@@ -1205,7 +1223,7 @@ zenity --info --text=\"更新完毕！\" --ellipsize
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误，无法继续更新", traceback.format_exc())
-        os.system(f"'{programPath}/launch.sh' deepin-terminal -e pkexec bash /tmp/uengine-runner/update.sh")
+        OpenTerminal(f"pkexec bash /tmp/uengine-runner/update.sh")
         
 image = None
 class ApkInformation():
@@ -1787,7 +1805,7 @@ if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可") == QtWidgets.QMessageBox.Yes:
-            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"pkexec apt install uengine -y\"")
+            OpenTerminal(f"'pkexec apt install uengine -y")
             sys.exit(0)
     # 非 Deepin/UOS 用户
     # 因为安装器出现问题，所以废弃
@@ -1796,7 +1814,8 @@ if not os.path.exists("/usr/bin/uengine"):
         #sys.exit(0)
         #if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会安装移植版本（之前由 Shenmo 编写）\n安装完后重新启动该程序即可\n提示：需要在 Ubuntu 22.04 及以上版本才能正常安装") == QtWidgets.QMessageBox.Yes:
-            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            #os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            OpenTerminal(f"bash '{programPath}/uengine-installer'")
             sys.exit(0)
 
 ###########################
@@ -1976,6 +1995,7 @@ uengineOpenDebBuilder.triggered.connect(OpenUengineDebBuilder)
 uengineKeyboardToMouse.triggered.connect(KeyboardToMouse)
 uengineCheckCpu.triggered.connect(UengineCheckCpu)
 uengineUbuntuInstall.triggered.connect(UengineUbuntuInstall)
+uengineUbuntuInstallRoot.triggered.connect(UengineUbuntuInstallRoot)
 uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
 uengineReinstall.triggered.connect(ReinstallUengine)
 uengineWindowSizeSetting.triggered.connect(UengineWindowSizeSetting.ShowWindow)

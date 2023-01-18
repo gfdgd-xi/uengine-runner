@@ -24,6 +24,14 @@ import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from getxmlimg import getsavexml
 
+print("""渔家傲·秋思
+塞下秋来风景异，衡阳雁去无留意。四面边声连角起。千嶂里，长烟落日孤城闭。
+浊酒一杯家万里，燕然未勒归无计。羌管悠悠霜满地。人不寐，将军白发征夫泪。""")
+print("")
+print("""眼看秋天到了，西北边塞的风光和江南风光自然大不相同。头顶的大雁又飞回南方衡阳去了，一点也没有停留意思。此情此景，不禁又勾起戍边人思乡的情绪。黄昏时分，军中号角催吹，周围的边声也随之而起。层峦叠嶂里，暮霭沉沉，山衔落日，孤零零的城门紧闭。
+饮一杯浊酒，我不由得想起万里之外的亲人。可是，眼下外患未平，功不成名不就，又怎能半途而废。远方传来羌笛的悠悠之声，天气寒冷，军营里早已结满寒霜。夜深了，我还不能安睡，为操持军计，我的须发都变白了。戍边人思念亲人，也久久难以成眠，多少次梦里流下眼泪。""")
+print("================================")
+
 def FindApk():
     path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 APK", json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkBuild.json"))["path"], "APK 可执行文件(*.apk);;所有文件(*.*)")
     if path != "" and path != "()":

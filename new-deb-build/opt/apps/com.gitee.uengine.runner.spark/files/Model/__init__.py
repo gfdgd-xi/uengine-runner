@@ -13,7 +13,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 优先为深度终端
 terminal = ""
 terminalList = [
-    "deepin-terminal1",
+    "deepin-terminal",
     "mate-terminal",
     "gnome-terminal",
     "xfce4-terminal"

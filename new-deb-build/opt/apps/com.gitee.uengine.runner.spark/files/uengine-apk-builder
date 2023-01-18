@@ -118,7 +118,7 @@ Maintainer: {}
 Depends: deepin-elf-verify, uengine (>= 1.0.1)
 Section: utils
 Priority: optional
-Description: {}\n'''.format(apkPackageNameNew, apkPackageVersion, apkChineseLabel, apkChineseLabel)
+Description: {}, Build By UEngine Runner Packager\n'''.format(apkPackageNameNew, apkPackageVersion, apkChineseLabel, apkChineseLabel)
             debPostinst = '''#!/bin/sh
 
 APK_DIR="/usr/share/uengine/apk"
@@ -427,6 +427,7 @@ if not lang in langFile.keys():
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]
 title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
+#title = f"UEngine 运行器应用打包器（高级） {version}"
 iconPath = "{}/builer.svg".format(os.path.split(os.path.realpath(__file__))[0])
 
 ###########################

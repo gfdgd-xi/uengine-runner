@@ -1,4 +1,11 @@
 build:
+	echo 别云间
+	echo 三年羁旅客，今日又南冠。
+	echo 无限山河泪，谁言天地宽。
+	echo 已知泉路近，欲别故乡难。
+	echo 毅魄归来日，灵旗空际看。 
+	echo
+	echo 译文：三年为抗清兵东走西飘荡，今天兵败被俘作囚入牢房。无限美好河山失陷伤痛泪，谁还敢说天庭宽阔地又广。已经知道黄泉之路相逼近，想到永别故乡实在心犯难。鬼雄魂魄等到归来那一日，灵旗下面要将故乡河山看。
 	echo "Build DEB..."
 	cp -rv uengine-loading-ubuntu.desktop       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv information.json                     new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
@@ -29,6 +36,7 @@ build:
 	cp -rv getxmlimg.py                         new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv defult.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv builer.svg                           new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv uengine-apk-builder-more             new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv api                                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv Help                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv Download.py                          new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/

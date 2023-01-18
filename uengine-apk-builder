@@ -426,8 +426,8 @@ if not lang in langFile.keys():
     lang = "en_US.UTF-8"
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]
-#title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
-title = f"UEngine 运行器应用打包器（高级） {version}"
+title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
+#title = f"UEngine 运行器应用打包器（高级） {version}"
 iconPath = "{}/builer.svg".format(os.path.split(os.path.realpath(__file__))[0])
 
 ###########################

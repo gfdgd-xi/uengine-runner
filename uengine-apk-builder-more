@@ -24,20 +24,31 @@ import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from getxmlimg import getsavexml
 
-print("""渔家傲·秋思
-塞下秋来风景异，衡阳雁去无留意。四面边声连角起。千嶂里，长烟落日孤城闭。
-浊酒一杯家万里，燕然未勒归无计。羌管悠悠霜满地。人不寐，将军白发征夫泪。""")
+print("""南安军
+梅花南北路，风雨湿征衣。出岭同谁出？归乡如此归！
+山河千古在，城郭一时非。饿死真吾志，梦中行采薇。""")
 print("")
-print("""译文：眼看秋天到了，西北边塞的风光和江南风光自然大不相同。头顶的大雁又飞回南方衡阳去了，一点也没有停留意思。此情此景，不禁又勾起戍边人思乡的情绪。黄昏时分，军中号角催吹，周围的边声也随之而起。层峦叠嶂里，暮霭沉沉，山衔落日，孤零零的城门紧闭。
-饮一杯浊酒，我不由得想起万里之外的亲人。可是，眼下外患未平，功不成名不就，又怎能半途而废。远方传来羌笛的悠悠之声，天气寒冷，军营里早已结满寒霜。夜深了，我还不能安睡，为操持军计，我的须发都变白了。戍边人思念亲人，也久久难以成眠，多少次梦里流下眼泪。""")
+print("""译文：由南往北走过大庾岭口，一路风雨打湿衣裳。想到去南岭时有哪些同伴，回到家乡却身为俘囚。
+祖国的河山千年万世永存，城郭只是暂时落入敌手。绝食而死是我真正的意愿，梦中也学伯夷叔齐，吃野菜充饥等死。""")
 print("================================")
 
 def FindApk():
     path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 APK", json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkBuild.json"))["path"], "APK 可执行文件(*.apk);;所有文件(*.*)")
-    if path != "" and path != "()":
+    print(path)
+    if path[0] != "" and path[1] != "":
         try:
             combobox1.setEditText(path[0])
             write_txt(get_home() + "/.config/uengine-runner/FindApkBuild.json", json.dumps({"path": os.path.dirname(path[0])}))  # 写入配置文件
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
+
+def FindIcon():
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 APK", json.loads(readtxt(get_home() + "/.config/uengine-runner/FindApkBuild.json"))["path"], "png 文件(*.png);;svg 文件(*.svg);;所有文件(*.*)")
+    if path[0] != "" and path[1] != "":
+        try:
+            iconText.setText(path[0])
+            #write_txt(get_home() + "/.config/uengine-runner/FindApkBuild.json", json.dumps({"path": os.path.dirname(path[0])}))  # 写入配置文件
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
@@ -49,7 +60,13 @@ def BuildDeb():
     if combobox1.currentText() == "":
         QtWidgets.QMessageBox.critical(None, "提示", "信息没有填写完整，无法继续打包 APK")
         return
-    if not os.path.exists(combobox1.currentText()):
+    for i in textList:
+        if i.text() == "":
+            QtWidgets.QMessageBox.critical(None, "提示", "信息没有填写完整，无法继续打包 APK")
+            return
+    # 包名小写
+    packageText.setText(packageText.text().lower())
+    if not os.path.exists(combobox1.currentText()) or not os.path.exists(iconPath):
         QtWidgets.QMessageBox.critical(None, "提示", "信息填写错误，无法继续打包 APK")
         return
     DisabledAndEnbled(True)
@@ -96,10 +113,12 @@ class BuildApkDeb(QtCore.QThread):
             self.RunCommandShow("mkdir -pv '{}/usr/share/uengine/icons'".format(tempPath))
             self.RunCommandShow("echo '写入文件，因为写入过程过于复杂，不显示写入命令……'")
             apkPackageName = GetApkPackageName(apkPath, False)
-            if check.isChecked():
-                apkPackageNameNew = GetApkPackageName(apkPath, True).lower().replace("_", "-")
-            else:
-                apkPackageNameNew = GetApkPackageName(apkPath, False).lower().replace("_", "-")
+            apkPackageNameNew = packageText.text()
+            # 高级打包器直接忽略此勾选
+            #if check.isChecked():
+            #    apkPackageNameNew = GetApkPackageName(apkPath, True).lower().replace("_", "-")
+            #else:
+            #    apkPackageNameNew = GetApkPackageName(apkPath, False).lower().replace("_", "-")
             apkPackageVersion = GetApkVersion(apkPath)
             if apkPackageVersion[0].upper() == "V":
                 package = list(apkPackageVersion)
@@ -111,14 +130,14 @@ class BuildApkDeb(QtCore.QThread):
                 os.makedirs(f"{tempPath}/usr/share/uengine/appetc")
                 shutil.copy(f"/usr/share/uengine/appetc/{apkPackageName}.txt", f"{tempPath}/usr/share/uengine/appetc/{apkPackageName}.txt")
             iconSavePath = "{}/usr/share/uengine/icons/{}.png".format(tempPath, apkPackageNameNew)
-            debControl = '''Package: {}
-Version: {}
+            debControl = f'''Package: {apkPackageNameNew}
+Version: {versionText.text()}
 Architecture: all
-Maintainer: {}
+Maintainer: {makerText.text()}
 Depends: deepin-elf-verify, uengine (>= 1.0.1)
 Section: utils
 Priority: optional
-Description: {}, Build By UEngine Runner Packager\n'''.format(apkPackageNameNew, apkPackageVersion, apkChineseLabel, apkChineseLabel)
+Description: {comText.text()}\n'''
             debPostinst = '''#!/bin/sh
 
 APK_DIR="/usr/share/uengine/apk"
@@ -196,18 +215,19 @@ Name={}
             write_txt("{}/DEBIAN/prerm".format(tempPath), debPrerm)
             self.RunCommandShow("echo 正在写入文件：'/usr/share/applications/{}.desktop'".format(apkPackageNameNew))
             #write_txt("{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageNameNew), desktopFile)
-            BuildUengineDesktop(apkPackageName, apkActivityName, apkChineseLabel, "/usr/share/uengine/icons/{}.png".format(apkPackageNameNew),
-                        "{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageNameNew))
+            BuildUengineDesktop(apkPackageName, apkActivityName, nameText.text(), "/usr/share/uengine/icons/{}.png".format(apkPackageNameNew),
+                        "{}/usr/share/applications/{}.desktop".format(tempPath, apkPackageNameNew), typeChoose.currentText())
             self.RunCommandShow("echo '复制文件'")
             self.RunCommandShow("echo '写入 APK 软件图标'")
-            SaveApkIcon(apkPath, iconSavePath)
+            #SaveApkIcon(apkPath, iconSavePath)
+            self.RunCommandShow(f"cp -rv '{iconText.text()}' '{iconSavePath}'")
             self.RunCommandShow("echo '复制 APK 文件'")
             self.RunCommandShow("cp -rv '{}' '{}/usr/share/uengine/apk/{}.apk'".format(apkPath, tempPath, apkPackageNameNew))
             self.RunCommandShow("echo '正在设置文件权限……'")
             self.RunCommandShow("chmod 0775 -vR '{}/DEBIAN/postinst'".format(tempPath))
             self.RunCommandShow("chmod 0775 -vR '{}/DEBIAN/prerm'".format(tempPath))
             self.RunCommandShow("echo '打包 deb 到桌面……'")
-            self.RunCommandShow("dpkg -b '{}' '{}/{}_{}.deb'".format(tempPath, get_desktop_path(),apkPackageNameNew, apkPackageVersion))
+            self.RunCommandShow("dpkg -b '{}' '{}/{}_{}_all.deb'".format(tempPath, get_desktop_path(),apkPackageNameNew, versionText.text()))
             self.RunCommandShow("echo '正在删除临时目录……'")
             self.RunCommandShow("rm -rfv '{}'".format(tempPath))
             self.RunCommandShow("echo '完成！'")
@@ -236,6 +256,10 @@ def DisabledAndEnbled(choose):
     button2.setDisabled(choose)
     button3.setDisabled(choose)
     sizes.setDisabled(choose)
+    iconBrowser.setDisabled(choose)
+    typeChoose.setDisabled(choose)
+    for i in textList:
+        i.setDisabled(choose)
 
 # 重启本应用程序
 def ReStartProgram():
@@ -334,22 +358,23 @@ def GetApkVersion(apkFilePath):
             line = line.replace(" ", "")
             return line
 
-def BuildUengineDesktop(packageName, activityName, showName, iconPath, savePath):
+def BuildUengineDesktop(packageName, activityName, showName, iconPath, savePath, type):
     if showName == "" or showName == None:
         showName = "未知应用"
-    things = '''
+    things = f'''
     [Desktop Entry]
 Categories=app;
 Encoding=UTF-8
-Exec=/usr/bin/uengine launch --action=android.intent.action.MAIN --package={} --component={}
-GenericName={}
-Icon={}
+Exec=/usr/bin/uengine launch --action=android.intent.action.MAIN --package={packageName} --component={activityName}
+GenericName={showName}
+Icon={iconPath}
 MimeType=
-Name={}
-StartupWMClass={}
+Name={showName}
+Categories={type};
+StartupWMClass={showName}
 Terminal=false
 Type=Application
-'''.format(packageName, activityName, showName, iconPath, showName, showName)
+'''
     write_txt(savePath, things)
 
 # 获取软件的中文名称
@@ -426,8 +451,7 @@ if not lang in langFile.keys():
     lang = "en_US.UTF-8"
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]
-#title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
-title = f"UEngine 运行器应用打包器（高级） {version}"
+title = "{} {}".format(langFile[lang]["Uengine Apk Builder"]["Title"], version)
 iconPath = "{}/builer.svg".format(os.path.split(os.path.realpath(__file__))[0])
 
 ###########################
@@ -459,6 +483,13 @@ window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
 widgetLayout = QtWidgets.QGridLayout()
 combobox1 = QtWidgets.QComboBox()
+packageText = QtWidgets.QLineEdit()
+versionText = QtWidgets.QLineEdit()
+comText = QtWidgets.QLineEdit()
+makerText = QtWidgets.QLineEdit()
+typeChoose = QtWidgets.QComboBox()
+nameText = QtWidgets.QLineEdit()
+iconText = QtWidgets.QLineEdit()
 label1 = QtWidgets.QLabel(langFile[lang]["Uengine Apk Builder"]["label1"])
 button2 = QtWidgets.QPushButton(langFile[lang]["Uengine Apk Builder"]["button2"])
 button3 = QtWidgets.QPushButton(langFile[lang]["Uengine Apk Builder"]["button3"])
@@ -466,6 +497,8 @@ textbox1 = QtWidgets.QTextBrowser()
 frame2 = QtWidgets.QHBoxLayout()
 check = QtWidgets.QCheckBox(langFile[lang]["Uengine Apk Builder"]["check"])
 sizes = QtWidgets.QCheckBox(langFile[lang]["Uengine Apk Builder"]["size"])
+iconBrowser = QtWidgets.QPushButton("浏览")
+iconBrowser.clicked.connect(FindIcon)
 label1.setSizePolicy(size)
 button2.setSizePolicy(size)
 check.setSizePolicy(size)
@@ -475,11 +508,28 @@ combobox1.addItems(findApkHistory)
 combobox1.setEditText("")
 button2.clicked.connect(FindApk)
 button3.clicked.connect(BuildDeb)
+typeChoose.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
+typeChoose.setCurrentText("Network")
 widgetLayout.addWidget(label1, 0, 0, 1, 1)
 widgetLayout.addWidget(combobox1, 0, 1, 1, 1)
 widgetLayout.addWidget(button2, 0, 2, 1, 1)
-widgetLayout.addLayout(frame2, 1, 1, 1, 1)
-widgetLayout.addWidget(textbox1, 2, 0, 1, 3)
+widgetLayout.addWidget(QtWidgets.QLabel("包名："), 1, 0)
+widgetLayout.addWidget(packageText, 1, 1, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("版本号："), 2, 0)
+widgetLayout.addWidget(versionText, 2, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("说明："), 3, 0)
+widgetLayout.addWidget(comText, 3, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("维护者："), 4, 0)
+widgetLayout.addWidget(makerText, 4, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("程序分类："), 5, 0)
+widgetLayout.addWidget(typeChoose, 5, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("程序名称："), 6, 0)
+widgetLayout.addWidget(nameText, 6, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("程序图标："), 7, 0)
+widgetLayout.addWidget(iconText, 7, 1)
+widgetLayout.addWidget(iconBrowser, 7, 2)
+widgetLayout.addLayout(frame2, 8, 1, 1, 1)
+widgetLayout.addWidget(textbox1, 9, 0, 1, 3)
 # 菜单栏
 menu = window.menuBar()
 programmenu = menu.addMenu(langFile[lang]["Uengine Apk Builder"]["Menu"][0]["Name"])
@@ -488,7 +538,7 @@ exitProgram.triggered.connect(window.close)
 programmenu.addAction(exitProgram)
 #
 check.setChecked(True)
-frame2.addWidget(check)
+#frame2.addWidget(check)
 frame2.addWidget(sizes)
 frame2.addWidget(button3)
 widget.setLayout(widgetLayout)
@@ -501,4 +551,12 @@ try:
 except:
     print("无参数")
 window.show()
+textList = [
+        packageText,
+        versionText,
+        comText,
+        makerText,
+        nameText, 
+        iconText
+        ]
 sys.exit(app.exec_())

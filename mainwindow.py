@@ -18,6 +18,7 @@ import time
 import json
 import numpy
 import base64
+import socket
 import shutil
 import datetime
 import zipfile
@@ -38,6 +39,12 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from getxmlimg import getsavexml
+try:
+    import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
+    bad = False
+except:
+    bad = True
+from Model import *
 
 def PythonLower():
     app = QtWidgets.QApplication(sys.argv)
@@ -790,7 +797,27 @@ def VersionCheck(version1, version2):
     return version1 == version2
 
 def ShowHelp():
-    webbrowser.open_new_tab(programPath + "/Help/index.html")
+    global webHelp
+    # 先判断是否能连接服务器，如果能则访问线上版本，否则访问本地的帮助文件
+    sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    sk.settimeout(1)
+    url = "file://" + programPath + "/Help/index.html"
+    try:
+        sk.connect(("uengine-runner.racoongx.cn", 80))
+        url = f"http://uengine-runner.racoongx.cn"
+    except:
+        traceback.print_exc()
+    if bad:
+        # 如果没有安装 QWebEngine，则直接用浏览器打开
+        webbrowser.open_new_tab(url)
+        return
+    # 否则用 QWebEngine 打开
+    webHelp = QtWebEngineWidgets.QWebEngineView()
+    webHelp.setWindowTitle("获取程序帮助")
+    webHelp.setUrl(QtCore.QUrl(url))
+    webHelp.setWindowIcon(QtGui.QIcon(iconPath))
+    webHelp.resize(int(webHelp.frameGeometry().width() * 1.3), int(webHelp.frameGeometry().height() * 1.1))
+    webHelp.show()
 
 def AllowOrDisallowUpdateAndroidApp():
     if not os.path.exists("/data/uengine/data/data/misc/adb/adb_keys"):
@@ -1455,6 +1482,28 @@ class AddNewUengineDesktopLink():
         activityName.setText(str(GetApkActivityName(path)))
         write_txt(get_home() + "/.config/uengine-runner/FindApkName.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
 
+def GetNewInformation():
+    try:
+        text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/information/index.html").text
+    except:
+        traceback.print_exc()
+        text = """<p>无法连接到服务器</p>
+            <hr/>
+            <p>你可以尝试：</p>
+            <p>1. 判断是否能正常连接网络</p>
+            <p>2. 网络配置是否有误</p>"""
+    global webInformation
+    if bad:
+        webInformation = QtWidgets.QTextBrowser()
+    else:
+        webInformation = QtWebEngineWidgets.QWebEngineView()
+    webInformation.setHtml(text)
+    webInformation.setWindowTitle("获取程序公告")
+    webInformation.setWindowIcon(QtGui.QIcon(iconPath))
+    webInformation.resize(int(webInformation.frameGeometry().width() * 1.3), int(webInformation.frameGeometry().height() * 1.1))
+    webInformation.show()
+
+
 def UseProgram():
     global useProgram
     useProgram = '''<p>1、UEngine：{}</p>
@@ -1858,26 +1907,35 @@ uengineDoNotUseAdb.triggered.connect(UengineDoNotUseAdb)
 
 uengineAllowOrDisallowUpdateAndroidApp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13])
 uengineSetHttpProxy = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][15])
-uengineOpenDebBuilder = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1])
-uengineKeyboardToMouse = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7])
-uengineCheckCpu = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8])
-uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12])
+uengineOpenDebBuilder = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1])
+uengineKeyboardToMouse = QtWidgets.QAction(QtGui.QIcon.fromTheme("keyboard"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7])
+uengineCheckCpu = QtWidgets.QAction(QtGui.QIcon.fromTheme("cpu"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8])
+#uengineUbuntuInstall = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12])
 uengineDeleteUengineCheck = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9])
 uengineReinstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10])
-uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
+uengineUbuntuInstall = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
+uengineUbuntuInstallRoot = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "在 Ubuntu 上安装 UEngine（SuperSU 镜像）")
 uengineWindowSizeSetting = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][16])
-uengine.addAction(uengineAllowOrDisallowUpdateAndroidApp)
-uengine.addAction(uengineSetHttpProxy)
 uengine.addAction(uengineOpenDebBuilder)
 uengine.addAction(uengineKeyboardToMouse)
 uengine.addAction(uengineCheckCpu)
+uengine.addSeparator()
 uengine.addAction(uengineUbuntuInstall)
+uengine.addAction(uengineUbuntuInstallRoot)
+uengine.addSeparator()
 uengine.addAction(uengineWindowSizeSetting)
-uengineService = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"])
-uengineInternet = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"])
+uengine.addSeparator()
+uengine.addAction(uengineAllowOrDisallowUpdateAndroidApp)
+uengine.addAction(uengineSetHttpProxy)
+uengine.addSeparator()
+uengineService = uengine.addMenu(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"])
+uengineInternet = uengine.addMenu(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"])
+uengine.addSeparator()
 uengineIcon = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"])
+uengine.addSeparator()
 uengine.addMenu(uengineUseAdbm)
-uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"])
+uengineData = uengine.addMenu(QtGui.QIcon.fromTheme("fileopen"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"])
+uengine.addSeparator()
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
@@ -1893,9 +1951,9 @@ uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
 uengineReinstall.triggered.connect(ReinstallUengine)
 uengineWindowSizeSetting.triggered.connect(UengineWindowSizeSetting.ShowWindow)
 
-uengineStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
-uengineStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
-uengineRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][2])
+uengineStart = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
+uengineStop = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
+uengineRestart = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][2])
 uengineService.addAction(uengineStart)
 uengineService.addAction(uengineStop)
 uengineService.addAction(uengineRestart)
@@ -1904,14 +1962,14 @@ uengineStart.triggered.connect(StartUengine)
 uengineStop.triggered.connect(StopUengine)
 uengineRestart.triggered.connect(UengineRestart)
 
-uengineBridgeStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0])
-uengineBridgeStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1])
-uengineBridgeRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][2])
-uengineBridgeReload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][3])
-uengineBridgeForceReload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][4])
+uengineBridgeStart = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0])
+uengineBridgeStop = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1])
+uengineBridgeRestart = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][2])
+uengineBridgeReload = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][3])
+uengineBridgeForceReload = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][4])
 uengineInternet.addAction(uengineBridgeStart)
 uengineInternet.addAction(uengineBridgeStop)
-uengineInternet.addAction(uengineReinstall)
+#uengineInternet.addAction(uengineReinstall)
 uengineInternet.addAction(uengineBridgeReload)
 uengineInternet.addAction(uengineBridgeForceReload)
 # 绑定信号
@@ -1938,9 +1996,9 @@ uengineAddNewUengineDesktopLink.triggered.connect(AddNewUengineDesktopLink.ShowW
 uengineCleanAllUengineDesktopLink.triggered.connect(CleanAllUengineDesktopLink)
 
 #uengineData
-uengineOpenRootData = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][0])
-uengineOpenUserData = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1])
-uengineBackClean = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2])
+uengineOpenRootData = QtWidgets.QAction(QtGui.QIcon.fromTheme("fileopen"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][0])
+uengineOpenUserData = QtWidgets.QAction(QtGui.QIcon.fromTheme("fileopen"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1])
+uengineBackClean = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2])
 uengineData.addAction(uengineOpenRootData)
 uengineData.addAction(uengineOpenUserData)
 uengineData.addSeparator()
@@ -1971,6 +2029,7 @@ helpUengineRunnerBugUpload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindo
 helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4])
 helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
 helpFen = QtWidgets.QAction("程序评分")
+helpWebInformation = QtWidgets.QAction("程序公告")
 helpAbout = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
 helpAboutQt = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
 help.addAction(helpOpenProgramUrl)
@@ -1983,6 +2042,7 @@ help.addSeparator()
 help.addAction(helpShowHelp)
 help.addAction(helpRunnerUpdate)
 help.addAction(helpFen)
+help.addAction(helpWebInformation)
 help.addSeparator()
 help.addAction(helpAbout)
 help.addAction(helpAboutQt)
@@ -2000,6 +2060,7 @@ helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
 helpShowHelp.triggered.connect(ShowHelp)
 helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)
 helpFen.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/ProgramFen.py'"]).start())
+helpWebInformation.triggered.connect(GetNewInformation)
 helpAbout.triggered.connect(showhelp)
 helpAboutQt.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 # 设置窗口

@@ -4,15 +4,31 @@ Replaces: spark-uengine-runner, com.gitee.uengine.runner.spark.ubuntu
 Version: 2.0.0
 Architecture: all
 Section: utils
-Installed-Size: 1544
+Installed-Size: 1780
 Maintainer: gfdgd xi <3025613752@qq.com>
 Depends: python3, python3-tk, python3-pip, aapt, python3-setuptools, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, curl, python3-pil, python3-requests, adb, fonts-noto-cjk, python3-numpy, wget, inotify-tools, aria2, python3-pyqt5, python3-matplotlib, python3-urllib3
 Recommends: uengine, deepin-elf-verify, python3-pyqt5.qtwebengine
 Priority: optional
 Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu
 Homepage: https://gitee.com/gfdgd-xi/uengine-runner
-Description: UEngine 运行器，1.8.3 更新内容：
- ※1、修复安装/打包程序时出现找不到图标的问题；
- ※2、修复部分无法正确获取程序中文名和 Activity 的问题
- ※3、修复在运行器内打开打包器不会自动填充打包器 APK 路径
- ※4、问题反馈新增论坛反馈入口
+Description: UEngine 运行器，2.0.0 更新内容：
+ ※1、内置微型应用商店，支持评论、评分功能；
+ ※2、修复 UEngine 安装器在 Wayland 下无法正常运行的问题；
+ ※3、更新 UEngine 安装器安装的 UEngine 版本；
+ ※4、修复 UEngine 安装器安装后的 UEngine 无法正常安装 APK 的问题（包括从运行器和 deb 包安装）；
+ ※5、UEngine 安装器支持安装使用 SuperSU Root 的镜像；
+ ※6、UEngine 安装器安装后的 UEngine 支持开机后自动加载运行环境，无需人手动打开终端运行；
+ ※7、放开原先程序内的程序安装量查询功能，并新增打开量查询功能（在程序的关于窗口里打开）；
+ ※8、程序更新时不需要关闭所有 Python3 程序，只会关闭自己；
+ ※9、新增彩蛋（只在2023年1月22日生效）；
+ ※10、修复 UEngine 打包器在部分系统无法打开的问题；
+ ※11、新增程序公告功能；
+ ※12、修复了程序更新功能从高版本降级到低版本的问题；
+ ※13、不强制依赖 Deepin 终端；
+ ※14、新增 UEngine 打包器（高级版）；
+ 15、更改程序论坛网址；
+ 16、新增程序评分功能；
+ 17、修复 UEngine 打包器在打包时无法正确禁用所有选项；
+ 18、UEngine 打包器打包的 deb 不再指定 deepin-elf-verify 依赖版本；
+ 19、“更多帮助”功能支持访问云端的帮助内容；
+ 20、优化菜单栏分类，菜单栏新增图标。

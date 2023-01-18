@@ -19,6 +19,7 @@ import json
 import numpy
 import base64
 import shutil
+import datetime
 import zipfile
 import platform
 import requests
@@ -1603,12 +1604,32 @@ except:
 # add sub window
 #添加窗口开启关闭开关，防止重复开启
 windowflag = "close"
-def Egg():
+def Open():
     try:
-        lists = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/VersionList.json").text)
+        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/lists.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("https://304626p927.goho.co/uengine-runner/{}/data.txt".format(i)).text))
+            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/{}.txt".format(i)).text))
+    except:
+        QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
+        return
+    fig = matplotlib.pylab.figure()
+    fig.canvas.set_window_title("“UEngine 运行器”打开数（数据只供参考）")
+    matplotlib.pylab.plot(lists, data)
+    index = numpy.arange(len(lists))
+    fonts = matplotlib.font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')  # 用于支持中文显示，需要依赖fonts-noto-cjk
+    matplotlib.pylab.xlabel("版本号", fontproperties=fonts)
+    matplotlib.pylab.ylabel("打开数", fontproperties=fonts)
+            
+    matplotlib.pylab.title("“UEngine 运行器”打开数（数据只供参考）", fontproperties=fonts)
+    matplotlib.pylab.show()
+
+def Download():
+    try:
+        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/lists.json").text)
+        data = []
+        for i in lists:
+            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/{}.txt".format(i)).text))
     except:
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return
@@ -1650,14 +1671,17 @@ def showhelp():
     BtnGongxian = QtWidgets.QPushButton("谢明列表")
     BtnAbout = QtWidgets.QPushButton("关于")
     BtnDownN = QtWidgets.QPushButton("程序下载量")
+    BtnOpenN = QtWidgets.QPushButton("程序打开量")
     HelpStr = QtWidgets.QTextBrowser()
-    BtnDownN.setEnabled("--彩蛋" in sys.argv)
+    # 此功能从 2.0.0 后不再隐藏
+    #BtnDownN.setEnabled("--彩蛋" in sys.argv)
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)
     BtnGongxian.clicked.connect(ChgCon)
     BtnAbout.clicked.connect(ChgAbout)
-    BtnDownN.clicked.connect(Egg)
+    BtnDownN.clicked.connect(Download)
+    BtnOpenN.clicked.connect(Open)
 
     ChgTips()
 
@@ -1665,9 +1689,10 @@ def showhelp():
     helpLayout.addWidget(BtnLog, 1, 0, 1, 1)
     helpLayout.addWidget(BtnZujian, 2, 0, 1, 1)
     helpLayout.addWidget(BtnGongxian, 3, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 5, 0, 1, 1)
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 7, 1)
+    helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 6, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 8, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)
@@ -1985,4 +2010,9 @@ window.setWindowTitle(title)
 window.show()
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.setFixedSize(window.frameSize().width(), window.frameSize().height())
+# 癸卯年正月初一彩蛋（只显示一次，错过就没了）
+# （2023年1月22日）
+if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
+    os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
+    QtWidgets.QMessageBox.information(window, "祝福", "今天是癸卯年正月初一，这里代表 RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、美梦连连、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
 sys.exit(app.exec_())

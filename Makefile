@@ -36,6 +36,7 @@ build:
 	cp -rv pkexec/*                             new-deb-build/usr/share/polkit-1/actions
 	cp -rv AutoShell                            new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv AutoConfig.py                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv Model                                new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv UI                                   new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv ConfigLanguareRunner-help.json       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv ConfigLanguareRunner.py              new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/

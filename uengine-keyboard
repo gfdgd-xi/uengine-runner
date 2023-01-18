@@ -19,6 +19,12 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
+print("山坡羊·潼关怀古")
+print("""峰峦如聚，波涛如怒，山河表里潼关路。望西都，意踌躇。
+伤心秦汉经行处，宫阙万间都做了土。兴，百姓苦；亡，百姓苦。
+
+译文：（华山的）山峰从四面八方汇聚，（黄河的）波涛像发怒似的汹涌。潼关外有黄河，内有华山，山河雄伟，地势险要。遥望古都长安，陷于思索之中。从秦汉宫遗址经过，引发无限伤感，万间宫殿早已化作了尘土，一朝兴盛，百姓受苦；一朝灭亡，百姓依旧受苦。""")
+
 ########################
 #
 ########################

@@ -10,7 +10,12 @@ import updatekiller
 import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtWidgets as QtWidgets
-
+print("""过零丁洋
+辛苦遭逢起一经，干戈寥落四周星。山河破碎风飘絮，身世浮沉雨打萍。
+惶恐滩头说惶恐，零丁洋里叹零丁。人生自古谁无死？留取丹心照汗青。""")
+print("")
+print("译文：回想我早年由科举入仕历尽辛苦，如今战火消歇已熬过了四个年头。国家危在旦夕恰如狂风中的柳絮，个人又哪堪言说似骤雨里的浮萍。惶恐滩的惨败让我至今依然惶恐，零丁洋身陷元虏可叹我孤苦零丁。人生自古以来有谁能够长生不死？我要留一片爱国的丹心映照史册。")
+print("================================")
 # 读取文本文档
 def readtxt(path: "路径")->"读取文本文档":
     f = open(path, "r")  # 设置文件对象

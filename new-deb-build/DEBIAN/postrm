@@ -37,6 +37,7 @@ if [ "$1" = "purge" ]; then
 		echo /home/$username
 		if [ -d "/home/$username/.config/uengine-runner/" ]; then
 			rm -rf "/home/$username/.config/uengine-runner/"
+			rm -rf "/home/$username/.local/share/uengine-runner"
 		fi
 	done
 	# 清理 root 用户的配置文件

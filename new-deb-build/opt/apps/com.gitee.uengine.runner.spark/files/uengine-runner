@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi<3025613752@qq.com>
-# 版本：1.8.0
+# 版本：2.0.0
 # 更新时间：2022年07月25日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 PyQt5 构建
@@ -18,7 +18,9 @@ import time
 import json
 import numpy
 import base64
+import socket
 import shutil
+import datetime
 import zipfile
 import platform
 import requests
@@ -37,6 +39,12 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from getxmlimg import getsavexml
+try:
+    import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
+    bad = False
+except:
+    bad = True
+from Model import *
 
 def PythonLower():
     app = QtWidgets.QApplication(sys.argv)
@@ -49,6 +57,18 @@ if sys.version_info[0] < 3:
     PythonLower()
 if sys.version_info[1] < 6:
     PythonLower()
+
+print("""观沧海 曹操
+东临碣石，以观沧海。水何澹澹，山岛竦峙。
+树木丛生，百草丰茂。秋风萧瑟，洪波涌起。
+日月之行，若出其中；星汉灿烂，若出其里。
+幸甚至哉，歌以咏志。""")
+print("")
+print("""译文：东行登上碣石山，来观赏那苍茫的海。海水多么宽阔浩荡，山岛高高地挺立在海边。
+树木和百草丛生，十分繁茂。秋风吹动树木发出悲凉的声音，海中涌着巨大的海浪。
+太阳和月亮的运行，好像是从这浩瀚的海洋中发出的。银河星光灿烂，好像是从这浩瀚的海洋中产生出来的。
+我很幸运，就用这首诗歌来表达自己内心的志向。""")
+print("================================")
 
 class UninstallProgram(QtCore.QThread):
     info = QtCore.pyqtSignal(str)
@@ -435,19 +455,25 @@ def InstallRootUengineImage():
     if not os.path.exists:
         os.mkdir("/tmp/uengine-runner")
     write_txt("/tmp/uengine-runner/install.sh", "sudo dpkg -i /tmp/uengine-runner/u*.deb\nsudo apt install -f")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    #threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'\""]).start()
+    threading.Thread(target=OpenTerminal, args=[f"wget -P '/tmp/uengine-runner' 'https://hub.fastgit.xyz/gfdgd-xi/uengine-runner/releases/download/U1.2.15/uengine-android-image_1.2.15_amd64.deb' && pkexec bash '/tmp/uengine-runner/install.sh'"]).start()
+
 
 def UengineUbuntuInstall():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}'"]).start()
+
+def UengineUbuntuInstallRoot():
+    # 加 SuperSU 参数
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}' SuperSU"]).start()
 
 def UbuntuInstallUengine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath + '/uengine-installer'}'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath + '/uengine-installer'}'"]).start()
 
 def BuildRootUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e bash '{programPath}/root-uengine.sh'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/root-uengine.sh'"]).start()
     
 def ReinstallUengineImage():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e pkexec apt reinstall uengine-android-image -y"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"pkexec apt reinstall uengine-android-image -y"]).start()
 
 
 # 生成 uengine 启动文件到桌面
@@ -565,7 +591,7 @@ def BackUengineClean()->"清空 uengine 数据":
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
-        os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"pkexec rm -rfv /data/uengine\"")
+        OpenTerminal(f"pkexec rm -rfv /data/uengine")
         return
     print("Choose False")
 
@@ -628,7 +654,7 @@ def ScrcpyConnectUengine():
 sudo apt install snapd -y
 sudo snap refresh
 sudo snap install scrcpy''')
-        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C \"chmod 777 /tmp/uengine-runner/InstallScrcpy.sh -Rv && pkexec /tmp/uengine-runner/InstallScrcpy.sh\""]).start()
+        threading.Thread(target=OpenTerminal, args=[f"chmod 777 /tmp/uengine-runner/InstallScrcpy.sh -Rv && pkexec /tmp/uengine-runner/InstallScrcpy.sh"]).start()
         return
 
 # 获取用户桌面目录
@@ -701,12 +727,12 @@ def OpenUengineUserData():
 # 终端显示 adb 命令行
 def AdbShellShowInTer():
     os.system("adb connect 192.168.250.2:5555")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"adb -s 192.168.250.2:5555 shell"]).start()
 
 # 终端显示 adb top
 def AdbCPUAndRAWShowInTer():
     os.system("adb connect 192.168.250.2:5555")
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -w ~ -e 'adb -s 192.168.250.2:5555 shell top'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"adb -s 192.168.250.2:5555 shell top"]).start()
 
 def UengineSettingShow():
     threading.Thread(target=os.system, args=["/usr/bin/uengine launch --action=android.intent.action.MAIN --package=com.android.settings --component=com.android.settings.Settings"]).start()
@@ -727,14 +753,14 @@ def AdbStartServer():
     QtWidgets.QMessageBox.information(widget, "提示", "完成！")
 
 def ReinstallUengine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\"'"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"pkexec apt reinstall uengine uengine-android-image uengine-modules-dkms -y && notify-send -i uengine \"安装完毕！\""]).start()
 
 def DelUengineCheck():
     if not os.path.exists("/usr/share/uengine/uengine-check-runnable.sh"):
         QtWidgets.QMessageBox.information(widget, "提示", "本功能已经被删除，无法重复删除！")
         return
     if QtWidgets.QMessageBox.warning(widget, "警告", "删除后将无法使用本软件恢复\n如果需要恢复本功能，请重新安装 UEngine！", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Ok) == QtWidgets.QMessageBox.Ok:
-        threading.Thread(target=os.system, args=["'{programPath}/launch.sh' deepin-terminal -C 'pkexec rm -v /usr/share/uengine/uengine-check-runnable.sh'"]).start()
+        threading.Thread(target=OpenTerminal, args=[f"pkexec rm -v /usr/share/uengine/uengine-check-runnable.sh"]).start()
 
 # 使用 adb 连接 uengine
 def UengineConnectAdb():
@@ -789,7 +815,27 @@ def VersionCheck(version1, version2):
     return version1 == version2
 
 def ShowHelp():
-    webbrowser.open_new_tab(programPath + "/Help/index.html")
+    global webHelp
+    # 先判断是否能连接服务器，如果能则访问线上版本，否则访问本地的帮助文件
+    sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    sk.settimeout(1)
+    url = "file://" + programPath + "/Help/index.html"
+    try:
+        sk.connect(("uengine-runner.racoongx.cn", 80))
+        url = f"http://uengine-runner.racoongx.cn"
+    except:
+        traceback.print_exc()
+    if bad:
+        # 如果没有安装 QWebEngine，则直接用浏览器打开
+        webbrowser.open_new_tab(url)
+        return
+    # 否则用 QWebEngine 打开
+    webHelp = QtWebEngineWidgets.QWebEngineView()
+    webHelp.setWindowTitle("获取程序帮助")
+    webHelp.setUrl(QtCore.QUrl(url))
+    webHelp.setWindowIcon(QtGui.QIcon(iconPath))
+    webHelp.resize(int(webHelp.frameGeometry().width() * 1.3), int(webHelp.frameGeometry().height() * 1.1))
+    webHelp.show()
 
 def AllowOrDisallowUpdateAndroidApp():
     if not os.path.exists("/data/uengine/data/data/misc/adb/adb_keys"):
@@ -1104,14 +1150,36 @@ class UpdateWindow():
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
+        ok.setDisabled(True)
         try:
-            UpdateWindow.data = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/update.json").text)
+            UpdateWindow.data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-update-information/raw/branch/master/uengine-runner/update.json").text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText("此为最新版本，无需更新")
                 ok.setDisabled(True)
             else:
-                updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
+                # 版本号读取（防止出现高版本号提示要“升级”到低版本号的问题）
+                localVersionList = version.split(".")
+                webVersionList = UpdateWindow.data['Version'].split(".")
+                for i in range(len(localVersionList)):
+                    local = int(localVersionList[i])
+                    web = int(webVersionList[i])
+                    if web < local:
+                        updateText.setHtml(f"""<p>此为最新版本，无需更新，但似乎您当前使用的程序版本比云端版本还要高。</p>
+<p>出现这个问题可能会有如下几种情况：</p>
+<p>1、使用编译或者内测版本</p>
+<p>2、自己修改了程序版本</p>
+<p>3、作者忘记更新云端上的更新信息了</p>
+<p>如果是第三种情况，请反馈到此：https://gitee.com/gfdgd-xi-org/uengine-runner/issues/I6B091</p>
+<p>或者是这里：https://bbs.racoongx.cn/t/bugs</p>
+<p><img src='{programPath}/Icon/doge.png'></p>""")
+                        ok.setDisabled(True)
+                        break
+                    if web > local:
+                        updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
+                        ok.setEnabled(True)
+                        break
+                
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(updateWidget, "错误", "无法连接服务器！")
@@ -1121,7 +1189,7 @@ class UpdateWindow():
         updateWidgetLayout.addWidget(cancel, 2, 1, 1, 1)
         updateWidget.setLayout(updateWidgetLayout)
         UpdateWindow.update.setCentralWidget(updateWidget)
-        UpdateWindow.update.setWindowTitle("检查更新")
+        UpdateWindow.update.setWindowTitle("检查 UEngine 运行器更新")
         UpdateWindow.update.setWindowIcon(QtGui.QIcon(iconPath))
         UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
         UpdateWindow.update.show()
@@ -1149,7 +1217,7 @@ zenity --info --text=\"更新完毕！\" --ellipsize
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误，无法继续更新", traceback.format_exc())
-        os.system(f"'{programPath}/launch.sh' deepin-terminal -e pkexec bash /tmp/uengine-runner/update.sh")
+        OpenTerminal(f"pkexec bash /tmp/uengine-runner/update.sh")
         
 image = None
 class ApkInformation():
@@ -1244,7 +1312,7 @@ class ApkInformation():
         if choose == None or choose == 7:
             return
         try:
-            QtWidgets.QMessageBox.information(widget, "提示", requests.post("https://304626p927.goho.co/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
+            QtWidgets.QMessageBox.information(widget, "提示", requests.post("http://120.25.153.144/uengine-runner/app/check/add.php", {"Package": GetApkPackageName(path), "Type": choose}).text)
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ConnectServerStarError"])
@@ -1256,7 +1324,7 @@ class ApkInformation():
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
-            data = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/app/check/" + package +"/data.json").text)
+            data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/uengineapp/" + package +"/data.json").text)
             print(data)
         except:
             QtWidgets.QMessageBox.information(widget, "提示", "此程序暂时没有评分，欢迎您贡献第一个评分！")
@@ -1454,6 +1522,28 @@ class AddNewUengineDesktopLink():
         activityName.setText(str(GetApkActivityName(path)))
         write_txt(get_home() + "/.config/uengine-runner/FindApkName.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
 
+def GetNewInformation():
+    try:
+        text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/information/index.html").text
+    except:
+        traceback.print_exc()
+        text = """<p>无法连接到服务器</p>
+            <hr/>
+            <p>你可以尝试：</p>
+            <p>1. 判断是否能正常连接网络</p>
+            <p>2. 网络配置是否有误</p>"""
+    global webInformation
+    if bad:
+        webInformation = QtWidgets.QTextBrowser()
+    else:
+        webInformation = QtWebEngineWidgets.QWebEngineView()
+    webInformation.setHtml(text)
+    webInformation.setWindowTitle("获取程序公告")
+    webInformation.setWindowIcon(QtGui.QIcon(iconPath))
+    webInformation.resize(int(webInformation.frameGeometry().width() * 1.3), int(webInformation.frameGeometry().height() * 1.1))
+    webInformation.show()
+
+
 def UseProgram():
     global useProgram
     useProgram = '''<p>1、UEngine：{}</p>
@@ -1496,6 +1586,7 @@ SystemVersion = GetSystemVersion()
 iconPath = "{}/runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
 about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <p>介绍：一个基于 Python3 的 PyQt5 制作的 UEngine 运行器，在新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。</p>
+<p>程序开源许可证：GPLV3</p>
 <p>版本：{version}</p>
 <p>适用平台：{goodRunSystem}</p>
 <p>Qt 版本：{QtCore.qVersion()}</p>
@@ -1603,12 +1694,32 @@ except:
 # add sub window
 #添加窗口开启关闭开关，防止重复开启
 windowflag = "close"
-def Egg():
+def Open():
     try:
-        lists = json.loads(requests.get("https://304626p927.goho.co/uengine-runner/VersionList.json").text)
+        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/lists.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("https://304626p927.goho.co/uengine-runner/{}/data.txt".format(i)).text))
+            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/{}.txt".format(i)).text))
+    except:
+        QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
+        return
+    fig = matplotlib.pylab.figure()
+    fig.canvas.set_window_title("“UEngine 运行器”打开数（数据只供参考）")
+    matplotlib.pylab.plot(lists, data)
+    index = numpy.arange(len(lists))
+    fonts = matplotlib.font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')  # 用于支持中文显示，需要依赖fonts-noto-cjk
+    matplotlib.pylab.xlabel("版本号", fontproperties=fonts)
+    matplotlib.pylab.ylabel("打开数", fontproperties=fonts)
+            
+    matplotlib.pylab.title("“UEngine 运行器”打开数（数据只供参考）", fontproperties=fonts)
+    matplotlib.pylab.show()
+
+def Download():
+    try:
+        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/lists.json").text)
+        data = []
+        for i in lists:
+            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/{}.txt".format(i)).text))
     except:
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return
@@ -1650,14 +1761,17 @@ def showhelp():
     BtnGongxian = QtWidgets.QPushButton("谢明列表")
     BtnAbout = QtWidgets.QPushButton("关于")
     BtnDownN = QtWidgets.QPushButton("程序下载量")
+    BtnOpenN = QtWidgets.QPushButton("程序打开量")
     HelpStr = QtWidgets.QTextBrowser()
-    BtnDownN.setEnabled("--彩蛋" in sys.argv)
+    # 此功能从 2.0.0 后不再隐藏
+    #BtnDownN.setEnabled("--彩蛋" in sys.argv)
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)
     BtnGongxian.clicked.connect(ChgCon)
     BtnAbout.clicked.connect(ChgAbout)
-    BtnDownN.clicked.connect(Egg)
+    BtnDownN.clicked.connect(Download)
+    BtnOpenN.clicked.connect(Open)
 
     ChgTips()
 
@@ -1665,9 +1779,10 @@ def showhelp():
     helpLayout.addWidget(BtnLog, 1, 0, 1, 1)
     helpLayout.addWidget(BtnZujian, 2, 0, 1, 1)
     helpLayout.addWidget(BtnGongxian, 3, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 5, 0, 1, 1)
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 7, 1)
+    helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 6, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 8, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)
@@ -1684,7 +1799,7 @@ if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可") == QtWidgets.QMessageBox.Yes:
-            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"pkexec apt install uengine -y\"")
+            OpenTerminal(f"'pkexec apt install uengine -y")
             sys.exit(0)
     # 非 Deepin/UOS 用户
     # 因为安装器出现问题，所以废弃
@@ -1693,7 +1808,8 @@ if not os.path.exists("/usr/bin/uengine"):
         #sys.exit(0)
         #if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会安装移植版本（之前由 Shenmo 编写）\n安装完后重新启动该程序即可\n提示：需要在 Ubuntu 22.04 及以上版本才能正常安装") == QtWidgets.QMessageBox.Yes:
-            os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            #os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
+            OpenTerminal(f"bash '{programPath}/uengine-installer'")
             sys.exit(0)
 
 ###########################
@@ -1833,26 +1949,35 @@ uengineDoNotUseAdb.triggered.connect(UengineDoNotUseAdb)
 
 uengineAllowOrDisallowUpdateAndroidApp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][13])
 uengineSetHttpProxy = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][15])
-uengineOpenDebBuilder = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1])
-uengineKeyboardToMouse = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7])
-uengineCheckCpu = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8])
-uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12])
+uengineOpenDebBuilder = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][1])
+uengineKeyboardToMouse = QtWidgets.QAction(QtGui.QIcon.fromTheme("keyboard"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][7])
+uengineCheckCpu = QtWidgets.QAction(QtGui.QIcon.fromTheme("cpu"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][8])
+#uengineUbuntuInstall = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][12])
 uengineDeleteUengineCheck = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9])
 uengineReinstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10])
-uengineUbuntuInstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
+uengineUbuntuInstall = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
+uengineUbuntuInstallRoot = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "在 Ubuntu 上安装 UEngine（SuperSU 镜像）")
 uengineWindowSizeSetting = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][16])
-uengine.addAction(uengineAllowOrDisallowUpdateAndroidApp)
-uengine.addAction(uengineSetHttpProxy)
 uengine.addAction(uengineOpenDebBuilder)
 uengine.addAction(uengineKeyboardToMouse)
 uengine.addAction(uengineCheckCpu)
+uengine.addSeparator()
 uengine.addAction(uengineUbuntuInstall)
+uengine.addAction(uengineUbuntuInstallRoot)
+uengine.addSeparator()
 uengine.addAction(uengineWindowSizeSetting)
-uengineService = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"])
-uengineInternet = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"])
+uengine.addSeparator()
+uengine.addAction(uengineAllowOrDisallowUpdateAndroidApp)
+uengine.addAction(uengineSetHttpProxy)
+uengine.addSeparator()
+uengineService = uengine.addMenu(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Name"])
+uengineInternet = uengine.addMenu(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Name"])
+uengine.addSeparator()
 uengineIcon = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][4]["Name"])
+uengine.addSeparator()
 uengine.addMenu(uengineUseAdbm)
-uengineData = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"])
+uengineData = uengine.addMenu(QtGui.QIcon.fromTheme("fileopen"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Name"])
+uengine.addSeparator()
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
@@ -1864,13 +1989,14 @@ uengineOpenDebBuilder.triggered.connect(OpenUengineDebBuilder)
 uengineKeyboardToMouse.triggered.connect(KeyboardToMouse)
 uengineCheckCpu.triggered.connect(UengineCheckCpu)
 uengineUbuntuInstall.triggered.connect(UengineUbuntuInstall)
+uengineUbuntuInstallRoot.triggered.connect(UengineUbuntuInstallRoot)
 uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
 uengineReinstall.triggered.connect(ReinstallUengine)
 uengineWindowSizeSetting.triggered.connect(UengineWindowSizeSetting.ShowWindow)
 
-uengineStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
-uengineStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
-uengineRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][2])
+uengineStart = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
+uengineStop = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])
+uengineRestart = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][2])
 uengineService.addAction(uengineStart)
 uengineService.addAction(uengineStop)
 uengineService.addAction(uengineRestart)
@@ -1879,14 +2005,14 @@ uengineStart.triggered.connect(StartUengine)
 uengineStop.triggered.connect(StopUengine)
 uengineRestart.triggered.connect(UengineRestart)
 
-uengineBridgeStart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0])
-uengineBridgeStop = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1])
-uengineBridgeRestart = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][2])
-uengineBridgeReload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][3])
-uengineBridgeForceReload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][4])
+uengineBridgeStart = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][0])
+uengineBridgeStop = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][1])
+uengineBridgeRestart = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][2])
+uengineBridgeReload = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][3])
+uengineBridgeForceReload = QtWidgets.QAction(QtGui.QIcon.fromTheme("internet"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][3]["Menu"][4])
 uengineInternet.addAction(uengineBridgeStart)
 uengineInternet.addAction(uengineBridgeStop)
-uengineInternet.addAction(uengineReinstall)
+#uengineInternet.addAction(uengineReinstall)
 uengineInternet.addAction(uengineBridgeReload)
 uengineInternet.addAction(uengineBridgeForceReload)
 # 绑定信号
@@ -1913,9 +2039,9 @@ uengineAddNewUengineDesktopLink.triggered.connect(AddNewUengineDesktopLink.ShowW
 uengineCleanAllUengineDesktopLink.triggered.connect(CleanAllUengineDesktopLink)
 
 #uengineData
-uengineOpenRootData = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][0])
-uengineOpenUserData = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1])
-uengineBackClean = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2])
+uengineOpenRootData = QtWidgets.QAction(QtGui.QIcon.fromTheme("fileopen"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][0])
+uengineOpenUserData = QtWidgets.QAction(QtGui.QIcon.fromTheme("fileopen"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][1])
+uengineBackClean = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][6]["Menu"][2])
 uengineData.addAction(uengineOpenRootData)
 uengineData.addAction(uengineOpenUserData)
 uengineData.addSeparator()
@@ -1946,8 +2072,9 @@ helpUengineRunnerBugUpload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindo
 helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4])
 helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
 helpFen = QtWidgets.QAction("程序评分")
-helpAbout = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
-helpAboutQt = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
+helpWebInformation = QtWidgets.QAction("程序公告")
+helpAbout = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
+helpAboutQt = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
 help.addAction(helpOpenProgramUrl)
 help.addAction(uengineRunnerSearch)
 help.addAction(makerWebsize)
@@ -1958,6 +2085,7 @@ help.addSeparator()
 help.addAction(helpShowHelp)
 help.addAction(helpRunnerUpdate)
 help.addAction(helpFen)
+help.addAction(helpWebInformation)
 help.addSeparator()
 help.addAction(helpAbout)
 help.addAction(helpAboutQt)
@@ -1975,6 +2103,7 @@ helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
 helpShowHelp.triggered.connect(ShowHelp)
 helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)
 helpFen.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/ProgramFen.py'"]).start())
+helpWebInformation.triggered.connect(GetNewInformation)
 helpAbout.triggered.connect(showhelp)
 helpAboutQt.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 # 设置窗口
@@ -1985,4 +2114,12 @@ window.setWindowTitle(title)
 window.show()
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.setFixedSize(window.frameSize().width(), window.frameSize().height())
+# 癸卯年正月初一彩蛋（只显示一次，错过就没了）
+# （2023年1月22日）
+if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
+    os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
+    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，这里代表 RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、美梦连连、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
+if version == "2.0.0":
+    title += " 新春版"
+    window.setWindowTitle(title)
 sys.exit(app.exec_())

@@ -2121,7 +2121,8 @@ window.setFixedSize(window.frameSize().width(), window.frameSize().height())
 # （2023年1月22日）
 if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
     os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
-    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，这里代表 RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、美梦连连、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
+    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
+#if datetime.datetime.now().year >= 2023 and datetime.datetime.now().month >= 1 and datetime.datetime.now().day >= 22:
 if version == "2.0.0":
     title += " 新春版"
     window.setWindowTitle(title)

@@ -1799,7 +1799,7 @@ if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可") == QtWidgets.QMessageBox.Yes:
-            OpenTerminal(f"'pkexec apt install uengine -y")
+            OpenTerminal(f"pkexec apt install uengine -y")
             sys.exit(0)
     # 非 Deepin/UOS 用户
     # 因为安装器出现问题，所以废弃

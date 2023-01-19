@@ -68,7 +68,7 @@ if len(sys.argv) - optionAll < 2:
 command = ""
 for i in sys.argv[1:]:
     command += f"\"{i}\" "
-print("Wine 运行器自动配置文件解析器（基于 Bash）")
+print("UEngine 运行器自动配置文件解析器（基于 Bash）")
 print(f"版本：{version}")
 print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
 print("--------------------------------------------------------------")

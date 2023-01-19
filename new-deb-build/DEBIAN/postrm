@@ -37,16 +37,25 @@ if [ "$1" = "purge" ]; then
 		echo /home/$username
 		if [ -d "/home/$username/.config/uengine-runner/" ]; then
 			rm -rf "/home/$username/.config/uengine-runner/"
-			rm -rf "/home/$username/.local/share/uengine-runner"
+			# 删除 QWebEngine 记录
 			rm -rf "/home/$username/.local/share/uengine-runner"
 			rm -rf "/home/$username/.local/share/AutoConfig.py"
-			
+			rm -rf "/home/$username/.config/share/uengine-runner"
+			rm -rf "/home/$username/.config/share/AutoConfig.py"
+			rm -rf "/home/$username/.cache/share/uengine-runner"
+			rm -rf "/home/$username/.cache/share/AutoConfig.py"
 		fi
 	done
 	# 清理 root 用户的配置文件
 	echo /root
 	if [ -d "/root/.config/uengine-runner/" ]; then
 		rm -rf "/root/.config/uengine-runner/"
+		rm -rf "/root/.local/share/uengine-runner"
+		rm -rf "/root/.local/share/AutoConfig.py"
+		rm -rf "/root/.config/share/uengine-runner"
+		rm -rf "/root/.config/share/AutoConfig.py"
+		rm -rf "/root/.cache/share/uengine-runner"
+		rm -rf "/root/.cache/share/AutoConfig.py"
 	fi
 else
 	echo "非 purge，跳过清理"

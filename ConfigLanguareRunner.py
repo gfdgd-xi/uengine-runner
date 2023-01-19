@@ -665,7 +665,7 @@ if __name__ == "__main__":
     except:
         print("错误：无法读取该文件，无法继续")
         sys.exit(1)
-    print("Wine 运行器自动配置文件解析器")
+    print("UEngine 运行器自动配置文件解析器")
     print(f"版本：{version}")
     print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
     print("--------------------------------------------------------------")

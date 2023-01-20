@@ -1754,6 +1754,13 @@ def showhelp():
     def ChgTips():
         HelpStr.setHtml(tips)
     
+    def ChgAdmiration():
+        HelpStr.setHtml(f"""<p><b>赞赏要记得要添加备注“UEngine运行器”，然后后面接自己想要备注的内容或不写</p></b>
+<p><img src='{programPath}/Icon/doge.png'></p>
+<h3>转到微信</h3>
+<p><img src='{programPath}/Icon/QR-WeChat.png'></p>
+<h3>转到支付宝</h3>
+<p><img src='{programPath}/Icon/QR-ZhiFuBao.png'></p>""")
     
     BtnReadme = QtWidgets.QPushButton("使用说明")
     BtnLog = QtWidgets.QPushButton("更新内容")
@@ -1762,15 +1769,24 @@ def showhelp():
     BtnAbout = QtWidgets.QPushButton("关于")
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
+    BtnAdmiration = QtWidgets.QPushButton("赞赏")
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
+    # 暂时隐藏赞赏
+    try:
+        things = requests.get("https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/admiration.txt").text.strip()
+    except:
+        things = ""
+        traceback.print_exc()
+    BtnAdmiration.setEnabled("--admiration" in sys.argv or things == "true")
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)
     BtnGongxian.clicked.connect(ChgCon)
     BtnAbout.clicked.connect(ChgAbout)
     BtnDownN.clicked.connect(Download)
+    BtnAdmiration.clicked.connect(ChgAdmiration)
     BtnOpenN.clicked.connect(Open)
 
     ChgTips()
@@ -1781,8 +1797,9 @@ def showhelp():
     helpLayout.addWidget(BtnGongxian, 3, 0, 1, 1)
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
     helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 6, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 8, 1)
+    helpLayout.addWidget(BtnAdmiration, 6, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 7, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 9, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)

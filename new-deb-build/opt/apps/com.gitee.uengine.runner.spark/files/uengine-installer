@@ -63,6 +63,8 @@ sudo chmod 755 /usr/bin/uengine-loading-ubuntu
 #cp /tmp/uengine/run_daemon.sh $HOME/uengine-launch
 #cp /tmp/uengine/launch_uengine.sh $HOME/uengine-launch
 cd /tmp/uengine
+# 刷新 APT 依赖防止出现问题
+sudo apt update
 /tmp/uengine/install.sh
 # 安装所需依赖
 sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev 

@@ -286,6 +286,7 @@ def DisabledAndEnbled(choose: "启动或者禁用")->"禁用或启动所有控�
     #ComboUninstallPath.configure(state=a)
     BtnFindApk.setDisabled(choose)
     BtnInstall.setDisabled(choose)
+    BtnAppStore.setDisabled(choose)
     BtnShowUengineApp.setDisabled(choose)
     #BtnUninstallApkBrowser.configure(state=a)
     BtnUninstall.setDisabled(choose)
@@ -1754,6 +1755,13 @@ def showhelp():
     def ChgTips():
         HelpStr.setHtml(tips)
     
+    def ChgAdmiration():
+        HelpStr.setHtml(f"""<p><b>赞赏要记得要添加备注“UEngine运行器”，然后后面接自己想要备注的内容或不写</p></b>
+<p><img src='{programPath}/Icon/doge.png'></p>
+<h3>转到微信</h3>
+<p><img src='{programPath}/Icon/QR-WeChat.png'></p>
+<h3>转到支付宝</h3>
+<p><img src='{programPath}/Icon/QR-ZhiFuBao.png'></p>""")
     
     BtnReadme = QtWidgets.QPushButton("使用说明")
     BtnLog = QtWidgets.QPushButton("更新内容")
@@ -1762,15 +1770,27 @@ def showhelp():
     BtnAbout = QtWidgets.QPushButton("关于")
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
+    BtnAdmiration = QtWidgets.QPushButton("赞赏（暂未开启）")
+    BtnAdmiration.setDisabled(True)
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
+    # 暂时隐藏赞赏
+    try:
+        things = requests.get("https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/admiration.txt").text.strip()
+    except:
+        things = ""
+        traceback.print_exc()
+    if "--admiration" in sys.argv or things == "true":
+        BtnAdmiration.setEnabled(True)
+        BtnAdmiration.setText("赞赏")
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)
     BtnGongxian.clicked.connect(ChgCon)
     BtnAbout.clicked.connect(ChgAbout)
     BtnDownN.clicked.connect(Download)
+    BtnAdmiration.clicked.connect(ChgAdmiration)
     BtnOpenN.clicked.connect(Open)
 
     ChgTips()
@@ -1781,8 +1801,9 @@ def showhelp():
     helpLayout.addWidget(BtnGongxian, 3, 0, 1, 1)
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
     helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 6, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 8, 1)
+    helpLayout.addWidget(BtnAdmiration, 6, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 7, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 9, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)
@@ -1799,7 +1820,7 @@ if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower():
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可") == QtWidgets.QMessageBox.Yes:
-            OpenTerminal(f"'pkexec apt install uengine -y")
+            OpenTerminal(f"pkexec apt install uengine -y")
             sys.exit(0)
     # 非 Deepin/UOS 用户
     # 因为安装器出现问题，所以废弃
@@ -2121,7 +2142,8 @@ window.setFixedSize(window.frameSize().width(), window.frameSize().height())
 # （2023年1月22日）
 if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
     os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
-    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，这里代表 RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、美梦连连、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
+    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
+#if datetime.datetime.now().year >= 2023 and datetime.datetime.now().month >= 1 and datetime.datetime.now().day >= 22:
 if version == "2.0.0":
     title += " 新春版"
     window.setWindowTitle(title)

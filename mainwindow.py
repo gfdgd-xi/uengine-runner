@@ -286,6 +286,7 @@ def DisabledAndEnbled(choose: "启动或者禁用")->"禁用或启动所有控�
     #ComboUninstallPath.configure(state=a)
     BtnFindApk.setDisabled(choose)
     BtnInstall.setDisabled(choose)
+    BtnAppStore.setDisabled(choose)
     BtnShowUengineApp.setDisabled(choose)
     #BtnUninstallApkBrowser.configure(state=a)
     BtnUninstall.setDisabled(choose)
@@ -1769,7 +1770,8 @@ def showhelp():
     BtnAbout = QtWidgets.QPushButton("关于")
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
-    BtnAdmiration = QtWidgets.QPushButton("赞赏")
+    BtnAdmiration = QtWidgets.QPushButton("赞赏（暂未开启）")
+    BtnAdmiration.setDisabled(True)
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
@@ -1779,7 +1781,9 @@ def showhelp():
     except:
         things = ""
         traceback.print_exc()
-    BtnAdmiration.setEnabled("--admiration" in sys.argv or things == "true")
+    if "--admiration" in sys.argv or things == "true":
+        BtnAdmiration.setEnabled(True)
+        BtnAdmiration.setText("赞赏")
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)

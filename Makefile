@@ -54,7 +54,7 @@ build:
 	python3 RemovePycacheFile.py                #new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv new-deb-build /tmp/uengine-runner-builder
 	sudo chown -R root:root /tmp/uengine-runner-builder
-	dpkg -b /tmp/uengine-runner-builder com.gitee.uengine.runner.spark.deb
+	sudo dpkg -b /tmp/uengine-runner-builder com.gitee.uengine.runner.spark.deb
 	sudo rm -rfv /tmp/uengine-runner-builder
 
 install:
@@ -64,7 +64,7 @@ install:
 	#sudo dpkg -i com.gitee.uengine.runner.spark.deb | true
 	#sudo apt install -f
 	sudo apt reinstall ./com.gitee.uengine.runner.spark.deb
-	rm com.gitee.uengine.runner.spark.deb
+	sudo rm com.gitee.uengine.runner.spark.deb
 
 depend:
 	sudo apt install python3 python3-tk python3-pip aapt \

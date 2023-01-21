@@ -4,7 +4,7 @@ Replaces: spark-uengine-runner, com.gitee.uengine.runner.spark.ubuntu
 Version: 2.0.0
 Architecture: all
 Section: utils
-Installed-Size: 1780
+Installed-Size: 2920
 Maintainer: gfdgd xi <3025613752@qq.com>
 Depends: python3, python3-tk, python3-pip, aapt, python3-setuptools, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, curl, python3-pil, python3-requests, adb, fonts-noto-cjk, python3-numpy, wget, inotify-tools, aria2, python3-pyqt5, python3-matplotlib, python3-urllib3
 Recommends: uengine, deepin-elf-verify, python3-pyqt5.qtwebengine
@@ -32,4 +32,6 @@ Description: UEngine 运行器，2.0.0 更新内容：
  18、UEngine 打包器打包的 deb 不再指定 deepin-elf-verify 依赖版本；
  19、“更多帮助”功能支持访问云端的帮助内容；
  20、更换程序接口；
- 21、优化菜单栏分类，菜单栏新增图标。
+ 21、优化菜单栏分类，菜单栏新增图标；
+ 22、程序关于可以查看程序使用的开源协议；
+ 23、修复在 Ubuntu 下安装后启动器没有图标的问题。

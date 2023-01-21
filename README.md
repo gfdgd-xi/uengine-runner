@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
-<h1 align="center">UEngine 运行器 1.8.3</h1>  
+<h1 align="center">UEngine 运行器 2.0.0</h1>  
 <hr>  
 <p align='center'><a href='https://gitee.com/gfdgd-xi/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>  
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -78,7 +78,7 @@ sudo apt upgrade
 19、“更多帮助”功能支持访问云端的帮助内容；    
 20、更换程序接口；    
 21、优化菜单栏分类，菜单栏新增图标；    
-22、程序关于可以查看程序使用的开源协议；
+22、程序关于可以查看程序使用的开源协议；  
 23、修复在 Ubuntu 下安装后启动器没有图标的问题。      
 ![图片.png](https://storage.deepin.org/thread/202301211303181171_图片.png)  
   

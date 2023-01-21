@@ -1755,6 +1755,20 @@ def showhelp():
     def ChgTips():
         HelpStr.setHtml(tips)
     
+    def ChgGPLV3():
+        try:
+            with open(f"{programPath}/LICENSE", "r") as file:
+                things = file.read()
+                try:
+                    HelpStr.setMarkdown(things)
+                except:
+                    # 旧版 QT 不支持 Markdown
+                    traceback.print_exc()
+                    HelpStr.setText(things)
+        except:
+            traceback.print_exc()
+            HelpStr.setText(traceback.print_exc())
+
     def ChgAdmiration():
         HelpStr.setHtml(f"""<p><b>赞赏要记得要添加备注“UEngine运行器”，然后后面接自己想要备注的内容或不写</p></b>
 <p><img src='{programPath}/Icon/doge.png'></p>
@@ -1770,6 +1784,7 @@ def showhelp():
     BtnAbout = QtWidgets.QPushButton("关于")
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
+    BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
     BtnAdmiration = QtWidgets.QPushButton("赞赏（暂未开启）")
     BtnAdmiration.setDisabled(True)
     HelpStr = QtWidgets.QTextBrowser()
@@ -1790,6 +1805,7 @@ def showhelp():
     BtnGongxian.clicked.connect(ChgCon)
     BtnAbout.clicked.connect(ChgAbout)
     BtnDownN.clicked.connect(Download)
+    BtnGPLV3.clicked.connect(ChgGPLV3)
     BtnAdmiration.clicked.connect(ChgAdmiration)
     BtnOpenN.clicked.connect(Open)
 
@@ -1801,9 +1817,10 @@ def showhelp():
     helpLayout.addWidget(BtnGongxian, 3, 0, 1, 1)
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
     helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
-    helpLayout.addWidget(BtnAdmiration, 6, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 7, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 9, 1)
+    helpLayout.addWidget(BtnGPLV3, 6, 0, 1, 1)
+    helpLayout.addWidget(BtnAdmiration, 7, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 8, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 10, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)

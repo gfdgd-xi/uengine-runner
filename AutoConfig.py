@@ -17,6 +17,7 @@ import json
 import traceback
 import urllib.request
 import requests
+import updatekiller
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *

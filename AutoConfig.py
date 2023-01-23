@@ -25,7 +25,7 @@ try:
     import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
     webeng = True
 except:
-    print("未安装此依赖库")
+    print("未安装 QtWebEngine")    #这样更容易排查问题
     webeng = False
 print("""太常引·建康中秋夜为吕叔潜赋
 一轮秋影转金波，飞镜又重磨。把酒问姮娥：被白发、欺人奈何？
@@ -526,7 +526,8 @@ def ChangeSources():
     sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
-            urlSources = urlSourcesList[i]
+            old_urlSources = urlSources     #先备份
+            urlSources = urlSourcesList[i]  #然后切换尝试
             # 解析云列表
             try:
                 # 获取列表
@@ -539,6 +540,7 @@ def ChangeSources():
             except:
                 traceback.print_exc()
                 QtWidgets.QMessageBox.critical(window, "提示", "无法连接服务器")
+                urlSources = old_urlSources     #如果源不可用则换回来
             break
 
 if __name__ == "__main__":

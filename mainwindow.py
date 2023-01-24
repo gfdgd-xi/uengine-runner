@@ -1770,12 +1770,7 @@ def showhelp():
             HelpStr.setText(traceback.print_exc())
 
     def ChgAdmiration():
-        HelpStr.setHtml(f"""<p><b>优先捐助微信到微信</p></b>
-<p><img src='{programPath}/Icon/doge.png'></p>
-<h3>转到微信</h3>
-<p><img src='{programPath}/Icon/QR-WeChat.png'></p>
-<h3>转到支付宝</h3>
-<p><img src='{programPath}/Icon/QR-ZhiFuBao.png'></p>""")
+        webbrowser.open_new_tab("http://dt.racoongx.cn/")
     
     BtnReadme = QtWidgets.QPushButton("使用说明")
     BtnLog = QtWidgets.QPushButton("更新内容")
@@ -1785,7 +1780,7 @@ def showhelp():
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
     BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
-    BtnAdmiration.setDisabled(True)
+    BtnAdmiration = QtWidgets.QPushButton("赞赏")
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
@@ -2138,6 +2133,11 @@ helpFen.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{p
 helpWebInformation.triggered.connect(GetNewInformation)
 helpAbout.triggered.connect(showhelp)
 helpAboutQt.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
+
+zanShangAction = QtWidgets.QAction("赞赏我们")
+zanShang.addAction(zanShangAction)
+zanShangAction.triggered.connect(lambda: webbrowser.open_new_tab("http://dt.racoongx.cn/"))
+
 # 设置窗口
 app.setStyle(QtWidgets.QStyleFactory.create(settingConf["Theme"]))
 widget.setLayout(widgetLayout)

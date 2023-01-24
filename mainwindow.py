@@ -1770,7 +1770,7 @@ def showhelp():
             HelpStr.setText(traceback.print_exc())
 
     def ChgAdmiration():
-        HelpStr.setHtml(f"""<p><b>赞赏要记得要添加备注“UEngine运行器”，然后后面接自己想要备注的内容或不写</p></b>
+        HelpStr.setHtml(f"""<p><b>优先捐助微信到微信</p></b>
 <p><img src='{programPath}/Icon/doge.png'></p>
 <h3>转到微信</h3>
 <p><img src='{programPath}/Icon/QR-WeChat.png'></p>
@@ -1785,20 +1785,10 @@ def showhelp():
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
     BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
-    BtnAdmiration = QtWidgets.QPushButton("赞赏（暂未开启）")
     BtnAdmiration.setDisabled(True)
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
-    # 暂时隐藏赞赏
-    try:
-        things = requests.get("https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/admiration.txt").text.strip()
-    except:
-        things = ""
-        traceback.print_exc()
-    if "--admiration" in sys.argv or things == "true":
-        BtnAdmiration.setEnabled(True)
-        BtnAdmiration.setText("赞赏")
     BtnReadme.clicked.connect(ChgTips)
     BtnLog.clicked.connect(ChgLog)
     BtnZujian.clicked.connect(ChgDep)
@@ -1920,7 +1910,8 @@ menu = window.menuBar()
 programmenu = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Name"])
 adb = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Name"])
 uengine = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Name"])
-help = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Name"])
+help = menu.addMenu("关于")
+zanShang = menu.addMenu("赞赏我们")
 
 cleanProgramHistory = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][0])
 settingWindow = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][2])
@@ -2114,7 +2105,7 @@ helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]
 helpRunnerUpdate = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][3])
 helpFen = QtWidgets.QAction("程序评分")
 helpWebInformation = QtWidgets.QAction("程序公告")
-helpAbout = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][1])
+helpAbout = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), "关于")
 helpAboutQt = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][5])
 help.addAction(helpOpenProgramUrl)
 help.addAction(uengineRunnerSearch)
@@ -2160,8 +2151,4 @@ window.setFixedSize(window.frameSize().width(), window.frameSize().height())
 if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
     os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
     QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
-#if datetime.datetime.now().year >= 2023 and datetime.datetime.now().month >= 1 and datetime.datetime.now().day >= 22:
-if version == "2.0.0":
-    title += " 新春版"
-    window.setWindowTitle(title)
 sys.exit(app.exec_())

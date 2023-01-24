@@ -43,6 +43,7 @@ urlSourcesList = [
     "http://gfdgdxi.free.idcfengye.com/uengine-runner-list/auto/",  # 备用源 3
     "http://127.0.0.1/uengine-runner-list/auto/"  # 本地测试源
 ]
+urlSourcesIndex = 0
 urlSources = urlSourcesList[0]
 lists = []
 
@@ -523,6 +524,7 @@ def readtxt(path):
 
 def ChangeSources():
     global urlSources
+    global urlSourcesIndex
     sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
@@ -537,7 +539,9 @@ def ChangeSources():
                 for i in lists:
                     nmodel.appendRow(QtGui.QStandardItem(i[0]))
                 ui.searchList.setModel(nmodel)
+                urlSourcesIndex = i
             except:
+                [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action][urlSourcesIndex].setChecked(True)
                 traceback.print_exc()
                 QtWidgets.QMessageBox.critical(window, "提示", "无法连接服务器")
                 urlSources = old_urlSources     #如果源不可用则换回来

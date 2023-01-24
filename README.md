@@ -48,7 +48,7 @@ sudo apt upgrade
   
 ### 三、使用程序自带的更新程序更新  
   
-**1、打开 UEngine 运行器然后点击“关于”=>“检查更新”，点击“更新（更新过程中会关闭所有Python应用，包括这个应用）”**    
+**1、打开 UEngine 运行器然后点击“关于”=>“检查更新”，点击“更新（更新过程中会关闭这个应用的所有进程）”**    
 ![image.png](https://storage.deepin.org/thread/202205220759382269_image.png)    
 **2、输入密码进行更新**    
 ![image.png](https://storage.deepin.org/thread/202205220801175784_image.png)    

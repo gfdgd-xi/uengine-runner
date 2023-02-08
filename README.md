@@ -1,7 +1,7 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
 <h1 align="center">UEngine 运行器 2.0.0</h1>  
 <hr>  
-<p align='center'><a href='https://gitee.com/gfdgd-xi/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>  
+<a href='https://gitee.com/gfdgd-xi-org/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi-org/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
   
 ## 介绍  
@@ -48,7 +48,7 @@ sudo apt upgrade
   
 ### 三、使用程序自带的更新程序更新  
   
-**1、打开 UEngine 运行器然后点击“关于”=>“检查更新”，点击“更新（更新过程中会关闭所有Python应用，包括这个应用）”**    
+**1、打开 UEngine 运行器然后点击“关于”=>“检查更新”，点击“更新（更新过程中会关闭这个应用的所有进程）”**    
 ![image.png](https://storage.deepin.org/thread/202205220759382269_image.png)    
 **2、输入密码进行更新**    
 ![image.png](https://storage.deepin.org/thread/202205220801175784_image.png)    

@@ -17,6 +17,7 @@ import json
 import traceback
 import urllib.request
 import requests
+import updatekiller
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *
@@ -24,7 +25,7 @@ try:
     import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
     webeng = True
 except:
-    print("未安装此依赖库")
+    print("未安装 QtWebEngine")    #这样更容易排查问题
     webeng = False
 print("""太常引·建康中秋夜为吕叔潜赋
 一轮秋影转金波，飞镜又重磨。把酒问姮娥：被白发、欺人奈何？
@@ -42,6 +43,7 @@ urlSourcesList = [
     "http://gfdgdxi.free.idcfengye.com/uengine-runner-list/auto/",  # 备用源 3
     "http://127.0.0.1/uengine-runner-list/auto/"  # 本地测试源
 ]
+urlSourcesIndex = 0
 urlSources = urlSourcesList[0]
 lists = []
 
@@ -522,10 +524,12 @@ def readtxt(path):
 
 def ChangeSources():
     global urlSources
+    global urlSourcesIndex
     sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
-            urlSources = urlSourcesList[i]
+            old_urlSources = urlSources     #先备份
+            urlSources = urlSourcesList[i]  #然后切换尝试
             # 解析云列表
             try:
                 # 获取列表
@@ -535,9 +539,12 @@ def ChangeSources():
                 for i in lists:
                     nmodel.appendRow(QtGui.QStandardItem(i[0]))
                 ui.searchList.setModel(nmodel)
+                urlSourcesIndex = i
             except:
+                [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action][urlSourcesIndex].setChecked(True)
                 traceback.print_exc()
                 QtWidgets.QMessageBox.critical(window, "提示", "无法连接服务器")
+                urlSources = old_urlSources     #如果源不可用则换回来
             break
 
 if __name__ == "__main__":

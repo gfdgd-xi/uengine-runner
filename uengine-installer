@@ -112,8 +112,7 @@ if [[ $? != 0 ]]; then
     for username in $(ls /home)  
     do
         echo /home/$username
-        sudo rm -rfv /home/$username/uengine
-        sudo rm -rfv /home/$username/uengine-launch
+        sudo rm /home/$username/uengine-launch/run_daemon.sh
     done
     zenity --error --no-wrap '--text=抱歉，UEngine 安装失败，已移除安装时进行的修改'
     exit

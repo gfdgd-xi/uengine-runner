@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/bash 
 # 使用 pip 安装所需库
 echo 安装组件
 python3 -m pip install --upgrade pip          --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
@@ -20,6 +20,33 @@ ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-update-bug  
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/root-uengine                     /usr/bin/uengine-root
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/AutoShell/main.py                /usr/bin/uengine-runner-auto-install-bash
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-applist-launch.sh /usr/bin/uengine-runner-applist-launch.sh
+# 移除安装错误的 UEngine Ubuntu 补丁
+which uengine
+if [[ $? != 0 ]] && [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
+    # 移除补丁
+    rm /usr/share/applications/uengine-loading-ubuntu.desktop
+    rm /etc/xdg/autostart/uengine-loading-ubuntu.desktop
+    rm /usr/bin/uengine-loading-ubuntu
+    for username in $(ls /home)  
+    do
+        echo /home/$username
+        sudo rm /home/$username/uengine-launch/run_daemon.sh
+    done
+fi
+# 更新 uengine-loading-ubuntu（如果存在）
+if [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
+    if [ -f /tmp/upgrade-uengine-loading-ubuntu ]; then
+        rm /tmp/upgrade-uengine-loading-ubuntu
+    fi
+    # 下载新版
+    aria2c -x 16 -s 16 -d /tmp -o upgrade-uengine-loading-ubuntu https://code.gitlink.org.cn/gfdgd_xi/uengine-installer-bak/raw/branch/master/run_daemon.sh
+    if [ $? == 0 ]; then
+        # 替换
+        sudo cp /tmp/upgrade-uengine-loading-ubuntu /usr/bin/uengine-loading-ubuntu
+        sudo chmod 755 /usr/bin/uengine-loading-ubuntu
+    fi
+    rm /tmp/upgrade-uengine-loading-ubuntu
+fi
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true

@@ -1,4 +1,30 @@
 #/bin/bash
+# 判断安装条件
+CheckEnv(){
+    # 检测是不是 Ubuntu
+    lsb_release -i | grep -i ubuntu
+    if [[ $? != 0 ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本只支持 Ubuntu'
+        exit
+    fi
+    # 检测架构
+    if [[ `arch` != "x86_64" ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：暂不支持非 X86 架构'
+        exit
+    fi
+    # 检测内核
+    kernel=`uname -r`
+    python3 "${programPath}/CompareVersion.py" "${kernel}" "5.17.3"
+    if [[ $? == 0 ]]; then
+        zenity --warning --no-wrap "--text=提示：您当前使用的内核版本是${kernel}，而一会将会安装内核 5.17.3\n如果要使用 UEngine，请在重启后选择该版本内核启动，否则无法启动"
+    fi
+    #exit
+}
+programPath=$(cd $(dirname $0); pwd)
+# 先判断是否符合安装条件
+CheckEnv
+echo 1
+#exit
 # 在 Shenmo 制作的脚本的基础上进行了修改，修复在 Wayland 下运行错误和无法安装程序的问题
 # 建议在 Ubuntu 22.04 及以上版本安装，最好在此之前先安装星火应用商店并将系统和星火应用商店更新到最新版本
 #is_tar_checked="0"

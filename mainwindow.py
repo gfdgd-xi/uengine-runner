@@ -305,7 +305,7 @@ def GetSystemVersion():
     systemInformation = readtxt("/etc/os-release")
     for systemInformation in systemInformation.split('\n'):
         if "PRETTY_NAME=" in systemInformation:
-            return systemInformation.replace("PRETTY_NAME=", "").replace('"', '')
+            return systemInformation.replace("NAME=", "").replace('"', '')
 
 # 打开所有窗口事件
 def Button5Click():

@@ -51,6 +51,8 @@ build:
 	cp -rv run-program-without-wayland.sh       new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv ProgramFen.py                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv Icon                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv CompareVersion.py                    new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv uengine-remove.sh                    new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	rm -rfv new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/Help/information
 	python3 RemovePycacheFile.py                #new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv new-deb-build /tmp/uengine-runner-builder

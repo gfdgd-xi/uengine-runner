@@ -23,6 +23,7 @@ ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner-applist-laun
 # 移除安装错误的 UEngine Ubuntu 补丁
 which uengine
 if [[ $? != 0 ]] && [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
+    echo 移除错误的 UEngine Ubuntu 补丁
     # 移除补丁
     rm /usr/share/applications/uengine-loading-ubuntu.desktop
     rm /etc/xdg/autostart/uengine-loading-ubuntu.desktop
@@ -30,11 +31,12 @@ if [[ $? != 0 ]] && [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
     for username in $(ls /home)  
     do
         echo /home/$username
-        sudo rm /home/$username/uengine-launch/run_daemon.sh
+        rm /home/$username/uengine-launch/run_daemon.sh
     done
 fi
 # 更新 uengine-loading-ubuntu（如果存在）
 if [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
+    echo 更新 uengine-loading-ubuntu
     if [ -f /tmp/upgrade-uengine-loading-ubuntu ]; then
         rm /tmp/upgrade-uengine-loading-ubuntu
     fi
@@ -42,8 +44,14 @@ if [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
     aria2c -x 16 -s 16 -d /tmp -o upgrade-uengine-loading-ubuntu https://code.gitlink.org.cn/gfdgd_xi/uengine-installer-bak/raw/branch/master/run_daemon.sh
     if [ $? == 0 ]; then
         # 替换
-        sudo cp /tmp/upgrade-uengine-loading-ubuntu /usr/bin/uengine-loading-ubuntu
-        sudo chmod 755 /usr/bin/uengine-loading-ubuntu
+        cp /tmp/upgrade-uengine-loading-ubuntu /usr/bin/uengine-loading-ubuntu
+        chmod 755 /usr/bin/uengine-loading-ubuntu
+        for username in $(ls /home)  
+        do
+            echo /home/$username
+            cp /usr/bin/uengine-loading-ubuntu /home/$username/uengine-launch/run_daemon.sh
+            chmod 755 /home/$username/uengine-launch/run_daemon.sh
+        done
     fi
     rm /tmp/upgrade-uengine-loading-ubuntu
 fi

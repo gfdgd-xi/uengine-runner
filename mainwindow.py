@@ -822,8 +822,8 @@ def ShowHelp():
     sk.settimeout(1)
     url = "file://" + programPath + "/Help/index.html"
     try:
-        sk.connect(("uengine-runner.racoongx.cn", 80))
-        url = f"http://uengine-runner.racoongx.cn"
+        sk.connect(("uengine-runner.gfdgdxi.top", 80))
+        url = f"http://uengine-runner.gfdgdxi.top"
     except:
         traceback.print_exc()
     if bad:
@@ -1153,7 +1153,7 @@ class UpdateWindow():
         cancel.clicked.connect(UpdateWindow.update.close)
         ok.setDisabled(True)
         try:
-            UpdateWindow.data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-update-information/raw/branch/master/uengine-runner/update.json").text)
+            UpdateWindow.data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-update-information/raw/branch/master/uengine-runner/update.json").text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText("此为最新版本，无需更新")
@@ -1171,8 +1171,7 @@ class UpdateWindow():
 <p>1、使用编译或者内测版本</p>
 <p>2、自己修改了程序版本</p>
 <p>3、作者忘记更新云端上的更新信息了</p>
-<p>如果是第三种情况，请反馈到此：https://gitee.com/gfdgd-xi-org/uengine-runner/issues/I6B091</p>
-<p>或者是这里：https://bbs.racoongx.cn/t/bugs</p>
+<p>如果是第三种情况，请反馈到此：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6B091</p>
 <p><img src='{programPath}/Icon/doge.png'></p>""")
                         ok.setDisabled(True)
                         break
@@ -1325,7 +1324,7 @@ class ApkInformation():
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
-            data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/uengineapp/" + package +"/data.json").text)
+            data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/uengineapp/" + package +"/data.json").text)
             print(data)
         except:
             QtWidgets.QMessageBox.information(widget, "提示", "此程序暂时没有评分，欢迎您贡献第一个评分！")
@@ -1593,8 +1592,7 @@ about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <p>Qt 版本：{QtCore.qVersion()}</p>
 <p>程序官网：{programUrl}</p>
 <p>系统版本：{SystemVersion}</p>
-<p>主要开发者：gfdgd xi、为什么您不喜欢熊出没和阿布呢</p>
-<h1>©2021-{time.strftime("%Y")} RacoonGX 团队</h1>'''
+<h1>©2021-{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 updateThingsString = ""
 tips = ""
 contribute = ""
@@ -1697,10 +1695,10 @@ except:
 windowflag = "close"
 def Open():
     try:
-        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/lists.json").text)
+        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/lists.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/{}.txt".format(i)).text))
+            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/{}.txt".format(i)).text))
     except:
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return
@@ -1717,10 +1715,10 @@ def Open():
 
 def Download():
     try:
-        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/lists.json").text)
+        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/lists.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd-xi-org/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/{}.txt".format(i)).text))
+            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/{}.txt".format(i)).text))
     except:
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return
@@ -1768,9 +1766,6 @@ def showhelp():
         except:
             traceback.print_exc()
             HelpStr.setText(traceback.print_exc())
-
-    def ChgAdmiration():
-        webbrowser.open_new_tab("http://dt.racoongx.cn/")
     
     BtnReadme = QtWidgets.QPushButton("使用说明")
     BtnLog = QtWidgets.QPushButton("更新内容")
@@ -1780,7 +1775,6 @@ def showhelp():
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
     BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
-    BtnAdmiration = QtWidgets.QPushButton("赞赏")
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
@@ -1791,7 +1785,6 @@ def showhelp():
     BtnAbout.clicked.connect(ChgAbout)
     BtnDownN.clicked.connect(Download)
     BtnGPLV3.clicked.connect(ChgGPLV3)
-    BtnAdmiration.clicked.connect(ChgAdmiration)
     BtnOpenN.clicked.connect(Open)
 
     ChgTips()
@@ -1803,8 +1796,7 @@ def showhelp():
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
     helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
     helpLayout.addWidget(BtnGPLV3, 6, 0, 1, 1)
-    helpLayout.addWidget(BtnAdmiration, 7, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 8, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 7, 0, 1, 1)
     helpLayout.addWidget(HelpStr, 0, 1, 10, 1)
 
     helpWidget.setLayout(helpLayout)
@@ -1906,7 +1898,6 @@ programmenu = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Name
 adb = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][1]["Name"])
 uengine = menu.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Name"])
 help = menu.addMenu("关于")
-zanShang = menu.addMenu("赞赏我们")
 
 cleanProgramHistory = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][0])
 settingWindow = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), langFile[lang]["Main"]["MainWindow"]["Menu"][0]["Menu"][2])
@@ -2096,7 +2087,6 @@ uengineReinstallUengineImage.triggered.connect(ReinstallUengineImage)
 
 helpOpenProgramUrl = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][0])
 makerWebsize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), "作者个人站")
-helpForum = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), "程序论坛")
 uengineRunnerSearch = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), "查询指定程序在 UEngine 的运行情况")
 helpUengineRunnerBugUpload = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][2])
 helpShowHelp = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][3]["Menu"][4])
@@ -2108,7 +2098,6 @@ helpAboutQt = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), 
 help.addAction(helpOpenProgramUrl)
 help.addAction(uengineRunnerSearch)
 help.addAction(makerWebsize)
-help.addAction(helpForum)
 help.addSeparator()
 help.addAction(helpUengineRunnerBugUpload)
 help.addSeparator()
@@ -2128,7 +2117,6 @@ hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd
 helpOpenProgramUrl.triggered.connect(OpenProgramURL)
 uengineRunnerSearch.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/uengine-runner-info/"))
 makerWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io"))
-helpForum.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.racoongx.cn/"))
 helpUengineRunnerBugUpload.triggered.connect(UengineRunnerBugUpload)
 helpShowHelp.triggered.connect(ShowHelp)
 helpRunnerUpdate.triggered.connect(UpdateWindow.ShowWindow)
@@ -2136,10 +2124,6 @@ helpFen.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{p
 helpWebInformation.triggered.connect(GetNewInformation)
 helpAbout.triggered.connect(showhelp)
 helpAboutQt.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
-
-zanShangAction = QtWidgets.QAction("赞赏我们")
-zanShang.addAction(zanShangAction)
-zanShangAction.triggered.connect(lambda: webbrowser.open_new_tab("http://dt.racoongx.cn/"))
 
 # 设置窗口
 app.setStyle(QtWidgets.QStyleFactory.create(settingConf["Theme"]))
@@ -2149,9 +2133,4 @@ window.setWindowTitle(title)
 window.show()
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.setFixedSize(window.frameSize().width(), window.frameSize().height())
-# 癸卯年正月初一彩蛋（只显示一次，错过就没了）
-# （2023年1月22日）
-if datetime.datetime.now().year == 2023 and datetime.datetime.now().month == 1 and datetime.datetime.now().day == 22 and not os.path.exists(f"{get_home()}/.config/uengine-runner/2023-sf.lock"):
-    os.system(f"touch '{get_home()}/.config/uengine-runner/2023-sf.lock'")
-    QtWidgets.QMessageBox.information(window, "新年祝福", "今天是癸卯年正月初一，RacoonGX 团队祝您在新的一年里万事顺意、幸福美满、官运亨通、吉祥如意、万事顺利、荣华富贵、一帆风顺、金玉满堂、五福临门、龙凤呈祥、龙门精神、百业兴旺、六畜兴旺、五谷丰登、喜上眉梢！")
 sys.exit(app.exec_())

@@ -12,13 +12,19 @@
 （测试平台：UOS 家庭版 21.3.1，deepin 20.8,UOS 专业版 1050）  
   
 ## 程序相关网站
-作者个人站：https://gfdgd-xi.gitee.io  
-程序论坛：http://bbs.racoongx.cn  
+作者个人站：https://www.gfdgdxi.top  
 查询 APK 运行情况：https://gfdgd-xi.gitee.io/uengine-runner-info/  
 星火应用商店：https://spark-app.store/  
 星火社区：https://www.deepinos.org  
 Deepin 官网：https://www.deepin.org  
 Deepin 论坛：https://bbs.deepin.org  
+
+## 在 Deepin 23 Alpha2 安装 UEngine 运行器？
+> 例如：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6MBBC  
+
+需要从以下链接补充依赖：  
+https://gfdgdxi.lanzoue.com/b01qiu22f  
+密码:dihl  
 
 ## 安装前必读  
   
@@ -446,4 +452,14 @@ make install
 |                                                     WPS Office For Android                                                     |                                   https://www.wps.cn/                                   |  
 |                                                        钉钉 for android                                                        | https://page.dingtalk.com/wow/dingtalk/act/download?spm=a3140.8196062.0.0.6f4c5c3dWBhYUM |  
   
-### ©2021-Now  
+### 更多软件
+[![gfdgd xi/Wine 运行器](https://gitee.com/gfdgd-xi/deep-wine-runner/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/deep-wine-runner)   
+[![gfdgd xi/uengine 运行器](https://gitee.com/gfdgd-xi/uengine-runner/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/uengine-runner)   
+[![gfdgd xi/Deepin Community Live CD](https://gitee.com/gfdgd-xi/deepin-community-live-cd/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/deepin-community-live-cd)   
+[![gfdgd xi/国产 CPU 应用分享站](https://gitee.com/gfdgd-xi/apt-packages-websize-program/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/apt-packages-websize-program)   
+[![gfdgd xi/简易远程桌面访问器](https://gitee.com/gfdgd-xi/simple-remote-desktop-accessor/widgets/widget_card.svg?colors=ffffff,ffffff,,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/simple-remote-desktop-accessor)   
+[![星火社区作品集/星火应用商店（控制台版）](https://gitee.com/spark-community-works-collections/spark-store-console/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/spark-community-works-collections/spark-store-console)   
+[![星火社区作品集/spark-webapp-runtime 运行器](https://gitee.com/spark-community-works-collections/spark-webapp-runtime-runner/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/spark-community-works-collections/spark-webapp-runtime-runner)   
+[![gfdgd xi/定时器](https://gitee.com/gfdgd-xi/timer/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/timer)   
+
+### ©2021-Now gfdgd xi、为什么您不喜欢熊出没和阿布呢 

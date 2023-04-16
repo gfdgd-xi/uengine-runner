@@ -819,7 +819,7 @@ def ShowHelp():
     global webHelp
     # 先判断是否能连接服务器，如果能则访问线上版本，否则访问本地的帮助文件
     sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    sk.settimeout(1)
+    sk.settimeout(1000)
     url = "file://" + programPath + "/Help/index.html"
     try:
         sk.connect(("uengine-runner.gfdgdxi.top", 80))
@@ -1204,7 +1204,7 @@ class UpdateWindow():
 echo 删除多余的安装包
 rm -rfv /tmp/uengine-runner/update/*
 echo 关闭“UEngine 运行器”
-python3 {programPath}/updatekiller.py
+python3 "{programPath}/updatekiller.py"
 echo 下载安装包
 wget -P /tmp/uengine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包

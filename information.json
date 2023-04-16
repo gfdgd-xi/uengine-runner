@@ -5,8 +5,8 @@
 		"https://github.com/gfdgd-xi/uengine-runner",
         "https://gitlink.org.cn/gfdgd_xi/uengine-runner"
     ],
-    "Version": "2.0.1Alpha1",
-    "System": "Linux（deepin/UOS）",
+    "Version": "2.0.1",
+    "System": "Linux（deepin/UOS/Ubuntu22.04）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis 或程序的更多帮助",
         "安装APK：点浏览按钮，选中需要安装的APK，然后点安装按钮",

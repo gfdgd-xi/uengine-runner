@@ -1,3 +1,6 @@
+clean:
+	python3 RemovePycacheFile.py
+
 build:
 	echo 别云间
 	echo 三年羁旅客，今日又南冠。

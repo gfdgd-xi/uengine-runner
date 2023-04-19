@@ -6,7 +6,7 @@
 # 更新时间：2022年07月25日
 # 感谢：anbox、deepin 和 UOS
 # 基于 Python3 的 PyQt5 构建
-# 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>、为什么您不喜欢熊出没和阿布呢
+# 更新：gfdgd xi<3025613752@qq.com>、actionchen<917981399@qq.com>
 ###########################################################################################
 #################
 # 引入所需的库
@@ -1592,7 +1592,7 @@ about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <p>Qt 版本：{QtCore.qVersion()}</p>
 <p>程序官网：{programUrl}</p>
 <p>系统版本：{SystemVersion}</p>
-<h1>©2021-{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+<h1>©2021-{time.strftime("%Y")} gfdgd xi</h1>'''
 updateThingsString = ""
 tips = ""
 contribute = ""

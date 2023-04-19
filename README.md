@@ -10,10 +10,16 @@
 ![图片.png](https://storage.deepin.org/thread/202212181918041904_图片.png)    
   
 （测试平台：UOS 家庭版 21.3.1，deepin 20.8,UOS 专业版 1050）  
+适配架构：amd64、arm64  
+
+### 已知问题
+UEngine 运行器 2.0.0 的 UEngine 安装器故障（正在研究解决方法）：  
+https://gitee.com/gfdgd-xi/uengine-runner/issues/I6NTCR  
+https://gitee.com/gfdgd-xi/uengine-runner/issues/I6CKHB  
   
 ## 程序相关网站
 作者个人站：https://www.gfdgdxi.top  
-查询 APK 运行情况：https://gfdgd-xi.gitee.io/uengine-runner-info/  
+查询 APK 运行情况：https://gfdgd-xi.github.io/uengine-runner-info/  
 星火应用商店：https://spark-app.store/  
 星火社区：https://www.deepinos.org  
 Deepin 官网：https://www.deepin.org  

@@ -2005,7 +2005,7 @@ uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["M
 # 绑定信号
 uengineAllowOrDisallowUpdateAndroidApp.triggered.connect(AllowOrDisallowUpdateAndroidApp)
 uengineSetHttpProxy.triggered.connect(SetHttpProxy)
-uengineUbuntuRemove.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"bash '{programPath}/uengine-remove.sh'"]).start())
+uengineUbuntuRemove.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/uengine-remove.sh'"]).start())
 uengineOpenDebBuilder.triggered.connect(OpenUengineDebBuilder)
 uengineOpenDebBuilderMore.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/uengine-apk-builder-more'"]).start())
 uengineKeyboardToMouse.triggered.connect(KeyboardToMouse)

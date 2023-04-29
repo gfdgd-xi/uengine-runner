@@ -59,4 +59,4 @@ fi
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-python3 /opt/apps/com.gitee.uengine.runner.spark/files/Download.py 2.0.0 > /dev/null | true
+python3 /opt/apps/com.gitee.uengine.runner.spark/files/Download.py 2.0.1 > /dev/null | true

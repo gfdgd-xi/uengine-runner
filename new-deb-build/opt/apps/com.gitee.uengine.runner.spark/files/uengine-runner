@@ -305,7 +305,7 @@ def GetSystemVersion():
     systemInformation = readtxt("/etc/os-release")
     for systemInformation in systemInformation.split('\n'):
         if "PRETTY_NAME=" in systemInformation:
-            return systemInformation.replace("NAME=", "").replace('"', '')
+            return systemInformation.replace("PRETTY_NAME=", "").replace('"', '')
 
 # 打开所有窗口事件
 def Button5Click():
@@ -1592,6 +1592,7 @@ about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <p>Qt 版本：{QtCore.qVersion()}</p>
 <p>程序官网：{programUrl}</p>
 <p>系统版本：{SystemVersion}</p>
+<p>安装包构建时间：{information['Time']}</p>
 <h1>©2021-{time.strftime("%Y")} gfdgd xi</h1>'''
 updateThingsString = ""
 tips = ""

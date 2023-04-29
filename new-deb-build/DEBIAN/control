@@ -11,27 +11,15 @@ Recommends: uengine, deepin-elf-verify, python3-pyqt5.qtwebengine
 Priority: optional
 Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu
 Homepage: https://gitee.com/gfdgd-xi/uengine-runner
-Description: UEngine 运行器，2.0.0 更新内容：
- ※1、内置微型应用商店，支持评论、评分功能；
- ※2、修复 UEngine 安装器在 Wayland 下无法正常运行的问题；
- ※3、更新 UEngine 安装器安装的 UEngine 版本；
- ※4、修复 UEngine 安装器安装后的 UEngine 无法正常安装 APK 的问题（包括从运行器和 deb 包安装）；
- ※5、UEngine 安装器支持安装使用 SuperSU Root 的镜像；
- ※6、UEngine 安装器安装后的 UEngine 支持开机后自动加载运行环境，无需人手动打开终端运行；
- ※7、放开原先程序内的程序安装量查询功能，并新增打开量查询功能（在程序的关于窗口里打开）；
- ※8、程序更新时不需要关闭所有 Python3 程序，只会关闭自己；
- ※9、新增彩蛋（只在2023年1月22日生效）；
- ※10、修复 UEngine 打包器在部分系统无法打开的问题；
- ※11、新增程序公告功能；
- ※12、修复了程序更新功能从高版本降级到低版本的问题；
- ※13、不强制依赖 Deepin 终端；
- ※14、新增 UEngine 打包器（高级版）；
- 15、更改程序论坛网址；
- 16、新增程序评分功能；
- 17、修复 UEngine 打包器在打包时无法正确禁用所有选项；
- 18、UEngine 打包器打包的 deb 不再指定 deepin-elf-verify 依赖版本；
- 19、“更多帮助”功能支持访问云端的帮助内容；
- 20、更换程序接口；
- 21、优化菜单栏分类，菜单栏新增图标；
- 22、程序关于可以查看程序使用的开源协议；
- 23、修复在 Ubuntu 下安装后启动器没有图标的问题。
+Description: UEngine 运行器，2.0.1 更新内容：
+ ※1、新增移除在 Ubuntu 上安装的 UEngine 及其附属脚本的功能
+ ※2、优化 Ubuntu 安装器启用和安装逻辑，不允许在 UOS/Deepin 安装移植的 Ubuntu UEngine
+ ※3、Ubuntu 安装器不允许在非 X86 架构上使用
+ ※4、在升级/安装运行器的 deb 时会自动移除安装错误的 UEngine 生成的脚本
+ ※5、Ubuntu 安装器进行环境监测
+ ※6、修复应用商店换源问题（由@Bail修复）
+ 6、修改作者信息
+ 7、更新使用帮助
+ 8、关于窗口修复系统失败错误的问题并新增安装包构建时间
+ 9、移除赞赏功能
+ 10、微型应用商店适配了更新关闭进程（由@Bail实现）

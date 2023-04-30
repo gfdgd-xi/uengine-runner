@@ -1153,7 +1153,7 @@ class UpdateWindow():
         cancel.clicked.connect(UpdateWindow.update.close)
         ok.setDisabled(True)
         try:
-            UpdateWindow.data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-update-information/raw/branch/master/uengine-runner/update.json").text)
+            UpdateWindow.data = json.loads(requests.get("http://update.gfdgdxi.top/uengine-runner/update.json").text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText("此为最新版本，无需更新")
@@ -1324,7 +1324,7 @@ class ApkInformation():
             QtWidgets.QMessageBox.critical(widget, "错误", langFile[lang]["Main"]["MainWindow"]["Error"]["ApkFileError"])
             return
         try:
-            data = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/uengineapp/" + package +"/data.json").text)
+            data = json.loads(requests.get("http://data.download.gfdgdxi.top/uengineapp/" + package +"/data.json").text)
             print(data)
         except:
             QtWidgets.QMessageBox.information(widget, "提示", "此程序暂时没有评分，欢迎您贡献第一个评分！")
@@ -1524,7 +1524,7 @@ class AddNewUengineDesktopLink():
 
 def GetNewInformation():
     try:
-        text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/information/index.html").text
+        text = requests.get("http://uengine-runner.gfdgdxi.top/information/index.html").text
     except:
         traceback.print_exc()
         text = """<p>无法连接到服务器</p>
@@ -1696,10 +1696,10 @@ except:
 windowflag = "close"
 def Open():
     try:
-        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/lists.json").text)
+        lists = json.loads(requests.get("https://data.download.gfdgdxi.top/Open-UEngine/lists.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Open-UEngine/{}.txt".format(i)).text))
+            data.append(int(requests.get("https://data.download.gfdgdxi.top/Open-UEngine/{}.txt".format(i)).text))
     except:
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return
@@ -1716,11 +1716,12 @@ def Open():
 
 def Download():
     try:
-        lists = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/lists.json").text)
+        lists = json.loads(requests.get("https://data.download.gfdgdxi.top/Install-UEngine/lists.json").text)
         data = []
         for i in lists:
-            data.append(int(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-downloads-of-runner/raw/branch/master/Install-UEngine/{}.txt".format(i)).text))
+            data.append(int(requests.get("https://data.download.gfdgdxi.top/Install-UEngine/{}.txt".format(i)).text))
     except:
+        traceback.print_exc()
         QtWidgets.QMessageBox.critical(widget, "错误", "服务器出错！数据获取失败！")
         return
     fig = matplotlib.pylab.figure()

@@ -46,8 +46,8 @@ if [[ $? != 0 ]]; then
     exit
 fi
 uname -r | grep 5.17.3
-if [[ ! -f /usr/bin/uengine-loading-binder ]]; then
-       if [[ $? != 0 ]]; then
+if [[ $? != 0 ]]; then
+	if [[ -f /usr/bin/uengine-loading-binder ]]; then
 	    echo 加载 binder
 	    pkexec /usr/bin/uengine-loading-binder
 	fi

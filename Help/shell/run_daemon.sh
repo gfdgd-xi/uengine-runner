@@ -46,9 +46,11 @@ if [[ $? != 0 ]]; then
     exit
 fi
 uname -r | grep 5.17.3
-if [[ -f /usr/bin/uengine-loading-binder ]] && [[ $? != 0 ]]; then
-    echo 加载 binder
-    pkexec /usr/bin/uengine-loading-binder
+if [[ ! -f /usr/bin/uengine-loading-binder ]]; then
+       if [[ $? != 0 ]]; then
+	    echo 加载 binder
+	    pkexec /usr/bin/uengine-loading-binder
+	fi
 fi
 notify-send -i /opt/apps/com.gitee.uengine.runner.spark/files/icon.png "UEngine 服务启动完成" -a uengine-runner
 bad=0

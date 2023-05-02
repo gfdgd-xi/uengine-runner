@@ -67,7 +67,7 @@ echo "开始部署。部署过程会需要root权限，完成后会要求重启�
 cd /tmp
 tar -xf "$tar_path" 
 # 移除包内旧版的run_daemon.sh（如果有的话）
-aria2c -x 16 -s 16 -d /tmp -o run_daemon.sh https://code.gitlink.org.cn/gfdgd_xi/uengine-installer-bak/raw/branch/master/run_daemon.sh
+aria2c -x 16 -s 16 -d /tmp -o run_daemon.sh http://uengine-runner.gfdgdxi.top/shell/run_daemon.sh
 if [[ $? == 0 ]]; then
     # 如果下载成功，就使用下载好的 run_daemon.sh
     if [[ -f /tmp/run_daemon.sh ]]; then

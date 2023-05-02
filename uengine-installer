@@ -13,7 +13,8 @@ CheckEnv(){
         exit
     fi
     # 检测内核
-    lsmod | grep -e ashmem_linux -e binder_linux
+    sudo modprobe binder_linux
+    lsmod | grep -e binder_linux
     if [[ $? != 0 ]]; then
         zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：当前内核不支持 binder 模块，请安装支持 binder 模块的 Linux 内核'
         exit

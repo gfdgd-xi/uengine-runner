@@ -13,11 +13,16 @@ CheckEnv(){
         exit
     fi
     # 检测内核
-    kernel=`uname -r`
-    python3 "${programPath}/CompareVersion.py" "${kernel}" "5.17.3"
-    if [[ $? == 0 ]]; then
-        zenity --warning --no-wrap "--text=提示：您当前使用的内核版本是${kernel}，而一会将会安装内核 5.17.3\n如果要使用 UEngine，请在重启后选择该版本内核启动，否则无法启动"
+    lsmod | grep -e ashmem_linux -e binder_linux
+    if [[ $? != 0 ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：当前内核不支持 binder 模块，请安装支持 binder 模块的 Linux 内核'
+        exit
     fi
+    #kernel=`uname -r`
+    #python3 "${programPath}/CompareVersion.py" "${kernel}" "5.17.3"
+    #if [[ $? == 0 ]]; then
+    #    zenity --warning --no-wrap "--text=提示：您当前使用的内核版本是${kernel}，而一会将会安装内核 5.17.3\n如果要使用 UEngine，请在重启后选择该版本内核启动，否则无法启动"
+    #fi
     #exit
 }
 programPath=$(cd $(dirname $0); pwd)
@@ -94,6 +99,10 @@ sudo apt update
 /tmp/uengine/install.sh
 # 安装所需依赖
 sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev 
+# 启动内核 binder 模块
+sudo modprobe binder_linux
+sudo mkdir /dev/binderfs
+sudo mount -t binder binder /dev/binderfs
 # 用于修复 UEngine 在 Ubuntu 无法安装 APK 的问题
 sudo mkdir -p /var/lib/uengine
 sudo ln -s /data/uengine/data/data/ /var/lib/uengine/data

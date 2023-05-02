@@ -66,6 +66,11 @@ tar_path=`echo "$tar_path" | sed $'s/\'//g'`
 echo "开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
 cd /tmp
 tar -xf "$tar_path" 
+if [[ $? != 0 ]]; then
+    echo 解压错误，无法继续
+    zenity --error --no-wrap '--text=安装错误，原因：资源解压失败！'
+    exit 1
+fi
 # 移除包内旧版的run_daemon.sh（如果有的话）
 aria2c -x 16 -s 16 -d /tmp -o run_daemon.sh http://uengine-runner.gfdgdxi.top/shell/run_daemon.sh
 if [[ $? == 0 ]]; then

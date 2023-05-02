@@ -3,10 +3,10 @@
 CheckEnv(){
     # 检测是不是 Ubuntu
     lsb_release -i | grep -i ubuntu
-    if [[ $? != 0 ]]; then
-        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本只支持 Ubuntu'
-        exit
-    fi
+#    if [[ $? != 0 ]]; then
+#        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本只支持 Ubuntu'
+#        exit
+#    fi
     # 检测架构
     if [[ `arch` != "x86_64" ]]; then
         zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：暂不支持非 X86 架构'

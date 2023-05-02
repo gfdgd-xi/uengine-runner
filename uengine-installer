@@ -135,6 +135,7 @@ if [[ $? != 0 ]]; then
 fi
 # 拷贝 binder loader
 sudo cp "${programPath}/LoadingBinder/load.sh" /usr/bin/uengine-loading-binder -v
+sudo chmod +r /usr/bin/uengine-loading-binder
 sudo cp "${programPath}/pkexec/com.deepin.pkexec.binder.loader.policy" /usr/share/polkit-1/actions/ -v
 # echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
 # 这里直接运行 run_daemon.sh，运行 launch_uengine.sh 好像不行

@@ -45,7 +45,8 @@ if [[ $? != 0 ]]; then
     notify-send -i /opt/apps/com.gitee.uengine.runner.spark/files/icon.png "未安装 UEngine，结束！" -a uengine-runner
     exit
 fi
-if [[ -f /usr/bin/uengine-loading-binder ]]; then
+uname -r | grep 5.17.3
+if [[ -f /usr/bin/uengine-loading-binder ]] && [[ $? != 0 ]]; then
     echo 加载 binder
     pkexec /usr/bin/uengine-loading-binder
 fi

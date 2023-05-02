@@ -45,6 +45,10 @@ if [[ $? != 0 ]]; then
     notify-send -i /opt/apps/com.gitee.uengine.runner.spark/files/icon.png "未安装 UEngine，结束！" -a uengine-runner
     exit
 fi
+if [[ -f /usr/bin/uengine-loading-binder ]]; then
+    echo 加载 binder
+    pkexec /usr/bin/uengine-loading-binder
+fi
 notify-send -i /opt/apps/com.gitee.uengine.runner.spark/files/icon.png "UEngine 服务启动完成" -a uengine-runner
 bad=0
 # 守护进程，防止异常退出

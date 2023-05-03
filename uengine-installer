@@ -150,9 +150,9 @@ sudo chmod 777 -Rv /usr/bin/uengine-loading-binder
 sudo cp "${programPath}/pkexec/com.deepin.pkexec.binder.loader.policy" /usr/share/polkit-1/actions/ -v
 # echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
 # 这里直接运行 run_daemon.sh，运行 launch_uengine.sh 好像不行
-echo "重启后在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用"
-echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭"
+echo "现在可以在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用。"
+echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭。"
 echo "不过一般情况下会自动开启，无需手动启动。"
-echo "按回车重启"
+echo "推荐重启后再使用此 Android 环境。"
+zenity --info --no-wrap "--text=安装完成！\n现在可以在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行\n或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用。\n你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭。\n不过一般情况下会自动开启，无需手动启动。\n推荐重启后再使用此 Android 环境。"
 read
-reboot

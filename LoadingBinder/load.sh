@@ -8,5 +8,6 @@ if [ -d /dev/binderfs ]; then
     exit
 fi
 modprobe binder_linux
+modprobe ashmem_linux
 mkdir /dev/binderfs
 mount -t binder binder /dev/binderfs

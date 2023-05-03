@@ -1,12 +1,18 @@
 #/bin/bash
 # 判断安装条件
 CheckEnv(){
-    # 检测是不是 Ubuntu
-    lsb_release -i | grep -i ubuntu
-#    if [[ $? != 0 ]]; then
-#        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本只支持 Ubuntu'
-#        exit
-#    fi
+    # 检测是不是 Deepin
+    lsb_release -i | grep -i deepin
+    if [[ $? != 0 ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本不支持 Deepin'
+        exit
+    fi
+    # 检测是不是 UOS
+    lsb_release -i | grep -i uos
+    if [[ $? == 0 ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本不支持 UOS'
+        exit
+    fi
     # 检测架构
     if [[ `arch` != "x86_64" ]]; then
         zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：暂不支持非 X86 架构'
@@ -15,15 +21,20 @@ CheckEnv(){
     # 检测内核
     sudo modprobe binder_linux
     lsmod | grep -e binder_linux
-    if [[ $? != 0 ]]; then
+    if [[ $? != 0 ]] && [[ -f /dev/binder ]] && [[ -f /dev/binderfs ]]; then
         zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：当前内核不支持 binder 模块，请安装支持 binder 模块的 Linux 内核'
         exit
     fi
+    # 检测 dtk 版本
+    aptDtkVersion=`apt show libdtkcore5 | grep Version`
+    newestDtkVersion=`echo ${aptDtkVersion##*Version: }`
+    echo 当前 apt 源最新的 dtk 版本：$newestDtkVersion
     #kernel=`uname -r`
-    #python3 "${programPath}/CompareVersion.py" "${kernel}" "5.17.3"
-    #if [[ $? == 0 ]]; then
-    #    zenity --warning --no-wrap "--text=提示：您当前使用的内核版本是${kernel}，而一会将会安装内核 5.17.3\n如果要使用 UEngine，请在重启后选择该版本内核启动，否则无法启动"
-    #fi
+    python3 "${programPath}/CompareVersion.py" "${newestDtkVersion}" "5.5"
+    if [[ $? != 0 ]]; then
+        zenity --error --no-wrap "--text=提示：您当前的 dtk 版本过老，请更新 dtk 版本后再试（版本需要大于等于 5.5），可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/ 获取编译好的 dtk"
+        exit
+    fi
     #exit
 }
 programPath=$(cd $(dirname $0); pwd)

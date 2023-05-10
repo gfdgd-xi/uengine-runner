@@ -53,7 +53,9 @@ rm -rf /tmp/uengine
 mkdir -p /tmp/uengine
 # 区分是下载 Root 镜像还是普通镜像
 if [[ $1 == "SuperSU" ]]; then
-    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007-supersu.tar.xz
+    #aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007-supersu.tar.xz
+    # 改为 JihuLab
+    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://jihulab.com/gfdgd-xi/uengine-download/-/raw/main/uengine2.1.2.2007-supersu.tar.xz
 else
     # 改为 Github
     #aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://github.com/rain-gfd/uengine-installer-package/releases/download/uengine2.1.2.2010/uengine2.1.2.2010.tar.xz

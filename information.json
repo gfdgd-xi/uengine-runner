@@ -23,6 +23,9 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "<b>V2.0.2：</b>",
+        "※1、修复源地址。",
+        "",
         "<b>V2.0.1：</b>",
         "※1、新增移除在 Ubuntu 上安装的 UEngine 及其附属脚本的功能",
         "※2、优化 Ubuntu 安装器启用和安装逻辑，不允许在 UOS/Deepin 安装移植的 Ubuntu UEngine",

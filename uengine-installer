@@ -58,7 +58,7 @@ else
     # 改为 Github
     #aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://github.com/rain-gfd/uengine-installer-package/releases/download/uengine2.1.2.2010/uengine2.1.2.2010.tar.xz
     # 改为 JihuLab
-    #aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://jihulab.com/gfdgd-xi/uengine-download/-/raw/main/uengine2.1.2.2010.tar.xz
+    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://jihulab.com/gfdgd-xi/uengine-download/-/raw/main/uengine2.1.2.2010.tar.xz
 fi
 tar_path="/tmp/uengine/uenginetar.xz"
 tar_path=`echo "$tar_path" | sed $'s/\'//g'`

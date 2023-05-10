@@ -1524,7 +1524,8 @@ class AddNewUengineDesktopLink():
 
 def GetNewInformation():
     try:
-        text = requests.get("http://uengine-runner.gfdgdxi.top/information/index.html").text
+        text = requests.get("http://www.gfdgdxi.top/uengine-runner/Help/information/index.html").text
+        print(text)
     except:
         traceback.print_exc()
         text = """<p>无法连接到服务器</p>

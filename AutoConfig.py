@@ -35,9 +35,9 @@ print("""译文：一轮缓缓移动的秋月洒下万里金波，就像那刚�
 我要乘风飞上万里长空，俯视祖国的大好山河。还要砍去月中摇曳的桂树枝柯，人们说，这将使月亮洒下人间的光辉更多。""")
 print("================================")
 urlSourcesList = [
-    "https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/auto",  # Gitlink 源
+    "http://config.uengine-runner.gfdgdxi.top/",  # Github 源
     "https://gitee.com/gfdgd-xi/uengine-wine-runner-auto-configuration-script/raw/master/",  # Gitee 源
-    "https://gfdgd-xi.github.io/uengine-wine-runner-auto-configuration-script/",  # Github 源
+    "https://code.gitlink.org.cn/gfdgd_xi/uengine-runner-list/raw/branch/master/auto",  # Gitlink 源
     "http://gfdgdxi.msns.cn/uengine-runner-list/auto/",  # 备用源1，纯 IPv6 源
     "http://gfdgdxi.free.idcfengye.com/uengine-runner-auto-configuration-script/",  # 备用源2
     "http://gfdgdxi.free.idcfengye.com/uengine-runner-list/auto/",  # 备用源 3
@@ -525,7 +525,7 @@ def readtxt(path):
 def ChangeSources():
     global urlSources
     global urlSourcesIndex
-    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
+    sources = [ui.actionGithub, ui.actionGitee, ui.actionGitlink, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             old_urlSources = urlSources     #先备份

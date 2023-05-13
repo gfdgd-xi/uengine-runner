@@ -1,10 +1,16 @@
 #/bin/bash
 # 判断安装条件
 CheckEnv(){
-    # 检测是不是 Ubuntu
-    lsb_release -i | grep -i ubuntu
+    # 检测是不是 Deepin
+    lsb_release -i | grep -i deepin
     if [[ $? != 0 ]]; then
-        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本只支持 Ubuntu'
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本不支持 Deepin'
+        exit
+    fi
+    # 检测是不是 UOS
+    lsb_release -i | grep -i uos
+    if [[ $? == 0 ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本不支持 UOS'
         exit
     fi
     # 检测架构
@@ -13,10 +19,21 @@ CheckEnv(){
         exit
     fi
     # 检测内核
-    kernel=`uname -r`
-    python3 "${programPath}/CompareVersion.py" "${kernel}" "5.17.3"
-    if [[ $? == 0 ]]; then
-        zenity --warning --no-wrap "--text=提示：您当前使用的内核版本是${kernel}，而一会将会安装内核 5.17.3\n如果要使用 UEngine，请在重启后选择该版本内核启动，否则无法启动"
+    sudo modprobe binder_linux
+    lsmod | grep -e binder_linux
+    if [[ $? != 0 ]] && [[ -f /dev/binder ]] && [[ -f /dev/binderfs ]]; then
+        zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：当前内核不支持 binder 模块，请安装支持 binder 模块的 Linux 内核'
+        exit
+    fi
+    # 检测 dtk 版本
+    aptDtkVersion=`apt show libdtkcore5 | grep Version`
+    newestDtkVersion=`echo ${aptDtkVersion##*Version: }`
+    echo 当前 apt 源最新的 dtk 版本：$newestDtkVersion
+    #kernel=`uname -r`
+    python3 "${programPath}/CompareVersion.py" "${newestDtkVersion}" "5.5"
+    if [[ $? != 0 ]]; then
+        zenity --error --no-wrap "--text=提示：您当前的 dtk 版本过老，请更新 dtk 版本后再试（版本需要大于等于 5.5），可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/ 获取编译好的 dtk"
+        exit
     fi
     #exit
 }
@@ -36,9 +53,14 @@ rm -rf /tmp/uengine
 mkdir -p /tmp/uengine
 # 区分是下载 Root 镜像还是普通镜像
 if [[ $1 == "SuperSU" ]]; then
-    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007-supersu.tar.xz
+    #aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007-supersu.tar.xz
+    # 改为 JihuLab
+    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://jihulab.com/gfdgd-xi/uengine-download/-/raw/main/uengine2.1.2.2007-supersu.tar.xz
 else
-    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://code.gitlink.org.cn/gfdgd_xi/uengine-installer/raw/branch/master/uengine2.1.2.2007.tar.xz
+    # 改为 Github
+    #aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://github.com/rain-gfd/uengine-installer-package/releases/download/uengine2.1.2.2010/uengine2.1.2.2010.tar.xz
+    # 改为 JihuLab
+    aria2c -x 16 -s 16 -d /tmp/uengine -o uenginetar.xz https://jihulab.com/gfdgd-xi/uengine-download/-/raw/main/uengine2.1.2.2010.tar.xz
 fi
 tar_path="/tmp/uengine/uenginetar.xz"
 tar_path=`echo "$tar_path" | sed $'s/\'//g'`
@@ -61,8 +83,13 @@ tar_path=`echo "$tar_path" | sed $'s/\'//g'`
 echo "开始部署。部署过程会需要root权限，完成后会要求重启。请注意不要在安装过程中安装或卸载其他软件"
 cd /tmp
 tar -xf "$tar_path" 
+if [[ $? != 0 ]]; then
+    echo 解压错误，无法继续
+    zenity --error --no-wrap '--text=安装错误，原因：资源解压失败！'
+    exit 1
+fi
 # 移除包内旧版的run_daemon.sh（如果有的话）
-aria2c -x 16 -s 16 -d /tmp -o run_daemon.sh https://code.gitlink.org.cn/gfdgd_xi/uengine-installer-bak/raw/branch/master/run_daemon.sh
+aria2c -x 16 -s 16 -d /tmp -o run_daemon.sh http://uengine-runner.gfdgdxi.top/shell/run_daemon.sh
 if [[ $? == 0 ]]; then
     # 如果下载成功，就使用下载好的 run_daemon.sh
     if [[ -f /tmp/run_daemon.sh ]]; then
@@ -94,6 +121,10 @@ sudo apt update
 /tmp/uengine/install.sh
 # 安装所需依赖
 sudo apt install -y libkf5globalaccel5 libqt5multimedia5 libqt5sensors5 libegl1-mesa-dev 
+# 启动内核 binder 模块
+sudo modprobe binder_linux
+sudo mkdir /dev/binderfs
+sudo mount -t binder binder /dev/binderfs
 # 用于修复 UEngine 在 Ubuntu 无法安装 APK 的问题
 sudo mkdir -p /var/lib/uengine
 sudo ln -s /data/uengine/data/data/ /var/lib/uengine/data
@@ -117,11 +148,15 @@ if [[ $? != 0 ]]; then
     zenity --error --no-wrap '--text=抱歉，UEngine 安装失败，已移除安装时进行的修改'
     exit
 fi
+# 拷贝 binder loader
+sudo cp "${programPath}/LoadingBinder/load.sh" /usr/bin/uengine-loading-binder -v
+sudo chmod 777 -Rv /usr/bin/uengine-loading-binder
+sudo cp "${programPath}/pkexec/com.deepin.pkexec.binder.loader.policy" /usr/share/polkit-1/actions/ -v
 # echo "重启后在$HOME/uengine-launch执行launch_uengine.sh即可打开uengine守护进程。随后即可安装和使用安卓应用"
 # 这里直接运行 run_daemon.sh，运行 launch_uengine.sh 好像不行
-echo "重启后在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用"
-echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭"
+echo "现在可以在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用。"
+echo "你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭。"
 echo "不过一般情况下会自动开启，无需手动启动。"
-echo "按回车重启"
+echo "推荐重启后再使用此 Android 环境。"
+zenity --info --no-wrap "--text=安装完成！\n现在可以在$HOME/uengine-launch执行run_daemon.sh或在启动器手动运行\n或执行命令uengine-loading-ubuntu即可打开uengine守护进程。随后即可安装和使用安卓应用。\n你需要在每次启动安卓应用之前打开这个脚本。打开后可安全关闭。\n不过一般情况下会自动开启，无需手动启动。\n推荐重启后再使用此 Android 环境。"
 read
-reboot

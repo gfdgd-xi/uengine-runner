@@ -1,7 +1,7 @@
 Package: com.gitee.uengine.runner.spark
 Source: com.gitee.uengine.runner.spark
 Replaces: spark-uengine-runner, com.gitee.uengine.runner.spark.ubuntu
-Version: 2.1.0~alpha1
+Version: 2.1.0
 Architecture: all
 Section: utils
 Installed-Size: 2920
@@ -11,15 +11,4 @@ Recommends: uengine, deepin-elf-verify, python3-pyqt5.qtwebengine
 Priority: optional
 Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu
 Homepage: https://gitee.com/gfdgd-xi/uengine-runner
-Description: UEngine 运行器，2.0.1 更新内容：
- ※1、新增移除在 Ubuntu 上安装的 UEngine 及其附属脚本的功能
- ※2、优化 Ubuntu 安装器启用和安装逻辑，不允许在 UOS/Deepin 安装移植的 Ubuntu UEngine
- ※3、Ubuntu 安装器不允许在非 X86 架构上使用
- ※4、在升级/安装运行器的 deb 时会自动移除安装错误的 UEngine 生成的脚本
- ※5、Ubuntu 安装器进行环境监测
- ※6、修复应用商店换源问题（由@Bail修复）
- 6、修改作者信息
- 7、更新使用帮助
- 8、关于窗口修复系统失败错误的问题并新增安装包构建时间
- 9、移除赞赏功能
- 10、微型应用商店适配了更新关闭进程（由@Bail实现）
+Description: 新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装/卸载/打包自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。

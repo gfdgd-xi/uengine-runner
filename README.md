@@ -64,7 +64,7 @@ sudo apt upgrade
 ![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)  
   
 ### 更新内容  
-### V2.1.0（2023年05月13日）
+#### V2.1.0（2023年05月13日）
 **※1、修复源地址（迁出 Gitlink）；**  
 **※2、优化 UEngine 安装器，可以在 Debian/Ubuntu 使用（Debian11/Debian10/Ubuntu20.04 需要安装 dtk（≥5.5），dtk 可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/releases 获取）；**  
 **※3、UEngine 安装器不再强制安装 5.17.3 内核以运行 UEngine 运行环境，只要当前使用内核支持 binder 模块即可继续（安装前会进行检测，如果用 2.0.0/2.0.1 安装了 5.17.3 内核也可以继续使用该内核）；**  

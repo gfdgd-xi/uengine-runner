@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
-<h1 align="center">UEngine 运行器 2.0.1</h1>  
+<h1 align="center">UEngine 运行器 2.1.0</h1>  
 <hr>  
 <a href='https://gitee.com/gfdgd-xi-org/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi-org/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -12,10 +12,6 @@
 （测试平台：UOS 家庭版 21.3.1，deepin 20.8,UOS 专业版 1050）  
 适配架构：amd64、arm64  
 
-### 已知问题
-UEngine 运行器 2.0.0 的 UEngine 安装器故障（正在研究解决方法）：  
-https://gitee.com/gfdgd-xi/uengine-runner/issues/I6NTCR  
-https://gitee.com/gfdgd-xi/uengine-runner/issues/I6CKHB  
   
 ## 程序相关网站
 作者个人站：https://www.gfdgdxi.top  
@@ -68,6 +64,27 @@ sudo apt upgrade
 ![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)  
   
 ### 更新内容  
+### V2.1.0（2023年05月13日）
+**※1、修复源地址（迁出 Gitlink）；**  
+**※2、优化 UEngine 安装器，可以在 Debian/Ubuntu 使用（Debian11/Debian10/Ubuntu20.04 需要安装 dtk（≥5.5），dtk 可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/releases 获取）；**  
+**※3、UEngine 安装器不再强制安装 5.17.3 内核以运行 UEngine 运行环境，只要当前使用内核支持 binder 模块即可继续（安装前会进行检测，如果用 2.0.0/2.0.1 安装了 5.17.3 内核也可以继续使用该内核）；**  
+**※4、修复 uengine-loading-ubuntu 的问题（参考 #I6CKHB:Ubuntu 22.04 LTS安装运行器并按提示安装UEngine后UEngine服务持续崩溃无法使用 ）以及 binder 模块调用问题。**  
+
+
+![图片.png](https://storage.deepin.org/thread/202305131320341501_图片.png)
+
+
+
+![微信图片_20230502211631.png](https://storage.deepin.org/thread/202305022117208736_微信图片_20230502211631.png)  
+![微信图片_20230502211624.png](https://storage.deepin.org/thread/202305022117206682_微信图片_20230502211624.png)  
+
+![2023-05-03_08-46.png](https://storage.deepin.org/thread/202305031117201797_2023-05-03_08-46.png)
+
+![2023-05-03 07-09-02 的屏幕截图.png](https://storage.deepin.org/thread/202305031117196454_2023-05-0307-09-02的屏幕截图.png)
+
+
+![微信图片_20230502211613.jpg](https://storage.deepin.org/thread/202305022117207441_微信图片_20230502211613.jpg)  
+
 #### V2.0.1（2023年04月29日，劳动节版）
 **※1、新增移除在 Ubuntu 上安装的 UEngine 及其附属脚本的功能**  
 **※2、优化 Ubuntu 安装器启用和安装逻辑，不允许在 UOS/Deepin 安装移植的 Ubuntu UEngine**  

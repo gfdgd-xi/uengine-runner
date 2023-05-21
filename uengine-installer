@@ -3,7 +3,7 @@
 CheckEnv(){
     # 检测是不是 Deepin
     lsb_release -i | grep -i deepin
-    if [[ $? != 0 ]]; then
+    if [[ $? == 0 ]]; then
         zenity --error --no-wrap '--text=您的系统无法安装 UEngine，原因：此脚本不支持 Deepin'
         exit
     fi

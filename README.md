@@ -21,7 +21,7 @@
 Deepin 官网：https://www.deepin.org  
 Deepin 论坛：https://bbs.deepin.org  
 
-## 在 Deepin 23 Alpha2 安装 UEngine 运行器？
+## 在 Deepin 23 Alpha2/Beta 安装 UEngine 运行器？
 > 例如：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6MBBC  
 
 需要从以下链接补充依赖：  
@@ -503,4 +503,4 @@ make install
 [![星火社区作品集/spark-webapp-runtime 运行器](https://gitee.com/spark-community-works-collections/spark-webapp-runtime-runner/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/spark-community-works-collections/spark-webapp-runtime-runner)   
 [![gfdgd xi/定时器](https://gitee.com/gfdgd-xi/timer/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/timer)   
 
-### ©2021-Now gfdgd xi
+## ©2021-Now gfdgd xi

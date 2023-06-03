@@ -28,6 +28,18 @@ Deepin 论坛：https://bbs.deepin.org
 https://gfdgdxi.lanzoue.com/b01qiu22f  
 密码:dihl  
 
+## 上架到的应用商店
+> 可以从下列应用商店获取 UEngine 运行器
+### Deepin/UOS 应用商店
+![图片.png](https://storage.deepin.org/thread/20230603201852396_图片.png)  
+
+### 星火应用商店
+
+![图片.png](https://storage.deepin.org/thread/202306032021155134_图片.png)
+ 
+
+
+
 ## 安装前必读  
   
 + **UEngine 安装时会自动把要安装的 apk 删除**，如果这个 apk 文件非常重要请**拷贝一个备份版并安装这个备份版或者在程序设置里面选择“备份APK包然后在安装后自动拷贝原先目录”选项**  

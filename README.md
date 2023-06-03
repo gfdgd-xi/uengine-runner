@@ -27,6 +27,7 @@ Deepin 论坛：https://bbs.deepin.org
 需要从以下链接补充依赖：  
 https://gfdgdxi.lanzoue.com/b01qiu22f  
 密码:dihl  
+或者从星火应用商店下载安装，星火应用商店的源里已经补齐 UEngine 运行器在 Deepin 23 Alpha2/Beta 缺少的依赖  
 
 ## 上架到的应用商店
 > 可以从下列应用商店获取 UEngine 运行器

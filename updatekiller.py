@@ -8,11 +8,15 @@ PIDFILE = '/tmp/uengine-runner.pid'
 #程序结束时清理pid
 @atexit.register
 def remove_pid():
-    with open(PIDFILE) as pidfile:
-        pidlst = pidfile.readlines()
-    pidlst.remove(str(PID)+'\n')
-    with open(PIDFILE,'w') as pidfile:
-        pidfile.writelines(pidlst)
+    try:
+        with open(PIDFILE) as pidfile:
+            pidlst = pidfile.readlines()
+        pidlst.remove(str(PID)+'\n')
+        with open(PIDFILE,'w') as pidfile:
+            pidfile.writelines(pidlst)
+    except:
+        # 忽略
+        pass
 
 #更新时结束进程
 def main():

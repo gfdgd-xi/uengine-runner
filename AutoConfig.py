@@ -541,7 +541,7 @@ def ChangeSources():
                 ui.searchList.setModel(nmodel)
                 urlSourcesIndex = i
             except:
-                [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action][urlSourcesIndex].setChecked(True)
+                #[ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action][urlSourcesIndex].setChecked(True)
                 traceback.print_exc()
                 QtWidgets.QMessageBox.critical(window, "提示", "无法连接服务器")
                 urlSources = old_urlSources     #如果源不可用则换回来

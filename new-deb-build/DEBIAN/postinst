@@ -37,11 +37,12 @@ fi
 # 更新 uengine-loading-ubuntu（如果存在）
 if [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
     echo 更新 uengine-loading-ubuntu
+    cp /opt/apps/com.gitee.uengine.runner.spark/files/LoadingBinder/load.sh /usr/bin/uengine-loading-binder
     if [ -f /tmp/upgrade-uengine-loading-ubuntu ]; then
         rm /tmp/upgrade-uengine-loading-ubuntu
     fi
     # 下载新版
-    aria2c -x 16 -s 16 -d /tmp -o upgrade-uengine-loading-ubuntu https://code.gitlink.org.cn/gfdgd_xi/uengine-installer-bak/raw/branch/master/run_daemon.sh
+    aria2c -x 16 -s 16 -d /tmp -o upgrade-uengine-loading-ubuntu http://uengine-runner.gfdgdxi.top/shell/run_daemon.sh
     if [ $? == 0 ]; then
         # 替换
         cp /tmp/upgrade-uengine-loading-ubuntu /usr/bin/uengine-loading-ubuntu
@@ -59,4 +60,4 @@ fi
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-python3 /opt/apps/com.gitee.uengine.runner.spark/files/Download.py 2.1.0 > /dev/null | true
+python3 /opt/apps/com.gitee.uengine.runner.spark/files/Download.py 2.1.1 > /dev/null | true

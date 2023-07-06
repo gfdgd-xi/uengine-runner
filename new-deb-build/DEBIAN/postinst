@@ -35,7 +35,7 @@ if [[ $? != 0 ]] && [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
     done
 fi
 # 更新 uengine-loading-ubuntu（如果存在）
-if [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
+if [[ -f /usr/bin/uengine-loading-ubuntu ]] || [[ -f /usr/bin/uengine-loading-binder ]]; then
     echo 更新 uengine-loading-ubuntu
     cp /opt/apps/com.gitee.uengine.runner.spark/files/LoadingBinder/load.sh /usr/bin/uengine-loading-binder
     if [ -f /tmp/upgrade-uengine-loading-ubuntu ]; then
@@ -46,15 +46,18 @@ if [[ -f /usr/bin/uengine-loading-ubuntu ]]; then
     if [ $? == 0 ]; then
         # 替换
         cp /tmp/upgrade-uengine-loading-ubuntu /usr/bin/uengine-loading-ubuntu
-        chmod 755 /usr/bin/uengine-loading-ubuntu
-        for username in $(ls /home)  
-        do
-            echo /home/$username
-            cp /usr/bin/uengine-loading-ubuntu /home/$username/uengine-launch/run_daemon.sh
-            chmod 755 /home/$username/uengine-launch/run_daemon.sh
-        done
+        
+    else
+        cp /opt/apps/com.gitee.uengine.runner.spark/files/Help/shell/run_daemon.sh /usr/bin/uengine-loading-ubuntu
     fi
-    rm /tmp/upgrade-uengine-loading-ubuntu
+    chmod 755 /usr/bin/uengine-loading-ubuntu
+    for username in $(ls /home)  
+    do
+        echo /home/$username
+        cp /usr/bin/uengine-loading-ubuntu /home/$username/uengine-launch/run_daemon.sh
+        chmod 755 /home/$username/uengine-launch/run_daemon.sh
+    done
+    rm -f /tmp/upgrade-uengine-loading-ubuntu
 fi
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略

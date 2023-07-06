@@ -81,7 +81,7 @@ sudo apt upgrade
 **※2、修复 UEngine 在 debian12 安装无法正常开启 UEngine 的问题；**  
 **※3、修复在 UEngine 程序菜单检查到 UEngine 不存在但是无法安装的问题；**  
 **※4、修复了 https://gitee.com/gfdgd-xi/uengine-runner/issues/I6B6C8 的问题；**  
-**※5、优化了 postinst 脚本；**  
+**※5、优化了 postinst 和 postrm 脚本；**  
 6、添加 zenity 依赖；  
 7、屏蔽在更新程序过程中杀死程序中输出的错误；  
 8、修改下载 dtk 的网址。  

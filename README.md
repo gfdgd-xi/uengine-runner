@@ -90,6 +90,7 @@ sudo apt upgrade
 ![图片.png](https://storage.deepin.org/thread/202307061119021692_图片.png)
 
 
+![图片.png](https://storage.deepin.org/thread/202307061138408182_图片.png)
 
 #### V2.1.0（2023年05月13日）
 **※1、修复源地址（迁出 Gitlink）；**  

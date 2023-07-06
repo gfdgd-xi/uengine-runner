@@ -1,0 +1,26 @@
+name: Auto Building Wine Runner
+run-name: ${{ github.actor }} Auto Building Wine Runner 🚀
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Building DEB
+        run: |
+          # 配置环境
+          sudo apt update
+          sudo apt install git dpkg-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qt5-qmake -y
+          git clone https://github.com/gfdgd-xi/uengine-runner
+          cd uengine-runner
+          make build
+          mv com.gitee.uengine.runner.spark.deb ~
+      - name: upload result
+        uses: actions/upload-artifact@v1
+        with:
+          name: com.gitee.uengine.runner.spark.deb
+          path: /home/runner/com.gitee.uengine.runner.spark.deb
+      
+      
+    

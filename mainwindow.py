@@ -1825,7 +1825,7 @@ if not os.path.exists("/usr/bin/uengine"):
         #QtWidgets.QMessageBox.critical(None, "错误", "请安装 UEngine 后继续")
         #sys.exit(0)
         #if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会使用 shenmo 提供的脚本进行安装\n安装完后重新启动该程序即可\n提示：无法保证此安装脚本安装的 UEngine 可以使用") == QtWidgets.QMessageBox.Yes:
-        if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会安装移植版本（之前由 Shenmo 编写）\n安装完后重新启动该程序即可\n提示：需要在 Ubuntu 20.04 或 debian10 及以上版本才能正常安装\nUbuntu 20.04 和 debian10 需要手动安装 dtk（≥5.5），可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/releases 获取") == QtWidgets.QMessageBox.Yes:
+        if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n这里将会安装移植版本（之前由 Shenmo 编写）\n安装完后重新启动该程序即可\n提示：需要在 Ubuntu 20.04 或 debian10 及以上版本才能正常安装\nUbuntu 20.04 和 debian10 需要手动安装 dtk（≥5.5），可以从 http://dtk.gfdgdxi.top 获取") == QtWidgets.QMessageBox.Yes:
             #os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"bash '{programPath}/uengine-installer'\"")
             OpenTerminal(f"bash '{programPath}/uengine-installer'")
             sys.exit(0)
@@ -1975,8 +1975,8 @@ uengineCheckCpu = QtWidgets.QAction(QtGui.QIcon.fromTheme("cpu"), langFile[lang]
 uengineDeleteUengineCheck = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][9])
 uengineReinstall = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][10])
 uengineUbuntuInstall = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][14])
-uengineUbuntuRemove = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "移除在 Ubuntu 上安装的 UEngine 及其附属脚本")
-uengineUbuntuInstallRoot = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "在 Ubuntu 上安装 UEngine（SuperSU 镜像）")
+uengineUbuntuRemove = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "移除在 Ubuntu/Debian 上安装的 UEngine 及其附属脚本")
+uengineUbuntuInstallRoot = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "在 Ubuntu/Debian 上安装 UEngine（SuperSU 镜像）")
 uengineWindowSizeSetting = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][16])
 uengine.addAction(uengineOpenDebBuilder)
 uengine.addAction(uengineOpenDebBuilderMore)

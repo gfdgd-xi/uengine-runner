@@ -2,11 +2,10 @@
     "Package": "com.gitee.uengine.runner.spark",
     "Url": [
         "https://gitee.com/gfdgd-xi/uengine-runner",
-		"https://github.com/gfdgd-xi/uengine-runner",
-        "https://gitlink.org.cn/gfdgd_xi/uengine-runner"
+		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "2.1.0",
-    "System": "Linux（deepin/UOS/Ubuntu22.04）",
+    "Version": "2.1.1",
+    "System": "Linux（deepin/UOS/Ubuntu/Debian）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis 或程序的更多帮助",
         "安装APK：点浏览按钮，选中需要安装的APK，然后点安装按钮",
@@ -23,6 +22,15 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "<b>V2.1.1：</b>",
+        "※1、修复在 Ubuntu/Debian 安装 UEngine 时提示“该脚本不支持 deepin”的问题",
+        "※2、修复 UEngine 在 debian12 安装无法正常开启 UEngine 的问题",
+        "※3、修复在 UEngine 程序菜单检查到 UEngine 不存在但是无法安装的问题",
+        "※4、修复了 https://gitee.com/gfdgd-xi/uengine-runner/issues/I6B6C8 的问题",
+        "5、添加 zenity 依赖",
+        "6、屏蔽在更新程序过程中杀死程序中输出的错误",
+        "7、修改下载 dtk 的网址",
+        "",
         "<b>V2.1.0：</b>",
         "※1、修复源地址（迁出 Gitlink）；",
         "※2、优化 UEngine 安装器，可以在 Debian/Ubuntu 使用（Debian11/Debian10/Ubuntu20.04 需要安装 dtk（≥5.5），dtk 可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/releases 获取）；",

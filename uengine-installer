@@ -32,7 +32,7 @@ CheckEnv(){
     #kernel=`uname -r`
     python3 "${programPath}/CompareVersion.py" "${newestDtkVersion}" "5.5"
     if [[ $? != 0 ]]; then
-        zenity --error --no-wrap "--text=提示：您当前的 dtk 版本过老，请更新 dtk 版本后再试（版本需要大于等于 5.5），可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/ 获取编译好的 dtk"
+        zenity --error --no-wrap "--text=提示：您当前的 dtk 版本过老，请更新 dtk 版本后再试（版本需要大于等于 5.5），可以从 http://dtk.gfdgdxi.top 获取编译好的 dtk"
         exit
     fi
     #exit

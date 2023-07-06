@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
-<h1 align="center">UEngine 运行器 2.1.0</h1>  
+<h1 align="center">UEngine 运行器 2.1.1</h1>  
 <hr>  
 <a href='https://gitee.com/gfdgd-xi-org/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi-org/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -9,9 +9,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;虽然通过Deepin/UOS应用商店已经能够安装部分安卓应用，但对于安卓应用爱好者来说，不能自由地安装任意APK软件包实在是不尽如人意。本软件可以实现在Deepin/UOS上安装任意APK软件包，并能将其启动图标发送到系统桌面或启动器中，方便用户快速启动它。  
 ![图片.png](https://storage.deepin.org/thread/202212181918041904_图片.png)    
   
-（测试平台：UOS 家庭版 21.3.1，deepin 20.8,UOS 专业版 1050）  
-适配架构：amd64、arm64  
-
+支持系统：Deepin（amd64）、UOS（amd64/arm64）、Debian（amd64，≥debian 10）、Ubuntu（amd64，≥Ubuntu 20.04）  
+Debian 10、Debian 11、Ubuntu 20.04 需要从 http://dtk.gfdgdxi.top/ 下载 dtk（版本≥5.5）并安装才能通过运行器的安装程序正确安装 UEngine  
   
 ## 程序相关网站
 作者个人站：https://www.gfdgdxi.top  
@@ -77,6 +76,8 @@ sudo apt upgrade
 ![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)  
   
 ### 更新内容  
+#### V2.1.1（2023年07月06日）
+
 #### V2.1.0（2023年05月13日）
 **※1、修复源地址（迁出 Gitlink）；**  
 **※2、优化 UEngine 安装器，可以在 Debian/Ubuntu 使用（Debian11/Debian10/Ubuntu20.04 需要安装 dtk（≥5.5），dtk 可以从 https://gitee.com/gfdgd-xi/dtk-sources-for-uos-apt/releases 获取）；**  

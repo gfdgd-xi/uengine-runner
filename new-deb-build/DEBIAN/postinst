@@ -1,10 +1,10 @@
 #!/bin/bash 
 # 使用 pip 安装所需库
 echo 安装组件
-python3 -m pip install --upgrade pip          --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
-python3 -m pip install --upgrade ttkthemes    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
-python3 -m pip install --upgrade pyautogui    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
-python3 -m pip install --upgrade keyboard     --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+python3 -m pip install --upgrade ttkthemes    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
+python3 -m pip install --upgrade pyautogui    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
+python3 -m pip install --upgrade keyboard     --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
+python3 -m pip install --upgrade pillow     --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
 echo 执行完成
 # 建立软链接
 ln -s /opt/apps/com.gitee.uengine.runner.spark/files/uengine-runner                   /usr/bin/uengine-runner

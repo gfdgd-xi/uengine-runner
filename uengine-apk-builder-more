@@ -227,7 +227,7 @@ Name={}
             self.RunCommandShow("chmod 0775 -vR '{}/DEBIAN/postinst'".format(tempPath))
             self.RunCommandShow("chmod 0775 -vR '{}/DEBIAN/prerm'".format(tempPath))
             self.RunCommandShow("echo '打包 deb 到桌面……'")
-            self.RunCommandShow("dpkg -b '{}' '{}/{}_{}_all.deb'".format(tempPath, get_desktop_path(),apkPackageNameNew, versionText.text()))
+            self.RunCommandShow("dpkg-deb -Z xz -b '{}' '{}/{}_{}_all.deb'".format(tempPath, get_desktop_path(),apkPackageNameNew, versionText.text()))
             self.RunCommandShow("echo '正在删除临时目录……'")
             self.RunCommandShow("rm -rfv '{}'".format(tempPath))
             self.RunCommandShow("echo '完成！'")

@@ -41,8 +41,8 @@ programEnv = [
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
     ["($THANK)", thankText],
-    ["($MAKER)", "RacoonGX 团队，By gfdgd xi"],
-    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi"],
+    ["($MAKER)", "gfdgd xi"],
+    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi"],
     ["($?)", "0"],
     ["($PLATFORM)", platform.system()],
     ["($DEBUG)", "1"]

@@ -1470,9 +1470,9 @@ class AddNewUengineDesktopLink():
             global activityName
             iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.text())
             shutil.copy(programPath + "/defult.png", iconSavePath)
-            BuildUengineDesktop(packageName.text(), activityName, packageName.text(), iconSavePath,
+            BuildUengineDesktop(packageName.text(), activityName.text(), packageName.text(), iconSavePath,
                 "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
-            BuildUengineDesktop(packageName.text(), activityName, packageName.text(), iconSavePath,
+            BuildUengineDesktop(packageName.text(), activityName.text(), packageName.text(), iconSavePath,
                 "{}/{}.desktop".format(get_desktop_path(), packageName.text()))
             AddNewUengineDesktopLink.SaveHistory()
             QtWidgets.QMessageBox.information(widget, "提示", "创建完毕！")

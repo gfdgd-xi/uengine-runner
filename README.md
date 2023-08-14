@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
-<h1 align="center">UEngine 运行器 2.1.1</h1>  
+<h1 align="center">UEngine 运行器 2.1.2</h1>  
 <hr>  
 <a href='https://gitee.com/gfdgd-xi-org/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi-org/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -27,6 +27,10 @@ Deepin 论坛：https://bbs.deepin.org
 https://gfdgdxi.lanzoue.com/b01qiu22f  
 密码:dihl  
 或者从星火应用商店下载安装，星火应用商店的源里已经补齐 UEngine 运行器在 Deepin 23 Alpha2/Beta 缺少的依赖  
+然后输入：
+```bash
+python3 -m pip install pillow
+```
 
 ## 上架到的应用商店
 > 可以从下列应用商店获取 UEngine 运行器
@@ -76,6 +80,15 @@ sudo apt upgrade
 ![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)  
   
 ### 更新内容  
+#### V2.1.2（2023年08月14日）
+**※1、修复 https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX**  
+**※2、修复添加应用图标时activity名称错误的问题**  
+**※3、修复 UEngine 运行器在 23 运行时提示缺失 PIL.Image 库的问题**  
+
+![图片.png](https://storage.deepin.org/thread/202308141701411843_图片.png)
+
+
+
 #### V2.1.1（2023年07月06日）
 **※1、修复在 Ubuntu/Debian 安装 UEngine 时提示“该脚本不支持 deepin”的问题；**  
 **※2、修复 UEngine 在 debian12 安装无法正常开启 UEngine 的问题；**  

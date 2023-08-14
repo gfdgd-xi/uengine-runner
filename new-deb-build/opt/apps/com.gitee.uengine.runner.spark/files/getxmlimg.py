@@ -1,5 +1,11 @@
-import PIL.Image as Image
-import PIL.ImageDraw as ImageDraw
+import os
+try:
+    import PIL.Image as Image
+    import PIL.ImageDraw as ImageDraw
+except:
+    os.system("python3 -m pip install --upgrade pillow  --break-system-packages   --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
+    import PIL.Image as Image
+    import PIL.ImageDraw as ImageDraw
 import zipfile
 import subprocess
 import re

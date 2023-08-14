@@ -33,7 +33,7 @@ def Update(name, stars, contact, things, version):
         "Version": version
     }
     try:
-        QtWidgets.QMessageBox.information(widget, "提示", requests.post(parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vdWVuZ2luZS1ydW5uZXIvYnVnL3VwbG9hZC5waHA=").decode("utf-8")), data=data).text)
+        QtWidgets.QMessageBox.information(widget, "提示", requests.post(parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3VlbmdpbmUtcnVubmVyL2J1Zy91cGxvYWQucGhw").decode("utf-8")), data=data).text)
         print(data)
     except:
         traceback.print_exc()
@@ -104,4 +104,11 @@ window.setCentralWidget(widget)
 window.setWindowTitle(f"UEngine 运行器 {version} 问题/建议反馈")
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.show()
+starMenu.setDisabled(True)
+contactThings.setDisabled(True)
+#otherUpload.setDisabled(True)
+nameThings.setDisabled(True)
+updateButton.setDisabled(True)
+updateThings.setDisabled(True)
+updateThings.setText("请移步到 Gitee 或 Github 提交 Bug（推荐使用 Gitee）")
 sys.exit(app.exec_())

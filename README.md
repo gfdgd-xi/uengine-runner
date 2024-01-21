@@ -545,7 +545,7 @@ make install
 [![gfdgd xi/定时器](https://gitee.com/gfdgd-xi/timer/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/timer)   
 
 ### 请作者喝杯茶
-如果您觉得 Wine 运行器对你有帮助，可以请作者喝杯茶  
+如果您觉得对你有帮助，可以请作者喝杯茶  
 <img src="Icon/QR/Wechat.png" width="250"  /> 
 <img src="Icon/QR/Alipay.jpg" width="250"  />
 <img src="Icon/QR/QQ.png" width="250" >

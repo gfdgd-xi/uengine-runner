@@ -1,0 +1,102 @@
+# Debian aapt(1) completion                             -*- shell-script -*-
+# Copyright: 2014 Hans-Christoph Steiner <hans@eds.org>
+
+_aapt()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    local special i
+    for (( i=0; i < ${#words[@]}-1; i++ )); do
+        if [[ ${words[i]} == @(add|crunch|dump|list|package|remove|singleCrunch|version) ]]; then
+            special=${words[i]}
+        fi
+    done
+
+    if [[ -n $special ]]; then
+        case $special in
+            add)
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=( $( compgen -W '-C -S -v' -- "$cur" ) )
+                else
+                    _filedir 'apk'
+                fi
+                return 0
+                ;;
+            crunch)
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=( $( compgen -W '-C -i -o -S -v' -- "$cur" ) )
+                else
+                    _filedir 'apk'
+                fi
+                return 0
+                ;;
+            dump)
+                case "$prev" in
+                    badging|configurations|permissions|resources|strings|xmltree|xmlstrings)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=( $( compgen -W '--values' -- "$cur" ) )
+                        else
+                            _filedir 'apk'
+                        fi
+                        return 0
+                        ;;
+                esac
+                COMPREPLY=( $( compgen -W 'badging configurations permissions resources
+                                           strings xmltree xmlstrings' -- "$cur" ) )
+                return 0
+                ;;
+            list)
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=( $( compgen -W '-a -v' -- "$cur" ) )
+                else
+                    _filedir 'apk'
+                fi
+                return 0
+                ;;
+            package)
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=( $( compgen -W '-A -c -d -f -F -g -G -I -j -m -P
+                        -S -u -v -x -z -m -0
+                        --debug-mode --min-sdk-version --target-sdk-version
+                        --app-version --app-version-name --custom-package
+                        --rename-manifest-package --rename-instrumentation-target-package
+                        --utf16 --auto-add-overlay --max-res-version
+                        --product --preferred-configurations --output-text-symbols
+                        ' -- "$cur" ) )
+                else
+                    _filedir
+                fi
+                return 0
+                ;;
+            remove)
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                else
+                    _filedir
+                fi
+                return 0
+                ;;
+            singleCrunch)
+                case $prev in
+                    -i|-o)
+                        _filedir
+                        return 0
+                        ;;
+                esac
+                COMPREPLY=( $( compgen -W '-i -o -v' -- "$cur" ) )
+                return 0
+                ;;
+            version)
+                return 0
+                ;;
+        esac
+    fi
+
+    COMPREPLY=( $( compgen -W 'add crunch dump list package remove singleCrunch version' -- "$cur" ) )
+
+    return 0
+} &&
+complete -F _aapt aapt
+
+# ex: ts=4 sw=4 et filetype=sh

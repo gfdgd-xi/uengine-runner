@@ -544,4 +544,14 @@ make install
 [![星火社区作品集/spark-webapp-runtime 运行器](https://gitee.com/spark-community-works-collections/spark-webapp-runtime-runner/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/spark-community-works-collections/spark-webapp-runtime-runner)   
 [![gfdgd xi/定时器](https://gitee.com/gfdgd-xi/timer/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/gfdgd-xi/timer)   
 
+### 请作者喝杯茶
+如果您觉得 Wine 运行器对你有帮助，可以请作者喝杯茶  
+<img src="Icon/QR/Wechat.png" width="250"  /> 
+<img src="Icon/QR/Alipay.jpg" width="250"  />
+<img src="Icon/QR/QQ.png" width="250" >
+
+#### 广告
+支付宝官方活动，扫描获得支付红包！  
+<p><img src="Icon/QR/advertisement0.jpg" width="250" ></p>
+
 ## ©2021-Now gfdgd xi

@@ -1,5 +1,6 @@
 clean:
 	python3 RemovePycacheFile.py
+	rm com.gitee.uengine.runner.spark.deb -fv
 
 build:
 	echo 别云间
@@ -58,6 +59,7 @@ build:
 	cp -rv uengine-remove.sh                    new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv pkexec                               new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv LoadingBinder                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv aapt                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	rm -rfv new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/Help/information
 	python3 UpdateTime.py
 	python3 RemovePycacheFile.py                #new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/

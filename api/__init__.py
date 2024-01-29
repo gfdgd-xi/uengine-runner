@@ -6,6 +6,12 @@ import traceback
 import subprocess
 from getxmlimg import getsavexml
 
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+
+# 获取用户主目录
+def get_home()->"获取用户主目录":
+    return os.path.expanduser('~')
+
 class ProgramInformation:
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     version = "1.6.0Alpha2"
@@ -49,7 +55,7 @@ class APK:
     def uninstall(self):
         return os.system("uengine uninstall --pkg='{}'".format(self.packageName()))
     def information(self):
-        return subprocess.getoutput("aapt dump badging '{}'".format(self.apkPath))
+        return subprocess.getoutput("'{}/aapt/run-aapt.sh' dump badging '{}'".format(programPath, self.apkPath))
     def activityName(self):
         info = self.information()
         for line in info.split('\n'):

@@ -418,7 +418,7 @@ def write_txt(path: "路径", things: "内容")->"写入文本文档":
 
 # 获取 aapt 的所有信息
 def GetApkInformation(apkFilePath: "apk 所在路径")->"获取 aapt 的所有信息":
-    return GetCommandReturn("aapt dump badging '{}'".format(apkFilePath))
+    return GetCommandReturn("'{}/aapt/run-aapt.sh' dump badging '{}'".format(programPath, apkFilePath))
 
 # 获取 apk Activity
 def GetApkActivityName(apkFilePath: "apk 所在路径")->"获取 apk Activity":
@@ -1559,7 +1559,7 @@ def UseProgram():
 <p>10、deepin 终端：{}</p>'''.format(subprocess.getoutput("uengine version"),
     subprocess.getoutput("python3 --version"),
     QtCore.qVersion,
-    subprocess.getoutput("aapt version"),
+    subprocess.getoutput(f"'{programPath}/aapt/run-aapt.sh' version"),
     subprocess.getoutput("dpkg --version"),
     subprocess.getoutput("mkdir --version"),
     subprocess.getoutput("chmod --version"),
@@ -1582,7 +1582,7 @@ if not lang in langFile.keys():
 programUrl = information["Url"][0]
 version = information["Version"]
 goodRunSystem = information["System"]
-aaptVersion = GetCommandReturn("aapt version")
+aaptVersion = GetCommandReturn(f"'{programPath}/aapt/run-aapt.sh' version")
 SystemVersion = GetSystemVersion()
 iconPath = "{}/runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
 about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>

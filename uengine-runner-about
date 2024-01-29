@@ -35,7 +35,7 @@ information = json.loads(readtxt(programPath + "/information.json"))
 programUrl = information["Url"][0]
 version = information["Version"]
 goodRunSystem = information["System"]
-aaptVersion = subprocess.getoutput("aapt version")
+aaptVersion = subprocess.getoutput(f"'{programPath}/aapt/run-aapt.sh' version")
 about = '''介绍        ：一个基于 Python3 的 tkinter 制作的 UEngine 运行器，在新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的UEngine安卓运行环境安装自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。
 
 版本        ：{}
@@ -75,7 +75,7 @@ def UseProgram():
 10、deepin 终端：{}'''.format(subprocess.getoutput("uengine version"),
     subprocess.getoutput("python3 --version"),
     tk.TkVersion,
-    subprocess.getoutput("aapt version"),
+    subprocess.getoutput(f"'{programPath}/aapt/run-aapt.sh' version"),
     subprocess.getoutput("dpkg --version"),
     subprocess.getoutput("mkdir --version"),
     subprocess.getoutput("chmod --version"),

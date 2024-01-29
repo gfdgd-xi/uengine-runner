@@ -3,8 +3,13 @@
 cat /etc/deepin_version | grep 23
 if [[ $? != 0 ]]; then
 	# 如果不是
-	aapt "$@"
-	exit $?
+	# 判断系统是否有安装 aapt
+	which aapt > /dev/null
+	if [[ $? == 0 ]]; then
+		# 如果有安装
+		aapt "$@"
+		exit $?
+	fi
 fi
 # 如果是
 programPath=$(cd $(dirname $0); pwd)

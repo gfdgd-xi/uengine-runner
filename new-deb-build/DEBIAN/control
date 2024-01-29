@@ -9,6 +9,6 @@ Maintainer: gfdgd xi <3025613752@qq.com>
 Depends: python3, python3-tk, python3-pip, python3-setuptools, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, curl, python3-pil, python3-requests, adb, fonts-noto-cjk, python3-numpy, wget, inotify-tools, aria2, python3-pyqt5, python3-matplotlib, python3-urllib3, zenity, python3-pil.imagetk
 Recommends: uengine, deepin-elf-verify, python3-pyqt5.qtwebengine, aapt
 Priority: optional
-Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu
+Conflicts: spark-uengine-apk-builder, com.gitee.uengine.runner.spark.ubuntu, kbox
 Homepage: https://gitee.com/gfdgd-xi/uengine-runner
 Description: 新版本Deepin/UOS发布后，可以在应用商店安装部分官方已适配的安卓应用，对爱好者来说，不能自己安装APK软件包始终差点意思，本程序可以为Deepin/UOS上的Uengine安卓运行环境安装/卸载/打包自定义APK软件包，并能发送安装的APK包启动菜单到桌面或系统菜单。

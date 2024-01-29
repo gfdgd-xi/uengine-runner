@@ -13,6 +13,11 @@ else
 	echo "系统：$version"
 	if [ "$versionLower" = "deepin" ] || [ "$versionLower" = "uos" ]; then
 		echo "此系统为 Deepin/UOS，使用 apt 安装"
+		lscpu | grep "FT-"
+		if [[ $? != 0 ]] && [[ `arch` == "aarch64" ]]; then
+			zenity --info --text="UEngine 运行器暂不支持非飞腾CPU"
+			exit
+		fi
 		zenity --question --text="您还未安装 UEngine，是否现在安装？" --no-wrap
 		if [[ $? == 0 ]]; then
 			"$dir/launch.sh" deepin-terminal -C "pkexec apt install uengine -y"

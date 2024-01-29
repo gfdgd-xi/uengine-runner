@@ -1858,6 +1858,9 @@ def showhelp():
 if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower() or subprocess.getoutput("arch").replace("\n", "").replace(" ", "") != "x86_64":
+        if not "ft-" in GetCommandReturn("lscpu").lower() and GetCommandReturn("lscpu").replace(" ", "").replace("\n", "") == "aarch64":
+            QtWidgets.QMessageBox.critical(None, "错误", "UEngine 运行器不支持非飞腾 CPU")
+            sys.exit(1)
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可") == QtWidgets.QMessageBox.Yes:
             OpenTerminal(f"pkexec apt install uengine -y")
             sys.exit(0)

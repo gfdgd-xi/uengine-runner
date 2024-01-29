@@ -10,10 +10,12 @@ import zipfile
 import subprocess
 import re
 
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+
 class getsavexml():
 
     def savexml(self,apkFilePath,xmlpath,iconSavePath):
-        cmddumpid = "aapt dump xmltree "+ apkFilePath + " " + xmlpath
+        cmddumpid = f"'{programPath}/aapt/run-aapt.sh' dump xmltree "+ apkFilePath + " " + xmlpath
         print(cmddumpid)
         xmltree =  subprocess.getoutput(cmddumpid)
         xmls = xmltree.splitlines()
@@ -35,7 +37,7 @@ class getsavexml():
         print(foreimgid)
 
         # 直接从apk resource文件获取前后两层图片路径及ID字符串
-        resource =  subprocess.getoutput("aapt dump --values resources " +  apkFilePath + "| grep -iE -A1 " +  "\"" + backimgid + "|" + foreimgid + "\"")
+        resource =  subprocess.getoutput(f"'{programPath}/aapt/run-aapt.sh' dump --values resources " +  apkFilePath + "| grep -iE -A1 " +  "\"" + backimgid + "|" + foreimgid + "\"")
         resourcelines = resource.splitlines()
         print(resourcelines)
 

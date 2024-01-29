@@ -89,8 +89,8 @@ class UninstallProgram(QtCore.QThread):
                 self.error.emit("疑似卸载失败，请检查 UEngine 是否正常安装、运行以及 APK 文件或包名是否正确、完整")
                 DisabledAndEnbled(False)
                 return
-            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package)):
-                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package))
+            if os.path.exists("{}/{}.desktop".format(desktopFilePath, package)):
+                os.remove("{}/{}.desktop".format(desktopFilePath, package))
             if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
                 os.remove("{}/{}.desktop".format(get_desktop_path(), package))
             findApkHistory.append(ComboInstallPath.currentText())
@@ -174,9 +174,9 @@ class InstallApk(QtCore.QThread):
         try:
             if not os.path.exists("/tmp/uengine-runner"):
                 os.makedirs("/tmp/uengine-runner")
-            if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
+            if not os.path.exists(desktopFilePath):
                 print("Mkdir")
-                os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
+                os.makedirs(desktopFilePath)
             # 读取设置
             setting = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
             # 安装应用
@@ -246,7 +246,7 @@ logicalHeight {verticalHeighe}
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
                 print("start install apk3")
                 BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                           "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
+                           "{}/{}.desktop".format(desktopFilePath, GetApkPackageName(path)))
                 print("\nprint install complete")
             if quit:
                 return
@@ -266,7 +266,7 @@ def InstallBuildDesktop(iconSavePath):
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)), choose)
     print("start install apk3")
     BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                           "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)), choose)
+                           "{}/{}.desktop".format(desktopFilePath, GetApkPackageName(path)), choose)
     print("\nprint install complete")
 
 def UpdateCombobox(tmp):
@@ -587,8 +587,8 @@ def BackUengineClean()->"清空 uengine 数据":
     if QtWidgets.QMessageBox.warning(widget, "警告", "清空后数据将会完全丢失，确定要继续吗？", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel) == QtWidgets.QMessageBox.Ok:
         DisabledAndEnbled(True)
         try:
-            if os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
-                shutil.rmtree("{}/.local/share/applications/uengine/".format(get_home()))
+            if os.path.exists(desktopFilePath):
+                shutil.rmtree(desktopFilePath)
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
@@ -1462,7 +1462,7 @@ class AddNewUengineDesktopLink():
     # 添加快捷方式
     def SaveDesktopLink():
         try:
-            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
+            if os.path.exists("{}/{}.desktop".format(desktopFilePath, packageName.text())):
                 if QtWidgets.QMessageBox.question(widget, "提示", "文件已存在，是否要覆盖？") == QtWidgets.QMessageBox.No:
                     return
             if not os.path.exists("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home())):
@@ -1471,7 +1471,7 @@ class AddNewUengineDesktopLink():
             iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.text())
             shutil.copy(programPath + "/defult.png", iconSavePath)
             BuildUengineDesktop(packageName.text(), activityName.text(), packageName.text(), iconSavePath,
-                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
+                "{}/{}.desktop".format(desktopFilePath, packageName.text()))
             BuildUengineDesktop(packageName.text(), activityName.text(), packageName.text(), iconSavePath,
                 "{}/{}.desktop".format(get_desktop_path(), packageName.text()))
             AddNewUengineDesktopLink.SaveHistory()
@@ -1485,13 +1485,13 @@ class AddNewUengineDesktopLink():
     def DelDesktopLink():
         try:
             global packageName
-            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
-                QtWidgets.QMessageBox.critical(widget, "错误", "此包名对应的 UEngine 桌面快捷方式不存在！")
+            if not os.path.exists("{}/{}.desktop".format(desktopFilePath, packageName.text())):
+                QtWidgets.QMessageBox.critical(widget, "错误", "此包名对应的 UEngine 快捷方式不存在！")
                 return
             if QtWidgets.QMessageBox.warning(widget, "警告", "你确定要删除吗？删除后将无法恢复！", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel) == QtWidgets.QMessageBox.Cancel:
                 return
             try:
-                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
+                os.remove("{}/{}.desktop".format(desktopFilePath, packageName.text()))
                 AddNewUengineDesktopLink.SaveHistory()
                 QtWidgets.QMessageBox.information(widget, "提示", "已删除")
             except:
@@ -1611,13 +1611,25 @@ desktop = programPath + "/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 useProgram = ""
 threading.Thread(target=UseProgram).start()
+isDeepin23=False
+# 判断是不是 Deepin23
+if os.path.exists("/etc/deepin_version"):
+    try:
+        with open(f"/etc/deepin_version") as file:
+            isDeepin23 = "23" in file.read()
+    except:
+        traceback.print_exc()
+desktopFilePath = f"{get_home()}/.local/share/applications/uengine/"
+if isDeepin23:
+    desktopFilePath = f"{get_home()}/.local/share/applications/"
+
 
 ###########################
 # 加载配置
 ###########################
 app = QtWidgets.QApplication(sys.argv)
-if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
-    os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
+if not os.path.exists(desktopFilePath):
+    os.makedirs(desktopFilePath)
 if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
     os.makedirs(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkHistory.json"):  # 如果没有配置文件

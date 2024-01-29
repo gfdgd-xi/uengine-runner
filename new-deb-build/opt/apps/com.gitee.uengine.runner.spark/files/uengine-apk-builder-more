@@ -313,7 +313,7 @@ def write_txt(path, things):
     file.close()  # 关闭文本对象
 
 def GetApkInformation(apkFilePath):
-    return GetCommandReturn("aapt dump badging '{}'".format(apkFilePath))
+    return GetCommandReturn("'{}/aapt/run-aapt.sh' dump badging '{}'".format(programPath, apkFilePath))
 
 def GetApkActivityName(apkFilePath):
     info = GetApkInformation(apkFilePath)

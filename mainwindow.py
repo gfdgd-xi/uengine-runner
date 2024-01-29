@@ -1598,6 +1598,17 @@ about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 updateThingsString = ""
 tips = ""
 contribute = ""
+appreciate = f"""<h3>请作者喝杯茶</h3>
+<p>如果您觉得 UEngine 运行器对你有帮助，可以请作者喝杯茶 </p>
+<p>
+    <img src="{programPath}/Icon/QR/Wechat.png" width="250"  /> 
+    <img src="{programPath}/Icon/QR/Alipay.jpg" width="250"  />
+    <img src="{programPath}/Icon/QR/QQ.png" width="250" >
+</p>
+<hr/>
+<h3>广告</h3>
+<p>支付宝官方活动，扫描获得支付红包！</p>
+<p><img src="{programPath}/Icon/QR/advertisement0.jpg" width="250" ></p>"""
 for i in information["Tips"]:
     tips += f"<p>{i}</p>"
 for i in information["Update"]:
@@ -1767,7 +1778,8 @@ def showhelp():
         HelpStr.setHtml(contribute)
     def ChgTips():
         HelpStr.setHtml(tips)
-    
+    def ChgAppreciate():
+        HelpStr.setHtml(appreciate)
     def ChgGPLV3():
         try:
             with open(f"{programPath}/LICENSE", "r") as file:
@@ -1790,6 +1802,7 @@ def showhelp():
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
     BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
+    appreciateButton = QtWidgets.QPushButton("赞赏作者")
     HelpStr = QtWidgets.QTextBrowser()
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
@@ -1801,6 +1814,7 @@ def showhelp():
     BtnDownN.clicked.connect(Download)
     BtnGPLV3.clicked.connect(ChgGPLV3)
     BtnOpenN.clicked.connect(Open)
+    appreciateButton.clicked.connect(ChgAppreciate)
 
     ChgTips()
 
@@ -1811,8 +1825,9 @@ def showhelp():
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
     helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
     helpLayout.addWidget(BtnGPLV3, 6, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 7, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 10, 1)
+    helpLayout.addWidget(appreciateButton, 7, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 8, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 11, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)

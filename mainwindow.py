@@ -1834,6 +1834,9 @@ def showhelp():
     helpWindow.setFixedSize(int(helpWindow.frameSize().width() * 0.9), int(helpWindow.frameSize().height() * 1.5))
     helpWindow.setWindowTitle("帮助")
     helpWindow.setWindowIcon(QtGui.QIcon(iconPath))
+    # 设置背景
+    helpWindow.setObjectName("helpWindow")
+    helpWindow.setStyleSheet(f"QWidget#helpWindow {{background: url({programPath}/Icon/Program/about-background.png) no-repeat;background-position: left bottom;}}")
     helpWindow.show()
     return
 

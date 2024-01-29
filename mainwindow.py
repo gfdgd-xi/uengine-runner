@@ -1585,8 +1585,7 @@ goodRunSystem = information["System"]
 aaptVersion = GetCommandReturn(f"'{programPath}/aapt/run-aapt.sh' version")
 SystemVersion = GetSystemVersion()
 iconPath = "{}/runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
-about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
-<p>介绍：虽然通过Deepin/UOS应用商店已经能够安装部分安卓应用，但对于安卓应用爱好者来说，不能自由地安装任意APK软件包实在是不尽如人意。本软件可以实现在Deepin/UOS上安装任意APK软件包，并能将其启动图标发送到系统桌面或启动器中，方便用户快速启动它。  </p>
+about = f'''<p>介绍：虽然通过Deepin/UOS应用商店已经能够安装部分安卓应用，但对于安卓应用爱好者来说，不能自由地安装任意APK软件包实在是不尽如人意。本软件可以实现在Deepin/UOS上安装任意APK软件包，并能将其启动图标发送到系统桌面或启动器中，方便用户快速启动它。  </p>
 <p>程序开源许可证：GPLV3</p>
 <p>版本：{version}</p>
 <p>适用平台：{goodRunSystem}</p>
@@ -1768,7 +1767,16 @@ def showhelp():
     def ChgLog():
         HelpStr.setHtml(updateThingsString)
     def ChgAbout(event):
-        HelpStr.setHtml(about)
+        HelpStr.setHtml(f"<p align='center'><a href='https://www.gfdgdxi.top/ChangeIcon'><img width=256 src='{iconPath}'/></a></p>\n" + about)
+    def OpenUrl(url):
+        print(url.url())
+        if url.url() == "https://www.gfdgdxi.top/ChangeIcon":
+            ChgAboutChangeIcon()
+            return
+        webbrowser.open_new_tab(url.url())
+
+    def ChgAboutChangeIcon():
+        HelpStr.setHtml(f"<p align='center'><img width=256 src='{programPath}/Icon/Program/about-icon.png'/></p>\n" + about)
     def ChgDep():
         if useProgram == "":
             BtnZujian.setDisabled(True)
@@ -1804,6 +1812,10 @@ def showhelp():
     BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
     appreciateButton = QtWidgets.QPushButton("赞赏作者")
     HelpStr = QtWidgets.QTextBrowser()
+    HelpStr.setOpenLinks(False)
+    HelpStr.setHtml(about)
+    HelpStr.setOpenExternalLinks(False)
+    HelpStr.anchorClicked.connect(OpenUrl)
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
     BtnReadme.clicked.connect(ChgTips)

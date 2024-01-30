@@ -28,6 +28,7 @@
         "※3、新增 ARM 架构非飞腾 CPU 识别防止破坏鲲鹏 kbox 环境",
         "4、优化安装量统计机制",
         "5、关于窗口新增赞助页",
+        "6、新增 QQ 交流群入口",
         "",
         "<b>V2.1.2：</b>",
         "※1、修复 https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX",

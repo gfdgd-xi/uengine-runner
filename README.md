@@ -11,6 +11,9 @@
   
 支持系统：Deepin（amd64）、UOS（amd64/arm64）、Debian（amd64，≥debian 10）、Ubuntu（amd64，≥Ubuntu 20.04）  
 Debian 10、Debian 11、Ubuntu 20.04 需要从 http://dtk.gfdgdxi.top/ 下载 dtk（版本≥5.5）并安装才能通过运行器的安装程序正确安装 UEngine  
+暂不支持 Debian 12  
+
+QQ 交流群：872491938  
   
 ## 程序相关网站
 作者个人站：https://www.gfdgdxi.top  

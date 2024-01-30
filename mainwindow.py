@@ -1593,6 +1593,7 @@ about = f'''<p>介绍：虽然通过Deepin/UOS应用商店已经能够安装部�
 <p>程序官网：{programUrl}</p>
 <p>系统版本：{SystemVersion}</p>
 <p>安装包构建时间：{information['Time']}</p>
+<p>QQ 交流群：872491938</p>
 <h1>©2021-{time.strftime("%Y")} gfdgd xi</h1>'''
 updateThingsString = ""
 tips = ""

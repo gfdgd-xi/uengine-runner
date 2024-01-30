@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
-<h1 align="center">UEngine 运行器 2.1.2</h1>  
+<h1 align="center">UEngine 运行器 2.2.0</h1>  
 <hr>  
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -83,6 +83,24 @@ sudo apt upgrade
 ![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)  
   
 ### 更新内容  
+#### V2.2.0（2023年01月30日）
+**※1、支持 deepin 23，不需要强制依赖 aapt**  
+**※2、修复 deepin 23 安装的 APK 无法正常在启动器显示图标的问题**  
+**※3、新增 ARM 架构非飞腾 CPU 识别防止破坏鲲鹏 kbox 环境**  
+**※4、修复部分系统在使用程序的一些功能时发生崩溃的问题**  
+**※5、新增 UEngine For Wayland 补丁**  
+6、优化安装量统计机制  
+7、关于窗口新增赞助页  
+8、新增 QQ 交流群入口  
+9、内置 Via 浏览器  
+
+![截图_选择区域_20240130111917.png](https://storage.deepin.org/thread/20240130031926574_截图_选择区域_20240130111917.png)
+
+
+
+
+
+
 #### V2.1.2（2023年08月14日）
 **※1、修复 https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX**  
 **※2、修复添加应用图标时activity名称错误的问题**  

@@ -27,6 +27,11 @@ rm -f /usr/bin/uengine-runner-auto-install-bash
 # 加判断是为了怕 reinstall 后程序就再也打不开了（除非卸载后重新安装）
 if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
     rm -rf /opt/apps/com.gitee.uengine.runner.spark
+	# 移除 UEngine For 23 Wayland 补丁
+	if [[ -f /usr/bin/uengine-session ]]; then
+		rm -fv /usb/bin/uengine
+		mv -v /usr/bin/uengine-session /usr/bin/uengine
+	fi
 fi
 # 删除软件配置文件（只限“purge”）
 # 配置目录：~/.config/uengine-runner

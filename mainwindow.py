@@ -1570,6 +1570,26 @@ def BackAPK(choice):
     global choose
     choose = choice
 
+def InstallUEnginePatchForWayland():
+    if os.system("which uengine"):
+        QtWidgets.QMessageBox.critical(window, "错误", "未安装UEngine，请先安装UEngine")
+        return
+    if os.path.exists("/usr/bin/uengine-session"):
+        QtWidgets.QMessageBox.critical(window, "提示", "已安装该补丁，请勿重复安装")
+        return
+    os.system(f"pkexec bash '{programPath}/LoadingBinder/uengine-wayland-install.sh'")
+    QtWidgets.QMessageBox.information(window, "提示", "安装成功！重启电脑后生效")
+
+def RemoveUEnginePatchForWayland():
+    if os.system("which uengine"):
+        QtWidgets.QMessageBox.critical(window, "错误", "未安装UEngine，请先安装UEngine")
+        return
+    if not os.path.exists("/usr/bin/uengine-session"):
+        QtWidgets.QMessageBox.critical(window, "提示", "已卸载该补丁，无需卸载")
+        return
+    os.system(f"pkexec bash '{programPath}/LoadingBinder/uengine-wayland-uninstall.sh'")
+    QtWidgets.QMessageBox.information(window, "提示", "卸载成功！重启电脑后生效")
+
 ###########################
 # 程序信息
 ###########################
@@ -1876,10 +1896,19 @@ if not os.path.exists("/usr/bin/uengine"):
             OpenTerminal(f"bash '{programPath}/uengine-installer'")
             sys.exit(0)
 
+
+
+
+
 ###########################
 # 窗口创建
 ###########################
 window = QtWidgets.QMainWindow()
+# 判断系统是不是 Deepin 23、有没有安装 Wayland 补丁、是不是 Wayland 环境
+if not os.path.exists("/usr/bin/uengine-session") and isDeepin23 and os.getenv("XDG_SESSION_TYPE") == "wayland":
+    # 如果是
+    if QtWidgets.QMessageBox.question(None, "提示", "检测到您使用的是 Deepin 23 + Wayland 环境，建议安装 UEngine For Wayland 补丁以便能正常使用 UEngine，是否安装？") == QtWidgets.QMessageBox.Yes:
+        InstallUEnginePatchForWayland()
 widget = QtWidgets.QWidget()
 widgetLayout = QtWidgets.QGridLayout()
 # 权重
@@ -2025,6 +2054,8 @@ uengineUbuntuRemove = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"
 uengineUbuntuInstallRoot = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "在 Ubuntu/Debian 上安装 UEngine（SuperSU 镜像）")
 uengineWindowSizeSetting = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][16])
 uengineInstallVia = QtWidgets.QAction("安装 Via")
+installUEnginePatchForWayland = QtWidgets.QAction("安装 UEngine For Wayland 补丁")
+uninstallUEnginePatchForWayland = QtWidgets.QAction("卸载 UEngine For Wayland 补丁")
 uengine.addAction(uengineOpenDebBuilder)
 uengine.addAction(uengineOpenDebBuilderMore)
 uengine.addAction(uengineKeyboardToMouse)
@@ -2052,6 +2083,9 @@ uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
 uengine.addSeparator()
 uengine.addAction(uengineInstallVia)
+uengine.addSeparator()
+uengine.addAction(installUEnginePatchForWayland)
+uengine.addAction(uninstallUEnginePatchForWayland)
 
 #uengineUbuntuInstall.setDisabled(True)
 # 绑定信号
@@ -2067,6 +2101,8 @@ uengineUbuntuInstallRoot.triggered.connect(UengineUbuntuInstallRoot)
 uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
 uengineReinstall.triggered.connect(ReinstallUengine)
 uengineWindowSizeSetting.triggered.connect(UengineWindowSizeSetting.ShowWindow)
+installUEnginePatchForWayland.triggered.connect(InstallUEnginePatchForWayland)
+uninstallUEnginePatchForWayland.triggered.connect(RemoveUEnginePatchForWayland)
 
 def InstallVia():
     ComboInstallPath.setCurrentText(f"{programPath}/APK/Via.apk")

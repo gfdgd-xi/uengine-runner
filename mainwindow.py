@@ -1004,7 +1004,7 @@ class UengineWindowSizeSetting:
                 i.setChecked(True)
         UengineWindowSizeSetting.setting.setWindowTitle(f"设置 Android 应用的窗口大小缩放设置")
         UengineWindowSizeSetting.setting.show()
-        UengineWindowSizeSetting.setting.resize(UengineWindowSizeSetting.setting.frameSize().width() * 1.3, UengineWindowSizeSetting.setting.frameSize().height())
+        UengineWindowSizeSetting.setting.resize(int(UengineWindowSizeSetting.setting.frameSize().width() * 1.3), int(UengineWindowSizeSetting.setting.frameSize().height()))
 
     def ReadSetting():
         file = open(f"/usr/share/uengine/appetc/{UengineWindowSizeSetting.package}.txt")
@@ -1191,7 +1191,7 @@ class UpdateWindow():
         UpdateWindow.update.setCentralWidget(updateWidget)
         UpdateWindow.update.setWindowTitle("检查 UEngine 运行器更新")
         UpdateWindow.update.setWindowIcon(QtGui.QIcon(iconPath))
-        UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
+        UpdateWindow.update.resize(int(updateWidget.frameGeometry().width()), int(updateWidget.frameGeometry().height() * 1.5))
         UpdateWindow.update.show()
 
     def Update():
@@ -1410,7 +1410,7 @@ class ShowTextTipsWindow():
         ShowTextTipsWindow.messageWindow.setWindowTitle("提示")
         ShowTextTipsWindow.messageWindow.setWindowIcon(QtGui.QIcon(iconPath))
         ShowTextTipsWindow.messageWindow.show()
-        ShowTextTipsWindow.messageWindow.resize(ShowTextTipsWindow.messageWindow.frameSize().width() * 2, ShowTextTipsWindow.messageWindow.frameSize().height() * 1.5)
+        ShowTextTipsWindow.messageWindow.resize(int(ShowTextTipsWindow.messageWindow.frameSize().width() * 2), int(ShowTextTipsWindow.messageWindow.frameSize().height() * 1.5))
         return
 
 # 添加/删除 uengine 应用快捷方式

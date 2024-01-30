@@ -61,7 +61,11 @@ if [ "$1" = "purge" ]; then
 else
 	echo "非 purge，跳过清理"
 fi
-
+# 自动卸载 UEngine 的 Via（如果 UEngine 已存在）
+if [[ -f /usr/bin/uengine-session-launch-helper ]]; then
+    # 忽略错误进行安装
+    /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg=mark.via | true
+fi
 # 刷新图标缓存
 # 因为 Ubuntu 的问题，省略
 gtk-update-icon-cache /usr/share/icons/bloom > /dev/null | true

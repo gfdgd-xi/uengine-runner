@@ -89,8 +89,8 @@ class UninstallProgram(QtCore.QThread):
                 self.error.emit("疑似卸载失败，请检查 UEngine 是否正常安装、运行以及 APK 文件或包名是否正确、完整")
                 DisabledAndEnbled(False)
                 return
-            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package)):
-                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), package))
+            if os.path.exists("{}/{}.desktop".format(desktopFilePath, package)):
+                os.remove("{}/{}.desktop".format(desktopFilePath, package))
             if os.path.exists("{}/{}.desktop".format(get_desktop_path(), package)):
                 os.remove("{}/{}.desktop".format(get_desktop_path(), package))
             findApkHistory.append(ComboInstallPath.currentText())
@@ -174,9 +174,9 @@ class InstallApk(QtCore.QThread):
         try:
             if not os.path.exists("/tmp/uengine-runner"):
                 os.makedirs("/tmp/uengine-runner")
-            if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
+            if not os.path.exists(desktopFilePath):
                 print("Mkdir")
-                os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
+                os.makedirs(desktopFilePath)
             # 读取设置
             setting = json.loads(readtxt(get_home() + "/.config/uengine-runner/setting.json"))
             # 安装应用
@@ -246,7 +246,7 @@ logicalHeight {verticalHeighe}
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)))
                 print("start install apk3")
                 BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                           "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)))
+                           "{}/{}.desktop".format(desktopFilePath, GetApkPackageName(path)))
                 print("\nprint install complete")
             if quit:
                 return
@@ -266,7 +266,7 @@ def InstallBuildDesktop(iconSavePath):
                             "{}/{}.desktop".format(get_desktop_path(), GetApkPackageName(path)), choose)
     print("start install apk3")
     BuildUengineDesktop(GetApkPackageName(path), GetApkActivityName(path), GetApkChineseLabel(path), iconSavePath,
-                           "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), GetApkPackageName(path)), choose)
+                           "{}/{}.desktop".format(desktopFilePath, GetApkPackageName(path)), choose)
     print("\nprint install complete")
 
 def UpdateCombobox(tmp):
@@ -587,8 +587,8 @@ def BackUengineClean()->"清空 uengine 数据":
     if QtWidgets.QMessageBox.warning(widget, "警告", "清空后数据将会完全丢失，确定要继续吗？", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel) == QtWidgets.QMessageBox.Ok:
         DisabledAndEnbled(True)
         try:
-            if os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
-                shutil.rmtree("{}/.local/share/applications/uengine/".format(get_home()))
+            if os.path.exists(desktopFilePath):
+                shutil.rmtree(desktopFilePath)
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
@@ -1004,7 +1004,7 @@ class UengineWindowSizeSetting:
                 i.setChecked(True)
         UengineWindowSizeSetting.setting.setWindowTitle(f"设置 Android 应用的窗口大小缩放设置")
         UengineWindowSizeSetting.setting.show()
-        UengineWindowSizeSetting.setting.resize(UengineWindowSizeSetting.setting.frameSize().width() * 1.3, UengineWindowSizeSetting.setting.frameSize().height())
+        UengineWindowSizeSetting.setting.resize(int(UengineWindowSizeSetting.setting.frameSize().width() * 1.3), int(UengineWindowSizeSetting.setting.frameSize().height()))
 
     def ReadSetting():
         file = open(f"/usr/share/uengine/appetc/{UengineWindowSizeSetting.package}.txt")
@@ -1191,7 +1191,7 @@ class UpdateWindow():
         UpdateWindow.update.setCentralWidget(updateWidget)
         UpdateWindow.update.setWindowTitle("检查 UEngine 运行器更新")
         UpdateWindow.update.setWindowIcon(QtGui.QIcon(iconPath))
-        UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
+        UpdateWindow.update.resize(int(updateWidget.frameGeometry().width()), int(updateWidget.frameGeometry().height() * 1.5))
         UpdateWindow.update.show()
 
     def Update():
@@ -1410,7 +1410,7 @@ class ShowTextTipsWindow():
         ShowTextTipsWindow.messageWindow.setWindowTitle("提示")
         ShowTextTipsWindow.messageWindow.setWindowIcon(QtGui.QIcon(iconPath))
         ShowTextTipsWindow.messageWindow.show()
-        ShowTextTipsWindow.messageWindow.resize(ShowTextTipsWindow.messageWindow.frameSize().width() * 2, ShowTextTipsWindow.messageWindow.frameSize().height() * 1.5)
+        ShowTextTipsWindow.messageWindow.resize(int(ShowTextTipsWindow.messageWindow.frameSize().width() * 2), int(ShowTextTipsWindow.messageWindow.frameSize().height() * 1.5))
         return
 
 # 添加/删除 uengine 应用快捷方式
@@ -1462,7 +1462,7 @@ class AddNewUengineDesktopLink():
     # 添加快捷方式
     def SaveDesktopLink():
         try:
-            if os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
+            if os.path.exists("{}/{}.desktop".format(desktopFilePath, packageName.text())):
                 if QtWidgets.QMessageBox.question(widget, "提示", "文件已存在，是否要覆盖？") == QtWidgets.QMessageBox.No:
                     return
             if not os.path.exists("{}/.local/share/icons/hicolor/256x256/apps/".format(get_home())):
@@ -1471,7 +1471,7 @@ class AddNewUengineDesktopLink():
             iconSavePath = "{}/.local/share/icons/hicolor/256x256/apps/{}.png".format(get_home(), packageName.text())
             shutil.copy(programPath + "/defult.png", iconSavePath)
             BuildUengineDesktop(packageName.text(), activityName.text(), packageName.text(), iconSavePath,
-                "{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
+                "{}/{}.desktop".format(desktopFilePath, packageName.text()))
             BuildUengineDesktop(packageName.text(), activityName.text(), packageName.text(), iconSavePath,
                 "{}/{}.desktop".format(get_desktop_path(), packageName.text()))
             AddNewUengineDesktopLink.SaveHistory()
@@ -1485,13 +1485,13 @@ class AddNewUengineDesktopLink():
     def DelDesktopLink():
         try:
             global packageName
-            if not os.path.exists("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text())):
-                QtWidgets.QMessageBox.critical(widget, "错误", "此包名对应的 UEngine 桌面快捷方式不存在！")
+            if not os.path.exists("{}/{}.desktop".format(desktopFilePath, packageName.text())):
+                QtWidgets.QMessageBox.critical(widget, "错误", "此包名对应的 UEngine 快捷方式不存在！")
                 return
             if QtWidgets.QMessageBox.warning(widget, "警告", "你确定要删除吗？删除后将无法恢复！", QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel) == QtWidgets.QMessageBox.Cancel:
                 return
             try:
-                os.remove("{}/.local/share/applications/uengine/{}.desktop".format(get_home(), packageName.text()))
+                os.remove("{}/{}.desktop".format(desktopFilePath, packageName.text()))
                 AddNewUengineDesktopLink.SaveHistory()
                 QtWidgets.QMessageBox.information(widget, "提示", "已删除")
             except:
@@ -1585,8 +1585,7 @@ goodRunSystem = information["System"]
 aaptVersion = GetCommandReturn(f"'{programPath}/aapt/run-aapt.sh' version")
 SystemVersion = GetSystemVersion()
 iconPath = "{}/runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
-about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
-<p>介绍：虽然通过Deepin/UOS应用商店已经能够安装部分安卓应用，但对于安卓应用爱好者来说，不能自由地安装任意APK软件包实在是不尽如人意。本软件可以实现在Deepin/UOS上安装任意APK软件包，并能将其启动图标发送到系统桌面或启动器中，方便用户快速启动它。  </p>
+about = f'''<p>介绍：虽然通过Deepin/UOS应用商店已经能够安装部分安卓应用，但对于安卓应用爱好者来说，不能自由地安装任意APK软件包实在是不尽如人意。本软件可以实现在Deepin/UOS上安装任意APK软件包，并能将其启动图标发送到系统桌面或启动器中，方便用户快速启动它。  </p>
 <p>程序开源许可证：GPLV3</p>
 <p>版本：{version}</p>
 <p>适用平台：{goodRunSystem}</p>
@@ -1594,10 +1593,22 @@ about = f'''<p align="center"><img width=256 src="{iconPath}"/></p>
 <p>程序官网：{programUrl}</p>
 <p>系统版本：{SystemVersion}</p>
 <p>安装包构建时间：{information['Time']}</p>
+<p>QQ 交流群：872491938</p>
 <h1>©2021-{time.strftime("%Y")} gfdgd xi</h1>'''
 updateThingsString = ""
 tips = ""
 contribute = ""
+appreciate = f"""<h3>请作者喝杯茶</h3>
+<p>如果您觉得 UEngine 运行器对你有帮助，可以请作者喝杯茶 </p>
+<p>
+    <img src="{programPath}/Icon/QR/Wechat.png" width="250"  /> 
+    <img src="{programPath}/Icon/QR/Alipay.jpg" width="250"  />
+    <img src="{programPath}/Icon/QR/QQ.png" width="250" >
+</p>
+<hr/>
+<h3>广告</h3>
+<p>支付宝官方活动，扫描获得支付红包！</p>
+<p><img src="{programPath}/Icon/QR/advertisement0.jpg" width="250" ></p>"""
 for i in information["Tips"]:
     tips += f"<p>{i}</p>"
 for i in information["Update"]:
@@ -1611,13 +1622,25 @@ desktop = programPath + "/UengineAndroidProgramList.desktop"
 desktopName = "UengineAndroidProgramList.desktop"
 useProgram = ""
 threading.Thread(target=UseProgram).start()
+isDeepin23=False
+# 判断是不是 Deepin23
+if os.path.exists("/etc/deepin_version"):
+    try:
+        with open(f"/etc/deepin_version") as file:
+            isDeepin23 = "23" in file.read()
+    except:
+        traceback.print_exc()
+desktopFilePath = f"{get_home()}/.local/share/applications/uengine/"
+if isDeepin23:
+    desktopFilePath = f"{get_home()}/.local/share/applications/"
+
 
 ###########################
 # 加载配置
 ###########################
 app = QtWidgets.QApplication(sys.argv)
-if not os.path.exists("{}/.local/share/applications/uengine/".format(get_home())):
-    os.makedirs("{}/.local/share/applications/uengine/".format(get_home()))
+if not os.path.exists(desktopFilePath):
+    os.makedirs(desktopFilePath)
 if not os.path.exists(get_home() + "/.config/uengine-runner"):  # 如果没有配置文件夹
     os.makedirs(get_home() + "/.config/uengine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/uengine-runner/FindApkHistory.json"):  # 如果没有配置文件
@@ -1745,7 +1768,16 @@ def showhelp():
     def ChgLog():
         HelpStr.setHtml(updateThingsString)
     def ChgAbout(event):
-        HelpStr.setHtml(about)
+        HelpStr.setHtml(f"<p align='center'><a href='https://www.gfdgdxi.top/ChangeIcon'><img width=256 src='{iconPath}'/></a></p>\n" + about)
+    def OpenUrl(url):
+        print(url.url())
+        if url.url() == "https://www.gfdgdxi.top/ChangeIcon":
+            ChgAboutChangeIcon()
+            return
+        webbrowser.open_new_tab(url.url())
+
+    def ChgAboutChangeIcon():
+        HelpStr.setHtml(f"<p align='center'><img width=256 src='{programPath}/Icon/Program/about-icon.png'/></p>\n" + about)
     def ChgDep():
         if useProgram == "":
             BtnZujian.setDisabled(True)
@@ -1755,7 +1787,8 @@ def showhelp():
         HelpStr.setHtml(contribute)
     def ChgTips():
         HelpStr.setHtml(tips)
-    
+    def ChgAppreciate():
+        HelpStr.setHtml(appreciate)
     def ChgGPLV3():
         try:
             with open(f"{programPath}/LICENSE", "r") as file:
@@ -1778,7 +1811,12 @@ def showhelp():
     BtnDownN = QtWidgets.QPushButton("程序下载量")
     BtnOpenN = QtWidgets.QPushButton("程序打开量")
     BtnGPLV3 = QtWidgets.QPushButton("程序开源许可证")
+    appreciateButton = QtWidgets.QPushButton("赞赏作者")
     HelpStr = QtWidgets.QTextBrowser()
+    HelpStr.setOpenLinks(False)
+    HelpStr.setHtml(about)
+    HelpStr.setOpenExternalLinks(False)
+    HelpStr.anchorClicked.connect(OpenUrl)
     # 此功能从 2.0.0 后不再隐藏
     #BtnDownN.setEnabled("--彩蛋" in sys.argv)
     BtnReadme.clicked.connect(ChgTips)
@@ -1789,6 +1827,7 @@ def showhelp():
     BtnDownN.clicked.connect(Download)
     BtnGPLV3.clicked.connect(ChgGPLV3)
     BtnOpenN.clicked.connect(Open)
+    appreciateButton.clicked.connect(ChgAppreciate)
 
     ChgTips()
 
@@ -1799,14 +1838,18 @@ def showhelp():
     helpLayout.addWidget(BtnDownN, 4, 0, 1, 1)
     helpLayout.addWidget(BtnOpenN, 5, 0, 1, 1)
     helpLayout.addWidget(BtnGPLV3, 6, 0, 1, 1)
-    helpLayout.addWidget(BtnAbout, 7, 0, 1, 1)
-    helpLayout.addWidget(HelpStr, 0, 1, 10, 1)
+    helpLayout.addWidget(appreciateButton, 7, 0, 1, 1)
+    helpLayout.addWidget(BtnAbout, 8, 0, 1, 1)
+    helpLayout.addWidget(HelpStr, 0, 1, 11, 1)
 
     helpWidget.setLayout(helpLayout)
     helpWindow.setCentralWidget(helpWidget)
     helpWindow.setFixedSize(int(helpWindow.frameSize().width() * 0.9), int(helpWindow.frameSize().height() * 1.5))
     helpWindow.setWindowTitle("帮助")
     helpWindow.setWindowIcon(QtGui.QIcon(iconPath))
+    # 设置背景
+    helpWindow.setObjectName("helpWindow")
+    helpWindow.setStyleSheet(f"QWidget#helpWindow {{background: url({programPath}/Icon/Program/about-background.png) no-repeat;background-position: left bottom;}}")
     helpWindow.show()
     return
 
@@ -1816,6 +1859,9 @@ def showhelp():
 if not os.path.exists("/usr/bin/uengine"):
     # Deepin/UOS 用户
     if "deepin" in SystemVersion.lower() or "uos" in SystemVersion.lower() or subprocess.getoutput("arch").replace("\n", "").replace(" ", "") != "x86_64":
+        if not "ft-" in GetCommandReturn("lscpu").lower() and GetCommandReturn("lscpu").replace(" ", "").replace("\n", "") == "aarch64":
+            QtWidgets.QMessageBox.critical(None, "错误", "UEngine 运行器不支持非飞腾 CPU")
+            sys.exit(1)
         if QtWidgets.QMessageBox.question(None, "提示", "您的电脑没有安装 UEngine，是否安装 UEngine 以便更好的使用\n安装完后重新启动该程序即可") == QtWidgets.QMessageBox.Yes:
             OpenTerminal(f"pkexec apt install uengine -y")
             sys.exit(0)

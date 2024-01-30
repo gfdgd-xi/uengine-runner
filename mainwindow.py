@@ -2024,6 +2024,7 @@ uengineUbuntuInstall = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon
 uengineUbuntuRemove = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "移除在 Ubuntu/Debian 上安装的 UEngine 及其附属脚本")
 uengineUbuntuInstallRoot = QtWidgets.QAction(QtGui.QIcon.fromTheme("ubuntu-logo-icon"), "在 Ubuntu/Debian 上安装 UEngine（SuperSU 镜像）")
 uengineWindowSizeSetting = QtWidgets.QAction(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][16])
+uengineInstallVia = QtWidgets.QAction("安装 Via")
 uengine.addAction(uengineOpenDebBuilder)
 uengine.addAction(uengineOpenDebBuilderMore)
 uengine.addAction(uengineKeyboardToMouse)
@@ -2049,6 +2050,9 @@ uengine.addSeparator()
 uengine.addAction(uengineDeleteUengineCheck)
 uengine.addAction(uengineReinstall)
 uengineRoot = uengine.addMenu(langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][11]["Name"])
+uengine.addSeparator()
+uengine.addAction(uengineInstallVia)
+
 #uengineUbuntuInstall.setDisabled(True)
 # 绑定信号
 uengineAllowOrDisallowUpdateAndroidApp.triggered.connect(AllowOrDisallowUpdateAndroidApp)
@@ -2063,6 +2067,12 @@ uengineUbuntuInstallRoot.triggered.connect(UengineUbuntuInstallRoot)
 uengineDeleteUengineCheck.triggered.connect(DelUengineCheck)
 uengineReinstall.triggered.connect(ReinstallUengine)
 uengineWindowSizeSetting.triggered.connect(UengineWindowSizeSetting.ShowWindow)
+
+def InstallVia():
+    ComboInstallPath.setCurrentText(f"{programPath}/APK/Via.apk")
+    Button3Install()
+
+uengineInstallVia.triggered.connect(InstallVia)
 
 uengineStart = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][0])
 uengineStop = QtWidgets.QAction(QtGui.QIcon.fromTheme("services"), langFile[lang]["Main"]["MainWindow"]["Menu"][2]["Menu"][2]["Menu"][1])

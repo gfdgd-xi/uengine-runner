@@ -60,6 +60,7 @@ build:
 	cp -rv pkexec                               new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv LoadingBinder                        new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	cp -rv aapt                                 new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
+	cp -rv APK                                  new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/
 	rm -rfv new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/Help/information
 	python3 UpdateTime.py
 	python3 RemovePycacheFile.py                #new-deb-build/opt/apps/com.gitee.uengine.runner.spark/files/

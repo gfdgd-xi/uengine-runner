@@ -15,6 +15,9 @@ Debian 10、Debian 11、Ubuntu 20.04 需要从 http://dtk.gfdgdxi.top/ 下载 dt
 
 QQ 交流群：872491938  
   
+## 在 deepin 23 上安装缺失依赖？
+依赖下载地址：https://gfdgdxi.lanzv.com/b01rwfgtg 密码:648f  
+
 ## 程序相关网站
 作者个人站：https://www.gfdgdxi.top  
 查询 APK 运行情况：https://gfdgd-xi.github.io/uengine-runner-info/  

@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="runner.svg"></p>  
-<h1 align="center">UEngine 运行器 2.2.0.1</h1>  
+<h1 align="center">UEngine 运行器 2.2.1</h1>  
 <hr>  
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/uengine-runner/members'><img src='https://gitee.com/gfdgd-xi/uengine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -86,6 +86,9 @@ sudo apt upgrade
 ![image.png](https://storage.deepin.org/thread/202205220801513371_image.png)  
   
 ### 更新内容  
+#### V2.2.1（2024年07月18日）
+**※1、修复 UEngine Ubuntu 安装器下载链接失效的问题**  
+
 #### V2.2.0.1（2023年02月04日）
 **※1、解决 deepin 23 beta3 缺失依赖的问题**  
 

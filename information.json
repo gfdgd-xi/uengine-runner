@@ -4,7 +4,7 @@
         "https://gitee.com/gfdgd-xi/uengine-runner",
 		"https://github.com/gfdgd-xi/uengine-runner"
     ],
-    "Version": "2.2.0.1",
+    "Version": "2.2.1",
     "System": "Linux（deepin/UOS/Ubuntu/Debian）",
     "Tips": [
         "更多可见：https://gitee.com/gfdgd-xi/uengine-runner/wikis 或程序的更多帮助",
@@ -22,6 +22,9 @@
         "5、如果想要使用adb连接UEngine或其他手机，请使用 1.2.0 以前的版本。（如需连接UEngine请安装adb补丁）"
     ],
     "Update": [
+        "<b>V2.2.1：</b>",
+        "※1、修复 UEngine Ubuntu 安装器下载链接失效的问题",
+        "",
         "<b>V2.2.0.1：</b>",
         "※1、解决 deepin 23 beta3 缺失依赖的问题",
         "",
